@@ -552,7 +552,7 @@ msgstr ""
 msgid "Shortcodes"
 msgstr ""
 
-msgid "Fügen Sie diesen Shortcode in den Inhalt (Editor) Ihrer Veranstaltung ein:"
+msgid "Fügen diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein:"
 msgstr ""
 
 msgid "Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird."
@@ -561,7 +561,7 @@ msgstr ""
 msgid "E-Mail Platzhalter"
 msgstr ""
 
-msgid "Diese Platzhalter können Sie in den Betreff oder Inhalt Ihrer E-Mail-Vorlagen einbauen:"
+msgid "Diese Platzhalter kannst du in den Betreff oder Inhalt deiner E-Mail-Vorlagen einbauen:"
 msgstr ""
 
 msgid "Platzhalter"
@@ -594,7 +594,7 @@ msgstr ""
 msgid "Name der Veranstaltung"
 msgstr ""
 
-msgid "Ihre Buchung für {event_name}"
+msgid "Deine Buchung für {event_name}"
 msgstr ""
 
 msgid "Termindaten"
@@ -612,7 +612,7 @@ msgstr ""
 msgid "Anzahl gebuchter Plätze"
 msgstr ""
 
-msgid "Sie haben {event_plaetze} Plätze reserviert."
+msgid "Du hast {event_plaetze} Plätze reserviert."
 msgstr ""
 
 msgid "Abmelde-Link (HTML)"
