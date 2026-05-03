@@ -1,13 +1,14 @@
 <?php
 /**
  * Plugin Name: VeranstaltungsWart
- * Description: Der Veranstatungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit.
+ * Description: Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit.
  * Version:     2.0.0
  * Author:      Sven Epple
  * Text Domain: veranstaltungswart
  * Domain Path: /languages
  * Requires PHP: 7.4
  * Requires at least: 5.8
+ * Tested up to: 6.5
  */
 
 // Sicherheitscheck: Verhindert direkten Aufruf der Datei
@@ -20,7 +21,7 @@ if (!defined('ABSPATH')) {
  */
 define('VW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('VW_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('VW_VERSION', '1.0.0');
+define('VW_VERSION', '2.0.0');
 
 /**
  * Loader einbinden und Autoloader registrieren.
@@ -48,11 +49,25 @@ class VeranstaltungsWart {
         register_activation_hook(__FILE__, [$this, 'activate']);
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
+        // WICHTIG: Sprachdateien laden, damit unsere Übersetzungen funktionieren!
+        add_action('plugins_loaded', [$this, 'load_textdomain']);
+
         // Initialisierung der Module
         $this->init_modules();
         
         // Hooks für allgemeine Plugin-Aufgaben
         add_action('init', [$this, 'ensure_capabilities']);
+    }
+
+    /**
+     * Lädt die Übersetzungsdateien (.mo) aus dem /languages Ordner.
+     */
+    public function load_textdomain() {
+        load_plugin_textdomain(
+            'veranstaltungswart',
+            false,
+            dirname(plugin_basename(__FILE__)) . '/languages'
+        );
     }
 
     /**
@@ -125,11 +140,11 @@ class VeranstaltungsWart {
 
         // 3. Veranstaltungsorte (CRUD Logik & Admin-Seite)
         $this->modules['locations'] = new \VW\Locations\LocationManager();
-        $this->modules['locations']->register(); // Registriert Speicher/Lösch-Hooks
+        $this->modules['locations']->register();
 
         // 4. Personen-Verwaltung (Teilnehmerdatenbank & Status-Updates)
         $this->modules['persons'] = new \VW\Persons\PersonManager();
-        $this->modules['persons']->register(); // Registriert Speicher/Status-Hooks
+        $this->modules['persons']->register();
 
         // 5. E-Mail-Vorlagen (System-Mails CPT)
         $this->modules['mails'] = new \VW\Mails\MailTemplateManager();
@@ -151,5 +166,4 @@ class VeranstaltungsWart {
 function run_veranstaltungswart() {
     return new VeranstaltungsWart();
 }
-
 run_veranstaltungswart();

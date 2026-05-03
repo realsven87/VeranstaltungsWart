@@ -1,8 +1,7 @@
-<?php
-namespace VW\Dashboard;
-
-use VW\Locations\LocationManager;
-use VW\Persons\PersonManager; 
+<?php 
+namespace VW\Dashboard; 
+use VW\Locations\LocationManager; 
+use VW\Persons\PersonManager;
 
 /**
  * Modul: Dashboard & Hilfe-Zentrale
@@ -11,12 +10,12 @@ use VW\Persons\PersonManager;
 class DashboardManager {
 
     /**
-     * Registriert die Hooks für das Admin-Menü.
+     * Registriert die Hooks für das Admin-Menü
      */
     public function register() {
         // Menüaufbau (Priorität 5, damit es weit oben erscheint)
         add_action('admin_menu', [$this, 'setup_admin_menu'], 5);
-
+        
         // Das Standard-Menü des CPTs (vw_event) aus der Hauptleiste entfernen
         add_action('admin_menu', function() {
             remove_menu_page('edit.php?post_type=vw_event');
@@ -37,9 +36,10 @@ class DashboardManager {
             );
         }
 
+        // Hauptmenü
         add_menu_page(
-            'VeranstaltungsWart',
-            'VeranstaltungsWart' . $badge,
+            __('VeranstaltungsWart', 'veranstaltungswart'),
+            __('VeranstaltungsWart', 'veranstaltungswart') . $badge,
             'edit_posts', 
             'vw_dashboard', 
             [$this, 'render_dashboard'],
@@ -47,20 +47,22 @@ class DashboardManager {
             6
         );
 
-        add_submenu_page('vw_dashboard', 'Dashboard', 'Dashboard', 'edit_posts', 'vw_dashboard', [$this, 'render_dashboard']);
-        add_submenu_page('vw_dashboard', 'Alle Veranstaltungen', 'Veranstaltungen', 'edit_posts', 'edit.php?post_type=vw_event');
-        add_submenu_page('vw_dashboard', 'Event-Kategorien', 'Kategorien', 'manage_options', 'edit-tags.php?taxonomy=vw_event_category&post_type=vw_event');
-        add_submenu_page('vw_dashboard', 'Veranstaltungsorte', 'Orte', 'edit_posts', 'vw_locations', [LocationManager::class, 'render_admin_page']);
-        add_submenu_page('vw_dashboard', 'Personen-Verwaltung', 'Personen', 'manage_options', 'vw_persons', [PersonManager::class, 'render_admin_page']);
-        add_submenu_page('vw_dashboard', 'Hilfe & Dokumentation', 'Hilfe', 'edit_posts', 'vw_help', [$this, 'render_help_page']);
+        // Untermenüs
+        add_submenu_page('vw_dashboard', __('Dashboard', 'veranstaltungswart'), __('Dashboard', 'veranstaltungswart'), 'edit_posts', 'vw_dashboard', [$this, 'render_dashboard']);
+        add_submenu_page('vw_dashboard', __('Alle Veranstaltungen', 'veranstaltungswart'), __('Veranstaltungen', 'veranstaltungswart'), 'edit_posts', 'edit.php?post_type=vw_event');
+        add_submenu_page('vw_dashboard', __('Event-Kategorien', 'veranstaltungswart'), __('Kategorien', 'veranstaltungswart'), 'manage_options', 'edit-tags.php?taxonomy=vw_event_category&post_type=vw_event');
+        add_submenu_page('vw_dashboard', __('Veranstaltungsorte', 'veranstaltungswart'), __('Orte', 'veranstaltungswart'), 'edit_posts', 'vw_locations', [LocationManager::class, 'render_admin_page']);
+        add_submenu_page('vw_dashboard', __('Personen-Verwaltung', 'veranstaltungswart'), __('Personen', 'veranstaltungswart'), 'manage_options', 'vw_persons', [PersonManager::class, 'render_admin_page']);
+        add_submenu_page('vw_dashboard', __('Hilfe & Dokumentation', 'veranstaltungswart'), __('Hilfe', 'veranstaltungswart'), 'edit_posts', 'vw_help', [$this, 'render_help_page']);
     }
 
     public function render_dashboard() {
         global $wpdb;
+        
         $table_reg = $wpdb->prefix . 'vw_registrations';
         $table_persons = $wpdb->prefix . 'vw_persons';
         $current_time = current_time('mysql');
-
+        
         $total_pending_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_reg WHERE status = 'eingegangen'");
         
         $active_events_count = (int) $wpdb->get_var($wpdb->prepare("

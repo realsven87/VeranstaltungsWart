@@ -6,13 +6,13 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 ?>
 
 <div class="wrap">
-    <h1 style="margin-bottom: 25px;">VeranstaltungsWart Dashboard</h1>
+    <h1 style="margin-bottom: 25px;"><?php esc_html_e('VeranstaltungsWart Dashboard', 'veranstaltungswart'); ?></h1>
     
     <?php 
     // Erfolgsmeldung nach Aktionen anzeigen
     if (isset($_GET['status_updated'])): ?>
         <div class="updated notice is-dismissible">
-            <p><strong>Aktion erfolgreich!</strong> Die Anmeldung wurde aktualisiert und die entsprechende E-Mail versendet.</p>
+            <p><strong><?php esc_html_e('Aktion erfolgreich!', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Die Anmeldung wurde aktualisiert und die entsprechende E-Mail versendet.', 'veranstaltungswart'); ?></p>
         </div>
     <?php endif; ?>
 
@@ -65,29 +65,35 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
     <div class="vw-dashboard-stats">
         <div class="vw-stat-card" style="border-left: 5px solid #ffa500;">
-            <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">⏳ Offene Anmeldungen</h2>
+            <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">
+                <span class="dashicons dashicons-warning" style="vertical-align: text-bottom; color: #ffa500;"></span> 
+                <?php esc_html_e('Offene Anmeldungen', 'veranstaltungswart'); ?>
+            </h2>
             <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($total_pending_count); ?></p>
-            <small style="color: #646970;">Warten auf deine Freigabe</small>
+            <small style="color: #646970;"><?php esc_html_e('Warten auf deine Freigabe', 'veranstaltungswart'); ?></small>
         </div>
 
         <div class="vw-stat-card" style="border-left: 5px solid #2271b1;">
-            <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">📅 Aktive Veranstaltungen</h2>
+            <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">
+                <span class="dashicons dashicons-calendar-alt" style="vertical-align: text-bottom; color: #2271b1;"></span> 
+                <?php esc_html_e('Aktive Veranstaltungen', 'veranstaltungswart'); ?>
+            </h2>
             <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($active_events_count); ?></p>
-            <small style="color: #646970;">Zukünftige veröffentlichte Events</small>
+            <small style="color: #646970;"><?php esc_html_e('Zukünftige veröffentlichte Events', 'veranstaltungswart'); ?></small>
         </div>
     </div>
 
-    <h2 style="font-size: 1.4em; margin: 30px 0 15px;">Aktuelle Warteschlange (Eingegangen)</h2>
+    <h2 style="font-size: 1.4em; margin: 30px 0 15px;"><?php esc_html_e('Aktuelle Warteschlange (Eingegangen)', 'veranstaltungswart'); ?></h2>
     
     <div class="vw-table-responsive">
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th style="width: 15%;">Eingang am</th>
-                    <th style="width: 25%;">Veranstaltung</th>
-                    <th style="width: 25%;">Teilnehmer</th>
-                    <th style="width: 10%; text-align: center;">Plätze</th>
-                    <th style="width: 25%; text-align: right;">Aktionen</th>
+                    <th style="width: 15%;"><?php esc_html_e('Eingang am', 'veranstaltungswart'); ?></th>
+                    <th style="width: 25%;"><?php esc_html_e('Veranstaltung', 'veranstaltungswart'); ?></th>
+                    <th style="width: 25%;"><?php esc_html_e('Teilnehmer', 'veranstaltungswart'); ?></th>
+                    <th style="width: 10%; text-align: center;"><?php esc_html_e('Plätze', 'veranstaltungswart'); ?></th>
+                    <th style="width: 25%; text-align: right;"><?php esc_html_e('Aktionen', 'veranstaltungswart'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -98,15 +104,15 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                     ?>
                         <tr>
                             <td class="column-date">
-                                <strong><?php echo date_i18n('d. M Y', strtotime($reg->registered_at)); ?></strong><br>
-                                <small><?php echo date_i18n('H:i', strtotime($reg->registered_at)); ?> Uhr</small>
+                                <strong><?php echo esc_html(date_i18n('d. M Y', strtotime($reg->registered_at))); ?></strong><br>
+                                <small><?php echo esc_html(date_i18n('H:i', strtotime($reg->registered_at))); ?> <?php esc_html_e('Uhr', 'veranstaltungswart'); ?></small>
                             </td>
                             <td>
                                 <span class="dashicons dashicons-calendar-alt" style="font-size: 16px; color: #646970;"></span> 
                                 <strong>
-                                    <a href="<?php echo get_edit_post_link($reg->event_post_id); ?>" 
-                                       title="Event bearbeiten" 
-                                       style="text-decoration: none; color: #2271b1;">
+                                    <a href="<?php echo esc_url(get_edit_post_link($reg->event_post_id)); ?>" 
+                                        title="<?php esc_attr_e('Event bearbeiten', 'veranstaltungswart'); ?>"
+                                        style="text-decoration: none; color: #2271b1;">
                                         <?php echo esc_html($reg->post_title); ?>
                                     </a>
                                 </strong>
@@ -130,15 +136,15 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                             <td style="text-align: right;">
                                 <div class="vw-dashboard-actions">
                                     <a href="<?php echo esc_url(wp_nonce_url($base_url . '&new_status=bestätigt', 'vw_reg_action_' . $reg->id)); ?>" 
-                                       class="button button-small" 
-                                       title="Jetzt bestätigen">
+                                        class="button button-small" 
+                                        title="<?php esc_attr_e('Jetzt bestätigen', 'veranstaltungswart'); ?>">
                                         <span class="dashicons dashicons-yes" style="color: #46b450; vertical-align: middle;"></span>
                                     </a>
                                     
                                     <a href="<?php echo esc_url(wp_nonce_url($base_url . '&new_status=abgelehnt', 'vw_reg_action_' . $reg->id)); ?>" 
-                                       class="button button-small" 
-                                       title="Ablehnen" 
-                                       onclick="return confirm('Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail.')">
+                                        class="button button-small" 
+                                        title="<?php esc_attr_e('Ablehnen', 'veranstaltungswart'); ?>"
+                                        onclick="return confirm('<?php echo esc_js(__('Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail.', 'veranstaltungswart')); ?>')">
                                         <span class="dashicons dashicons-no-alt" style="color: #dba617; vertical-align: middle;"></span>
                                     </a>
                                 </div>
@@ -149,7 +155,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                     <tr>
                         <td colspan="5" style="padding: 40px; text-align: center; color: #646970; background: #fff;">
                             <span class="dashicons dashicons-smiley" style="font-size: 40px; width: 40px; height: 40px; display: block; margin: 0 auto 10px;"></span>
-                            <p style="font-size: 1.1em;">Keine offenen Anmeldungen vorhanden. Alles erledigt! 🎉</p>
+                            <p style="font-size: 1.1em;"><?php esc_html_e('Keine offenen Anmeldungen vorhanden. Alles erledigt!', 'veranstaltungswart'); ?> 🚀</p>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -158,6 +164,6 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
     </div>
     
     <div style="margin-top: 20px;">
-        <p class="description">Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar.</p>
+        <p class="description"><?php esc_html_e('Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar.', 'veranstaltungswart'); ?></p>
     </div>
 </div>

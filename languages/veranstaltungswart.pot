@@ -1,0 +1,718 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: VeranstaltungsWart 2.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-03 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Handcrafted\n"
+
+#. Plugin Name
+msgid "VeranstaltungsWart"
+msgstr ""
+
+#. Plugin Description
+msgid "Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit."
+msgstr ""
+
+msgid "Veranstaltungen"
+msgstr ""
+
+msgid "Veranstaltung"
+msgstr ""
+
+msgid "Alle Veranstaltungen"
+msgstr ""
+
+msgid "Neue hinzufügen"
+msgstr ""
+
+msgid "Neue Veranstaltung anlegen"
+msgstr ""
+
+msgid "Veranstaltung bearbeiten"
+msgstr ""
+
+msgid "Anzeigen"
+msgstr ""
+
+msgid "Veranstaltungen suchen"
+msgstr ""
+
+msgid "Keine Veranstaltungen gefunden"
+msgstr ""
+
+msgctxt "URL slug"
+msgid "veranstaltungen"
+msgstr ""
+
+msgid "Event-Kategorien"
+msgstr ""
+
+msgid "Event-Kategorie"
+msgstr ""
+
+msgid "Kategorien suchen"
+msgstr ""
+
+msgid "Alle Kategorien"
+msgstr ""
+
+msgid "Kategorie bearbeiten"
+msgstr ""
+
+msgid "Kategorie aktualisieren"
+msgstr ""
+
+msgid "Neue Kategorie hinzufügen"
+msgstr ""
+
+msgid "Name der neuen Kategorie"
+msgstr ""
+
+msgid "Kategorien"
+msgstr ""
+
+msgid "Datum & Uhrzeit"
+msgstr ""
+
+msgid "Ort"
+msgstr ""
+
+msgid "Belegung"
+msgstr ""
+
+msgid "Verantwortlich"
+msgstr ""
+
+msgid "Uhr"
+msgstr ""
+
+msgid "Formatfehler"
+msgstr ""
+
+msgid "(VOLL)"
+msgstr ""
+
+msgid "Warteliste:"
+msgstr ""
+
+msgid "Keine Berechtigung."
+msgstr ""
+
+msgid "Alle Verantwortlichen"
+msgstr ""
+
+msgid "Aktion erfolgreich durchgeführt und Warteliste aktualisiert."
+msgstr ""
+
+msgid "Veranstaltungs-Details"
+msgstr ""
+
+msgid "Angemeldete Teilnehmer & Warteliste"
+msgstr ""
+
+msgid "Datum & Uhrzeit:"
+msgstr ""
+
+msgid "Veranstaltungsort:"
+msgstr ""
+
+msgid "-- Ort wählen --"
+msgstr ""
+
+msgid "Max. Teilnehmer:"
+msgstr ""
+
+msgid "0 = Unbegrenzt"
+msgstr ""
+
+msgid "Begleitpersonen erlauben"
+msgstr ""
+
+msgid "Teilnehmerliste (CSV) exportieren"
+msgstr ""
+
+msgid "Teilnehmerliste konnte nicht geladen werden."
+msgstr ""
+
+msgid "Gesamt-Kapazität:"
+msgstr ""
+
+msgid "Unbegrenzt"
+msgstr ""
+
+msgid "Bestätigte Teilnehmer:"
+msgstr ""
+
+msgid "Auf Warteliste:"
+msgstr ""
+
+msgid "Verfügbare Plätze:"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "E-Mail"
+msgstr ""
+
+msgid "Plätze"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Aktionen"
+msgstr ""
+
+msgid "Global bestätigte Person (Vertrauenswürdig)"
+msgstr ""
+
+msgid "Platz frei! Dieser Teilnehmer kann jetzt bestätigt werden."
+msgstr ""
+
+msgid "Bestätigt"
+msgstr ""
+
+msgid "Abgelehnt"
+msgstr ""
+
+msgid "Storniert"
+msgstr ""
+
+msgid "Eingegangen"
+msgstr ""
+
+msgid "Warteliste"
+msgstr ""
+
+msgid "Jetzt bestätigen"
+msgstr ""
+
+msgid "Ablehnen"
+msgstr ""
+
+msgid "Teilnehmer ablehnen?"
+msgstr ""
+
+msgid "Anmeldung endgültig löschen?"
+msgstr ""
+
+msgid "Löschen"
+msgstr ""
+
+msgid "Noch keine Anmeldungen für dieses Event vorhanden."
+msgstr ""
+
+msgid "Status-Info:"
+msgstr ""
+
+msgid "\"Eingegangen\" sind neue Anmeldungen."
+msgstr ""
+
+msgid "Grün markierte Zeilen"
+msgstr ""
+
+msgid "haben aktuell Platz im Event. Das"
+msgstr ""
+
+msgid "Icon zeigt global vertrauenswürdige Personen."
+msgstr ""
+
+msgid "Anmeldung zur Warteliste"
+msgstr ""
+
+msgid "Anmeldung zur Veranstaltung"
+msgstr ""
+
+msgid "Diese Veranstaltung ist aktuell ausgebucht. Du kannst dich auf die Warteliste setzen lassen."
+msgstr ""
+
+msgid "Nur noch %s Plätze verfügbar!"
+msgstr ""
+
+msgid "Vorname *"
+msgstr ""
+
+msgid "Nur Buchstaben erlaubt"
+msgstr ""
+
+msgid "Nachname *"
+msgstr ""
+
+msgid "E-Mail-Adresse *"
+msgstr ""
+
+msgid "Zusätzliche Begleitpersonen"
+msgstr ""
+
+msgid "Personen, die du mitbringst."
+msgstr ""
+
+msgid "Bitte stimme der Datenschutzerklärung zu, um dich verbindlich anzumelden."
+msgstr ""
+
+msgid "Ich stimme zu, dass meine Angaben aus diesem Formular zur Bearbeitung meiner Anmeldung erhoben und verarbeitet werden. Weitere Informationen findest du in der"
+msgstr ""
+
+msgid "Datenschutzerklärung"
+msgstr ""
+
+msgid "Auf Warteliste setzen"
+msgstr ""
+
+msgid "Jetzt anmelden"
+msgstr ""
+
+msgid "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+msgstr ""
+
+msgid "Bitte gib einen gültigen Namen an."
+msgstr ""
+
+msgid "Bitte gib eine gültige E-Mail-Adresse an."
+msgstr ""
+
+msgid "Sicherheits-Check fehlgeschlagen. Bitte lade die Seite neu."
+msgstr ""
+
+msgid "Vielen Dank! Deine Anmeldung war erfolgreich."
+msgstr ""
+
+msgid "Du wurdest erfolgreich auf die Warteliste gesetzt."
+msgstr ""
+
+msgid "Ihre Anmeldung wurde erfolgreich storniert."
+msgstr ""
+
+msgid "Du hast nicht die erforderlichen Rechte."
+msgstr ""
+
+msgid "Vorname"
+msgstr ""
+
+msgid "Nachname"
+msgstr ""
+
+msgid "Vertrauensstatus"
+msgstr ""
+
+msgid "VeranstaltungsWart - Personendaten"
+msgstr ""
+
+msgid "Gelöschte Veranstaltung"
+msgstr ""
+
+msgid "Registriert am"
+msgstr ""
+
+msgid "Begleitpersonen"
+msgstr ""
+
+msgid "Gesamtplätze"
+msgstr ""
+
+msgid "VeranstaltungsWart - Anmeldungen"
+msgstr ""
+
+msgid "Fehler beim Löschen der Personendaten im VeranstaltungsWart."
+msgstr ""
+
+msgid "Personenverwaltung"
+msgstr ""
+
+msgid "Änderungen gespeichert."
+msgstr ""
+
+msgid "Person wurde dauerhaft gelöscht."
+msgstr ""
+
+msgid "Fehler: Diese E-Mail-Adresse wird bereits von einer anderen Person verwendet!"
+msgstr ""
+
+msgid "Fehler: Bitte geben Sie eine gültige E-Mail-Adresse ein!"
+msgstr ""
+
+msgid "%s Person wurde erfolgreich aktualisiert/gelöscht."
+msgid_plural "%s Personen wurden erfolgreich aktualisiert/gelöscht."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Daten bearbeiten"
+msgstr ""
+
+msgid "Neue Person anlegen"
+msgstr ""
+
+msgid "Prüfung erforderlich"
+msgstr ""
+
+msgid "Freigegeben (Sofort-Bestätigung)"
+msgstr ""
+
+msgid "Neue manuelle Einträge sind standardmäßig freigegeben."
+msgstr ""
+
+msgid "Speichern"
+msgstr ""
+
+msgid "Person anlegen"
+msgstr ""
+
+msgid "Abbrechen"
+msgstr ""
+
+msgid "Aktion wählen"
+msgstr ""
+
+msgid "Als freigegeben markieren"
+msgstr ""
+
+msgid "Auf \"Prüfung\" zurücksetzen"
+msgstr ""
+
+msgid "Übernehmen"
+msgstr ""
+
+msgid "Aktion"
+msgstr ""
+
+msgid "Freigegeben"
+msgstr ""
+
+msgid "Wartet auf Prüfung"
+msgstr ""
+
+msgid "Prüfung"
+msgstr ""
+
+msgid "Bearbeiten"
+msgstr ""
+
+msgid "Person wirklich löschen?"
+msgstr ""
+
+msgid "Keine Teilnehmer gefunden."
+msgstr ""
+
+msgid "Bitte wähle zuerst eine Aktion aus dem Dropdown-Menü."
+msgstr ""
+
+msgid "Bist du sicher, dass du alle markierten Personen endgültig löschen möchtest? (Achtung: Verbundene Anmeldungen werden ebenfalls gelöscht!)"
+msgstr ""
+
+msgid "Keine ausreichenden Rechte."
+msgstr ""
+
+msgid "Veranstaltungsorte"
+msgstr ""
+
+msgid "Ort erfolgreich gespeichert."
+msgstr ""
+
+msgid "Ort wurde gelöscht."
+msgstr ""
+
+msgid "Ort bearbeiten"
+msgstr ""
+
+msgid "Neuen Ort hinzufügen"
+msgstr ""
+
+msgid "Name des Ortes"
+msgstr ""
+
+msgid "z.B. Gemeindesaal"
+msgstr ""
+
+msgid "Anschrift / Adresse"
+msgstr ""
+
+msgid "Straße, PLZ Ort"
+msgstr ""
+
+msgid "Standardkapazität"
+msgstr ""
+
+msgid "Ort anlegen"
+msgstr ""
+
+msgid "Adresse"
+msgstr ""
+
+msgid "Kap."
+msgstr ""
+
+msgid "Ort wirklich löschen?"
+msgstr ""
+
+msgid "Noch keine Orte hinterlegt."
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Orte"
+msgstr ""
+
+msgid "Personen"
+msgstr ""
+
+msgid "Hilfe & Dokumentation"
+msgstr ""
+
+msgid "Hilfe"
+msgstr ""
+
+msgid "VeranstaltungsWart Dashboard"
+msgstr ""
+
+msgid "Aktion erfolgreich!"
+msgstr ""
+
+msgid "Die Anmeldung wurde aktualisiert und die entsprechende E-Mail versendet."
+msgstr ""
+
+msgid "Offene Anmeldungen"
+msgstr ""
+
+msgid "Warten auf deine Freigabe"
+msgstr ""
+
+msgid "Aktive Veranstaltungen"
+msgstr ""
+
+msgid "Zukünftige veröffentlichte Events"
+msgstr ""
+
+msgid "Aktuelle Warteschlange (Eingegangen)"
+msgstr ""
+
+msgid "Eingang am"
+msgstr ""
+
+msgid "Teilnehmer"
+msgstr ""
+
+msgid "Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail."
+msgstr ""
+
+msgid "Keine offenen Anmeldungen vorhanden. Alles erledigt!"
+msgstr ""
+
+msgid "Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar."
+msgstr ""
+
+msgid "Willkommen beim <strong>VeranstaltungsWart</strong>. Hier finden Sie alle Informationen zur Einrichtung Ihres Buchungssystems."
+msgstr ""
+
+msgid "Erste Schritte"
+msgstr ""
+
+msgid "E-Mail-Vorlagen:"
+msgstr ""
+
+msgid "Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):"
+msgstr ""
+
+msgid "Eingangsbestätigung"
+msgstr ""
+
+msgid "Admin-Benachrichtigung"
+msgstr ""
+
+msgid "Wartelisten-Platz"
+msgstr ""
+
+msgid "Freigabe"
+msgstr ""
+
+msgid "Storno/Ablehnung"
+msgstr ""
+
+msgid "Orte:"
+msgstr ""
+
+msgid "Unter \"Veranstaltungsorte\" Kapazitäten festlegen."
+msgstr ""
+
+msgid "Event:"
+msgstr ""
+
+msgid "Veranstaltung erstellen und Shortcode einfügen."
+msgstr ""
+
+msgid "Shortcodes"
+msgstr ""
+
+msgid "Fügen Sie diesen Shortcode in den Inhalt (Editor) Ihrer Veranstaltung ein:"
+msgstr ""
+
+msgid "Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird."
+msgstr ""
+
+msgid "E-Mail Platzhalter"
+msgstr ""
+
+msgid "Diese Platzhalter können Sie in den Betreff oder Inhalt Ihrer E-Mail-Vorlagen einbauen:"
+msgstr ""
+
+msgid "Platzhalter"
+msgstr ""
+
+msgid "Beschreibung"
+msgstr ""
+
+msgid "Beispiel"
+msgstr ""
+
+msgid "Vorname des Teilnehmers"
+msgstr ""
+
+msgid "Hallo {vorname},"
+msgstr ""
+
+msgid "Nachname des Teilnehmers"
+msgstr ""
+
+msgid "Familie {nachname}"
+msgstr ""
+
+msgid "E-Mail des Teilnehmers"
+msgstr ""
+
+msgid "Kontakt: {email}"
+msgstr ""
+
+msgid "Name der Veranstaltung"
+msgstr ""
+
+msgid "Ihre Buchung für {event_name}"
+msgstr ""
+
+msgid "Termindaten"
+msgstr ""
+
+msgid "Am {event_datum} um {event_zeit}"
+msgstr ""
+
+msgid "Anschrift des Ortes"
+msgstr ""
+
+msgid "Ort: {event_adresse}"
+msgstr ""
+
+msgid "Anzahl gebuchter Plätze"
+msgstr ""
+
+msgid "Sie haben {event_plaetze} Plätze reserviert."
+msgstr ""
+
+msgid "Abmelde-Link (HTML)"
+msgstr ""
+
+msgid "Klicken Sie hier: {storno_link}"
+msgstr ""
+
+msgid "E-Mail-Vorlagen"
+msgstr ""
+
+msgid "E-Mail-Vorlage"
+msgstr ""
+
+msgid "Neue Vorlage"
+msgstr ""
+
+msgid "Neue E-Mail-Vorlage erstellen"
+msgstr ""
+
+msgid "E-Mail-Vorlage bearbeiten"
+msgstr ""
+
+msgid "Test-Mail wurde versendet!"
+msgstr ""
+
+msgid "Prüfe dein Postfach."
+msgstr ""
+
+msgid "Verfügbare Platzhalter:"
+msgstr ""
+
+msgid "Hinweis: Der <strong>Titel</strong> dieser Vorlage wird automatisch als <strong>E-Mail-Betreff</strong> verwendet."
+msgstr ""
+
+msgid "E-Mail testen"
+msgstr ""
+
+msgid "Bitte die Vorlage erst <strong>veröffentlichen</strong>, um eine Test-Mail zu senden."
+msgstr ""
+
+msgid "Sende diese Vorlage mit Beispieldaten an deine Adresse:"
+msgstr ""
+
+msgid "Test-Mail jetzt senden"
+msgstr ""
+
+msgid "Zugriff verweigert."
+msgstr ""
+
+msgid "Vorlage nicht gefunden."
+msgstr ""
+
+msgid "(Test-Nachname)"
+msgstr ""
+
+msgid "Demo-Veranstaltung am Sonntag"
+msgstr ""
+
+msgid "Musterstraße 1, 12345 Stadt"
+msgstr ""
+
+msgid "Anmeldung stornieren"
+msgstr ""
+
+msgid "Technischer Name (Slug)"
+msgstr ""
+
+msgid "Benachrichtigung"
+msgstr ""
+
+msgid "Systemfehler: E-Mail-Vorlage \"%s\" wurde nicht gefunden."
+msgstr ""
+
+msgid "[ {event_name} ] Anmeldung eingegangen"
+msgstr ""
+
+msgid "Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}!\n\nDeine Anmeldung ist eingegangen.\n\nWir prüfen aktuell die Anmeldungen und senden dir in Kürze eine separate Bestätigung zu.\n\nFalls du doch nicht teilnehmen kannst, nutze bitte diesen Link zur Stornierung:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""
+
+msgid "[ {event_name} ] Anmeldung bestätigt"
+msgstr ""
+
+msgid "Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit}</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""
+
+msgid "[ {event_name} ] Anmeldung abgelehnt"
+msgstr ""
+
+msgid "Hallo {vorname},\n\nleider können wir deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am {event_datum} nicht bestätigen.\n\nHoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""
+
+msgid "[ {event_name} ] Anmeldung auf der Warteliste"
+msgstr ""
+
+msgid "Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}! Aktuell sind alle Plätze belegt, aber du stehst auf der Warteliste.\n\nSobald ein Platz frei wird, informieren wir dich sofort per E-Mail.\n\nFalls du nicht mehr auf der Warteliste bleiben möchtest, kannst du dich hier wieder abmelden:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""
+
+msgid "[ {event_name} ] Neue Anmeldung"
+msgstr ""
+
+msgid "Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""

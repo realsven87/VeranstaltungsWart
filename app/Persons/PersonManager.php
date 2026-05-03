@@ -1,6 +1,5 @@
-<?php
-namespace VW\Persons;
-
+<?php 
+namespace VW\Persons; 
 use VW\Events\EventRepository;
 
 /**
@@ -40,7 +39,7 @@ class PersonManager {
      */
     public static function render_admin_page() {
         if (!current_user_can('manage_options')) return;
-
+        
         $repo = new EventRepository();
         
         // Edit-Logik: Falls eine ID übergeben wurde, Daten laden
@@ -49,7 +48,7 @@ class PersonManager {
         
         // Alle Personen für die Tabelle laden
         $persons     = $repo->get_all_persons();
-
+        
         include VW_PLUGIN_DIR . 'app/Persons/views/admin-page.php';
     }
 
@@ -59,12 +58,12 @@ class PersonManager {
      */
     public function handle_save_person() {
         if (!current_user_can('manage_options')) {
-            wp_die('Du hast nicht die erforderlichen Rechte.');
+            wp_die(esc_html__('Du hast nicht die erforderlichen Rechte.', 'veranstaltungswart'));
         }
-
+        
         // Nonce-Prüfung für die Sicherheit (funktioniert für $_POST und $_GET)
         check_admin_referer('vw_person_action', 'vw_person_nonce');
-
+        
         $repo = new EventRepository();
         
         // Daten aus $_REQUEST ziehen, um flexibel auf POST und GET zu reagieren
@@ -82,12 +81,6 @@ class PersonManager {
             exit;
         }
 
-        /**
-         * Status-Logik:
-         * 1. Wenn ein expliziter Status übertragen wurde (Dropdown oder Link), nimm diesen.
-         * 2. Wenn es eine neue Person ist ($id === 0) und im Backend angelegt wird: 'freigegeben'.
-         * 3. Ansonsten Standard: 'eingegangen'.
-         */
         if (isset($_REQUEST['trust_status'])) {
             $trust_status = sanitize_text_field($_REQUEST['trust_status']);
         } else {
@@ -103,7 +96,7 @@ class PersonManager {
 
         // In der Datenbank speichern oder aktualisieren
         $repo->update_person($id, $data);
-
+        
         // Zurück zur Liste mit Erfolgsmeldung
         wp_redirect(admin_url('admin.php?page=vw_persons&status=success'));
         exit;
@@ -114,15 +107,15 @@ class PersonManager {
      */
     public function handle_delete_person() {
         if (!current_user_can('manage_options')) {
-            wp_die('Du hast nicht die erforderlichen Rechte.');
+            wp_die(esc_html__('Du hast nicht die erforderlichen Rechte.', 'veranstaltungswart'));
         }
-
+        
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         check_admin_referer('vw_delete_person_nonce_' . $id);
-
+        
         $repo = new EventRepository();
         $repo->delete_person($id);
-
+        
         wp_redirect(admin_url('admin.php?page=vw_persons&status=deleted'));
         exit;
     }
@@ -132,23 +125,22 @@ class PersonManager {
      */
     public function handle_bulk_action() {
         if (!current_user_can('manage_options')) {
-            wp_die('Du hast nicht die erforderlichen Rechte.');
+            wp_die(esc_html__('Du hast nicht die erforderlichen Rechte.', 'veranstaltungswart'));
         }
-
+        
         check_admin_referer('vw_bulk_person_nonce', '_wpnonce_bulk');
-
+        
         $action = isset($_POST['bulk_action']) ? sanitize_text_field($_POST['bulk_action']) : '-1';
         $person_ids = isset($_POST['person_ids']) ? array_map('intval', $_POST['person_ids']) : [];
-
+        
         if ($action === '-1' || empty($person_ids)) {
-            // Nichts ausgewählt oder keine Aktion -> einfach zurück
             wp_redirect(admin_url('admin.php?page=vw_persons'));
             exit;
         }
 
         $repo = new EventRepository();
         $count = 0;
-
+        
         foreach ($person_ids as $id) {
             if ($action === 'delete') {
                 $repo->delete_person($id);
@@ -158,8 +150,7 @@ class PersonManager {
                 $count++;
             }
         }
-
-        // Zurückleiten mit Erfolgsmeldung und Anzahl der bearbeiteten Items
+        
         wp_redirect(admin_url('admin.php?page=vw_persons&status=bulk_success&count=' . $count));
         exit;
     }
@@ -169,7 +160,7 @@ class PersonManager {
      */
     public function register_privacy_exporter($exporters) {
         $exporters['vw_events'] = [
-            'exporter_friendly_name' => 'VeranstaltungsWart',
+            'exporter_friendly_name' => __('VeranstaltungsWart', 'veranstaltungswart'),
             'callback'               => [$this, 'privacy_export_data'],
         ];
         return $exporters;
@@ -180,7 +171,7 @@ class PersonManager {
      */
     public function register_privacy_eraser($erasers) {
         $erasers['vw_events'] = [
-            'eraser_friendly_name' => 'VeranstaltungsWart',
+            'eraser_friendly_name' => __('VeranstaltungsWart', 'veranstaltungswart'),
             'callback'             => [$this, 'privacy_erase_data'],
         ];
         return $erasers;
@@ -196,21 +187,20 @@ class PersonManager {
         $table_persons = $wpdb->prefix . 'vw_persons';
         $table_reg     = $wpdb->prefix . 'vw_registrations';
         
-        // Suche die Person
         $person = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_persons WHERE email = %s", $email_address));
         
         if ($person) {
             // 1. Stammdaten der Person
             $data = [
-                ['name' => 'Vorname', 'value' => $person->first_name],
-                ['name' => 'Nachname', 'value' => $person->last_name],
-                ['name' => 'E-Mail', 'value' => $person->email],
-                ['name' => 'Vertrauensstatus', 'value' => $person->trust_status],
+                ['name' => __('Vorname', 'veranstaltungswart'), 'value' => $person->first_name],
+                ['name' => __('Nachname', 'veranstaltungswart'), 'value' => $person->last_name],
+                ['name' => __('E-Mail', 'veranstaltungswart'), 'value' => $person->email],
+                ['name' => __('Vertrauensstatus', 'veranstaltungswart'), 'value' => $person->trust_status],
             ];
             
             $export_items[] = [
                 'group_id'    => 'vw_persons',
-                'group_label' => 'VeranstaltungsWart - Personendaten',
+                'group_label' => __('VeranstaltungsWart - Personendaten', 'veranstaltungswart'),
                 'item_id'     => "person-{$person->id}",
                 'data'        => $data,
             ];
@@ -220,16 +210,16 @@ class PersonManager {
             foreach ($registrations as $reg) {
                 $event_title = get_the_title($reg->event_post_id);
                 $reg_data = [
-                    ['name' => 'Veranstaltung', 'value' => $event_title ?: 'Gelöschte Veranstaltung'],
-                    ['name' => 'Registriert am', 'value' => $reg->registered_at],
-                    ['name' => 'Status', 'value' => $reg->status],
-                    ['name' => 'Begleitpersonen', 'value' => $reg->guests],
-                    ['name' => 'Gesamtplätze', 'value' => $reg->seats_total],
+                    ['name' => __('Veranstaltung', 'veranstaltungswart'), 'value' => $event_title ?: __('Gelöschte Veranstaltung', 'veranstaltungswart')],
+                    ['name' => __('Registriert am', 'veranstaltungswart'), 'value' => $reg->registered_at],
+                    ['name' => __('Status', 'veranstaltungswart'), 'value' => $reg->status],
+                    ['name' => __('Begleitpersonen', 'veranstaltungswart'), 'value' => $reg->guests],
+                    ['name' => __('Gesamtplätze', 'veranstaltungswart'), 'value' => $reg->seats_total],
                 ];
                 
                 $export_items[] = [
                     'group_id'    => 'vw_registrations',
-                    'group_label' => 'VeranstaltungsWart - Anmeldungen',
+                    'group_label' => __('VeranstaltungsWart - Anmeldungen', 'veranstaltungswart'),
                     'item_id'     => "reg-{$reg->id}",
                     'data'        => $reg_data,
                 ];
@@ -254,21 +244,17 @@ class PersonManager {
         $items_retained = false;
         $messages       = [];
         
-        // Suche die Person
         $person = $wpdb->get_row($wpdb->prepare("SELECT id FROM $table_persons WHERE email = %s", $email_address));
         
         if ($person) {
-            // 1. Zuerst alle Anmeldungen in den Events löschen
             $wpdb->delete($table_reg, ['person_id' => $person->id], ['%d']);
-            
-            // 2. Dann den Datensatz der Person selbst löschen
             $deleted = $wpdb->delete($table_persons, ['id' => $person->id], ['%d']);
             
             if ($deleted !== false) {
                 $items_removed = true;
             } else {
                 $items_retained = true;
-                $messages[] = 'Fehler beim Löschen der Personendaten im VeranstaltungsWart.';
+                $messages[] = __('Fehler beim Löschen der Personendaten im VeranstaltungsWart.', 'veranstaltungswart');
             }
         }
         
@@ -282,7 +268,6 @@ class PersonManager {
 
     /**
      * DSGVO: Automatischer "Staubsauger" (Cronjob)
-     * Löscht Personen, deren letzte Anmeldung länger als X Monate zurückliegt.
      */
     public function run_gdpr_cleanup() {
         global $wpdb;
@@ -290,17 +275,9 @@ class PersonManager {
         $table_persons = $wpdb->prefix . 'vw_persons';
         $table_reg     = $wpdb->prefix . 'vw_registrations';
         
-        // EINSTELLUNG: Wie viele Monate sollen Daten maximal aufgehoben werden?
         $months_to_keep = 12;
-        
-        // Berechne das Stichtag-Datum (z.B. heute minus 24 Monate)
         $cutoff_date = date('Y-m-d H:i:s', strtotime("-{$months_to_keep} months"));
         
-        /**
-         * Finde alle Personen, die:
-         * 1. Sich in der Vergangenheit angemeldet haben
-         * 2. Deren JÜNGSTE (letzte) Anmeldung älter ist als unser Stichtag
-         */
         $query = $wpdb->prepare("
             SELECT p.email, MAX(r.registered_at) as last_activity
             FROM $table_persons p
@@ -313,8 +290,6 @@ class PersonManager {
         
         if (!empty($old_persons)) {
             foreach ($old_persons as $person) {
-                // Wir nutzen einfach unsere DSGVO-Funktion von vorhin, 
-                // um die Person und all ihre Historien restlos zu löschen!
                 $this->privacy_erase_data($person->email);
             }
         }

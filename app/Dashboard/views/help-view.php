@@ -37,60 +37,61 @@
 </style>
 
 <div class="wrap">
-    <h1>Hilfe & Dokumentation</h1>
-    <p>Willkommen beim <strong>VeranstaltungsWart</strong>. Hier finden Sie alle Informationen zur Einrichtung Ihres Buchungssystems.</p>
+    <h1><?php esc_html_e('Hilfe & Dokumentation', 'veranstaltungswart'); ?></h1>
+    <p><?php echo wp_kses_post(__('Willkommen beim <strong>VeranstaltungsWart</strong>. Hier finden Sie alle Informationen zur Einrichtung Ihres Buchungssystems.', 'veranstaltungswart')); ?></p>
 
     <div class="vw-help-grid">
         
         <div class="vw-help-card">
-            <h2 style="margin-top:0;"><span class="dashicons dashicons-list-view"></span> Erste Schritte</h2>
+            <h2 style="margin-top:0;"><span class="dashicons dashicons-list-view"></span> <?php esc_html_e('Erste Schritte', 'veranstaltungswart'); ?></h2>
             <ol>
-                <li><strong>E-Mail-Vorlagen:</strong> Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):
+                <li><strong><?php esc_html_e('E-Mail-Vorlagen:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):', 'veranstaltungswart'); ?>
                     <ul style="list-style: disc; margin-left: 20px; margin-top: 5px; font-family: monospace;">
-                        <li>anmelde-eingang <span style="color:#646970; font-family: sans-serif;">(Eingangsbestätigung)</span></li>
-                        <li>admin-info-neu <span style="color:#646970; font-family: sans-serif;">(Admin-Benachrichtigung)</span></li>
-                        <li>warteliste-info <span style="color:#646970; font-family: sans-serif;">(Wartelisten-Platz)</span></li>
-                        <li>anmeldebestaetigung <span style="color:#646970; font-family: sans-serif;">(Freigabe)</span></li>
-                        <li>event-absage <span style="color:#646970; font-family: sans-serif;">(Storno/Ablehnung)</span></li>
+                        <li>eingangsbestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Eingangsbestätigung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>freigabe-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Admin-Benachrichtigung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>warteliste-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Wartelisten-Platz', 'veranstaltungswart'); ?>)</span></li>
+                        <li>anmeldebestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Freigabe', 'veranstaltungswart'); ?>)</span></li>
+                        <li>event-absage <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Storno/Ablehnung', 'veranstaltungswart'); ?>)</span></li>
                     </ul>
                 </li>
-                <li><strong>Orte:</strong> Unter "Veranstaltungsorte" Kapazitäten festlegen.</li>
-                <li><strong>Event:</strong> Veranstaltung erstellen und Shortcode einfügen.</li>
+                <li><strong><?php esc_html_e('Orte:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Unter "Veranstaltungsorte" Kapazitäten festlegen.', 'veranstaltungswart'); ?></li>
+                <li><strong><?php esc_html_e('Event:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Veranstaltung erstellen und Shortcode einfügen.', 'veranstaltungswart'); ?></li>
             </ol>
         </div>
 
         <div class="vw-help-card">
-            <h2 style="margin-top:0;"><span class="dashicons dashicons-shortcode"></span> Shortcodes</h2>
-            <p>Fügen Sie diesen Shortcode in den Inhalt (Editor) Ihrer Veranstaltung ein:</p>
+            <h2 style="margin-top:0;"><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('Shortcodes', 'veranstaltungswart'); ?></h2>
+            <p><?php esc_html_e('Fügen Sie diesen Shortcode in den Inhalt (Editor) Ihrer Veranstaltung ein:', 'veranstaltungswart'); ?></p>
             <code style="display: block; padding: 15px; background: #f0f0f1; font-size: 1.3em; text-align: center; border: 1px dashed #ccc; color: #2271b1;">[event_registration]</code>
-            <p><small><em>Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird.</em></small></p>
+            <p><small><em><?php esc_html_e('Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird.', 'veranstaltungswart'); ?></em></small></p>
         </div>
 
         <div class="vw-help-card vw-help-card-full">
-            <h2 style="margin-top:0;"><span class="dashicons dashicons-email-alt"></span> E-Mail Platzhalter</h2>
-            <p>Diese Platzhalter können Sie in den Betreff oder Inhalt Ihrer E-Mail-Vorlagen einbauen:</p>
+            <h2 style="margin-top:0;"><span class="dashicons dashicons-email-alt"></span> <?php esc_html_e('E-Mail Platzhalter', 'veranstaltungswart'); ?></h2>
+            <p><?php esc_html_e('Diese Platzhalter können Sie in den Betreff oder Inhalt Ihrer E-Mail-Vorlagen einbauen:', 'veranstaltungswart'); ?></p>
             
             <div class="vw-table-responsive">
                 <table class="widefat fixed striped" style="min-width: 600px;">
                     <thead>
                         <tr>
-                            <th style="width: 25%;">Platzhalter</th>
-                            <th style="width: 35%;">Beschreibung</th>
-                            <th style="width: 40%;">Beispiel</th>
+                            <th style="width: 25%;"><?php esc_html_e('Platzhalter', 'veranstaltungswart'); ?></th>
+                            <th style="width: 35%;"><?php esc_html_e('Beschreibung', 'veranstaltungswart'); ?></th>
+                            <th style="width: 40%;"><?php esc_html_e('Beispiel', 'veranstaltungswart'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td><code>{vorname}</code></td><td>Vorname des Teilnehmers</td><td>Hallo {vorname},</td></tr>
-                        <tr><td><code>{nachname}</code></td><td>Nachname des Teilnehmers</td><td>Familie {nachname}</td></tr>
-                        <tr><td><code>{email}</code></td><td>E-Mail des Teilnehmers</td><td>Kontakt: {email}</td></tr>
-                        <tr><td><code>{event_name}</code></td><td>Name der Veranstaltung</td><td>Ihre Buchung für {event_name}</td></tr>
-                        <tr><td><code>{event_datum}</code> / <code>{event_zeit}</code></td><td>Termindaten</td><td>Am {event_datum} um {event_zeit}</td></tr>
-                        <tr><td><code>{event_adresse}</code></td><td>Anschrift des Ortes</td><td>Ort: {event_adresse}</td></tr>
-                        <tr><td><code>{event_plaetze}</code></td><td>Anzahl gebuchter Plätze</td><td>Sie haben {event_plaetze} Plätze reserviert.</td></tr>
-                        <tr><td><code>{storno_link}</code></td><td>Abmelde-Link (HTML)</td><td>Klicken Sie hier: {storno_link}</td></tr>
+                        <tr><td><code>{vorname}</code></td><td><?php esc_html_e('Vorname des Teilnehmers', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Hallo {vorname},', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{nachname}</code></td><td><?php esc_html_e('Nachname des Teilnehmers', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Familie {nachname}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{email}</code></td><td><?php esc_html_e('E-Mail des Teilnehmers', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Kontakt: {email}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{event_name}</code></td><td><?php esc_html_e('Name der Veranstaltung', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Ihre Buchung für {event_name}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{event_datum}</code> / <code>{event_zeit}</code></td><td><?php esc_html_e('Termindaten', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Am {event_datum} um {event_zeit}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{event_adresse}</code></td><td><?php esc_html_e('Anschrift des Ortes', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Ort: {event_adresse}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{event_plaetze}</code></td><td><?php esc_html_e('Anzahl gebuchter Plätze', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Sie haben {event_plaetze} Plätze reserviert.', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicken Sie hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 </div>

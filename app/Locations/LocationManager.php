@@ -1,6 +1,5 @@
-<?php
-namespace VW\Locations;
-
+<?php 
+namespace VW\Locations; 
 use VW\Events\EventRepository;
 
 /**
@@ -23,13 +22,13 @@ class LocationManager {
      */
     public static function render_admin_page() {
         if (!current_user_can('edit_posts')) return;
-
+        
         $repo = new EventRepository();
         
         $edit_id       = isset($_GET['edit']) ? intval($_GET['edit']) : 0;
         $edit_location = $edit_id ? $repo->get_location($edit_id) : null;
         $locations     = $repo->get_all_locations();
-
+        
         include VW_PLUGIN_DIR . 'app/Locations/views/admin-page.php';
     }
 
@@ -37,7 +36,7 @@ class LocationManager {
      * Verarbeitet das Speichern/Update eines Ortes.
      */
     public function handle_save_location() {
-        if (!current_user_can('edit_posts')) wp_die('Keine ausreichenden Rechte.');
+        if (!current_user_can('edit_posts')) wp_die(esc_html__('Keine ausreichenden Rechte.', 'veranstaltungswart'));
         check_admin_referer('vw_location_action', 'vw_location_nonce');
         
         $repo = new EventRepository();
@@ -48,9 +47,8 @@ class LocationManager {
             'address'          => sanitize_textarea_field($_POST['address']),
             'default_capacity' => max(0, intval($_POST['default_capacity']))
         ];
-
+        
         $repo->save_location($id, $data);
-
         wp_redirect(admin_url('admin.php?page=vw_locations&status=success'));
         exit;
     }
@@ -59,13 +57,14 @@ class LocationManager {
      * Verarbeitet das Löschen eines Ortes.
      */
     public function handle_delete_location() {
-        if (!current_user_can('edit_posts')) wp_die('Keine ausreichenden Rechte.');
+        if (!current_user_can('edit_posts')) wp_die(esc_html__('Keine ausreichenden Rechte.', 'veranstaltungswart'));
+        
         $id = intval($_GET['id']);
         check_admin_referer('vw_delete_nonce_' . $id);
         
         global $wpdb;
         $wpdb->delete($wpdb->prefix . 'vw_locations', ['id' => $id], ['%d']);
-
+        
         wp_redirect(admin_url('admin.php?page=vw_locations&status=deleted'));
         exit;
     }
