@@ -618,7 +618,7 @@ msgstr ""
 msgid "Abmelde-Link (HTML)"
 msgstr ""
 
-msgid "Klicken Sie hier: {storno_link}"
+msgid "Klicke hier: {storno_link}"
 msgstr ""
 
 msgid "E-Mail-Vorlagen"

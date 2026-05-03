@@ -87,7 +87,7 @@
                         <tr><td><code>{event_datum}</code> / <code>{event_zeit}</code></td><td><?php esc_html_e('Termindaten', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Am {event_datum} um {event_zeit}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_adresse}</code></td><td><?php esc_html_e('Anschrift des Ortes', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Ort: {event_adresse}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_plaetze}</code></td><td><?php esc_html_e('Anzahl gebuchter Plätze', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Sie haben {event_plaetze} Plätze reserviert.', 'veranstaltungswart'); ?></td></tr>
-                        <tr><td><code>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicken Sie hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicke hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
                     </tbody>
                 </table>
             </div>
