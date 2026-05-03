@@ -226,10 +226,10 @@ msgstr ""
 msgid "Icon zeigt global vertrauenswürdige Personen."
 msgstr ""
 
-msgid "Anmeldung zur Warteliste"
+msgid "Anmeldung zu Warteliste"
 msgstr ""
 
-msgid "Anmeldung zur Veranstaltung"
+msgid "Anmeldung zu Veranstaltung"
 msgstr ""
 
 msgid "Diese Veranstaltung ist aktuell ausgebucht. Du kannst dich auf die Warteliste setzen lassen."

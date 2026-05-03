@@ -94,7 +94,7 @@ class RegistrationShortcode {
 
         <div class="vw-registration-container" style="background: #f9f9f9; padding: 25px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
             <h3 style="margin-top:0; margin-bottom: 20px;">
-                <?php echo $is_full ? esc_html__('Anmeldung zur Warteliste', 'veranstaltungswart') : esc_html__('Anmeldung zur Veranstaltung', 'veranstaltungswart'); ?>
+                <?php echo $is_full ? esc_html__('Anmeldung zu Warteliste', 'veranstaltungswart') : esc_html__('Anmeldung zu Veranstaltung', 'veranstaltungswart'); ?>
             </h3>
             
             <?php if ($is_full): ?>
