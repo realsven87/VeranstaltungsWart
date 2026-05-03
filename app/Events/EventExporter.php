@@ -15,10 +15,10 @@ class EventExporter {
     /**
      * Erzeugt eine CSV-Datei der Teilnehmer und sendet sie an den Browser.
      */
-    public function download_participants_csv($event_id) {
-        if (!current_user_can('manage_options')) {
-            wp_die('Zugriff verweigert.');
-        }
+public function download_participants_csv($event_id) {
+    if (!current_user_can('edit_posts')) {
+        wp_die(esc_html__('Zugriff verweigert.', 'veranstaltungswart'));
+    }
 
         $repo = new EventRepository();
         $event_title = get_the_title($event_id);

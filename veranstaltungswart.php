@@ -98,10 +98,13 @@ class VeranstaltungsWart {
     /**
      * Wird beim Deaktivieren ausgeführt.
      */
-    public function deactivate() {
-        // Zeichne die Landkarte ohne die Plugin-URLs neu
-        flush_rewrite_rules();
-    }
+public function deactivate() {
+    // Cronjob entfernen, damit er nicht leer weiterläuft
+    wp_clear_scheduled_hook('vw_daily_gdpr_cleanup');
+
+    // Zeichne die Landkarte ohne die Plugin-URLs neu
+    flush_rewrite_rules();
+}
 
     /**
      * Stellt sicher, dass Autoren und Admins die nötigen Rechte für das Plugin haben.

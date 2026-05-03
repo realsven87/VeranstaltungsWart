@@ -1,6 +1,11 @@
 <?php
 namespace VW\Core;
 
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Kernmodul: PSR-4 Autoloader
  * * Diese Klasse ist verantwortlich für das automatische Laden von Klassendateien
