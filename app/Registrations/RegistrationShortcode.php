@@ -137,7 +137,11 @@ class RegistrationShortcode {
                 <?php if ($allow_guests): ?>
                     <div class="vw-form-group" style="background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 4px;">
                         <label class="vw-label"><?php esc_html_e('Zusätzliche Begleitpersonen', 'veranstaltungswart'); ?></label>
-                        <input type="number" name="guests" value="0" min="0" max="10" class="vw-input" style="width: 80px; display: inline-block;">
+                        <select name="guests" class="vw-input" style="width: 80px; display: inline-block;">
+                            <?php for ($i = 0; $i <= 5; $i++): ?>
+                                <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php endfor; ?>
+                        </select>
                         <span style="font-size: 0.9em; color: #666; margin-left: 10px;"><?php esc_html_e('Personen, die du mitbringst.', 'veranstaltungswart'); ?></span>
                     </div>
                 <?php else: ?>
