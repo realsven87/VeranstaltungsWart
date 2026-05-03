@@ -1,5 +1,11 @@
 <?php 
-namespace VW\Locations; 
+namespace VW\Locations;
+
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use VW\Events\EventRepository;
 
 /**

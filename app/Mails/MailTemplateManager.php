@@ -1,6 +1,11 @@
 <?php 
 namespace VW\Mails;
 
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Modul: E-Mail-Vorlagen-Verwaltung
  * Erstellt einen Post-Type, um E-Mail-Texte im Backend editierbar zu machen.

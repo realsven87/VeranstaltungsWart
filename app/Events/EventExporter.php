@@ -1,6 +1,11 @@
 <?php
 namespace VW\Events;
 
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Modul: EventExporter
  * Verantwortlich für die Generierung und den Download von Teilnehmerlisten.

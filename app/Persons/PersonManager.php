@@ -1,5 +1,11 @@
 <?php 
-namespace VW\Persons; 
+namespace VW\Persons;
+
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use VW\Events\EventRepository;
 
 /**

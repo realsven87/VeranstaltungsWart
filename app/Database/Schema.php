@@ -1,6 +1,11 @@
 <?php
 namespace VW\Database;
 
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Modul: Datenbank-Schema
  * Diese Klasse definiert die Tabellenstruktur des Plugins. 

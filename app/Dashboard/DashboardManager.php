@@ -1,5 +1,11 @@
 <?php 
-namespace VW\Dashboard; 
+namespace VW\Dashboard;
+
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use VW\Locations\LocationManager; 
 use VW\Persons\PersonManager;
 

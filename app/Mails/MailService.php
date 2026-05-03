@@ -1,6 +1,11 @@
 <?php
 namespace VW\Mails;
 
+// Sicherheitscheck: Verhindert direkten Aufruf
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 use VW\Events\EventRepository;
 
 /**
