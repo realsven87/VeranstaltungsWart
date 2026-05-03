@@ -53,6 +53,7 @@ class EventMetaBox {
         $current_capacity = get_post_meta($post->ID, 'vw_max_capacity', true);
         $current_date     = get_post_meta($post->ID, 'vw_event_date', true);
         $allow_guests     = get_post_meta($post->ID, 'vw_allow_guests', true);
+        $allow_message    = get_post_meta($post->ID, 'vw_allow_message', true);
         
         // Standardmäßig Gäste erlauben
         if ($allow_guests === '') $allow_guests = '1'; 
@@ -99,11 +100,20 @@ class EventMetaBox {
                         class="widefat" min="0">
                 <span class="description" style="display: block; margin-top: 4px;"><?php esc_html_e('0 = Unbegrenzt', 'veranstaltungswart'); ?></span>
             </p>
+
+
             <hr>
             <p>
                 <label>
                     <input type="checkbox" name="vw_allow_guests" value="1" <?php checked($allow_guests, '1'); ?>>
                     <strong><?php esc_html_e('Begleitpersonen erlauben', 'veranstaltungswart'); ?></strong>
+                </label>
+            </p>
+            <!-- NEU: Checkbox für das Freitextfeld -->
+            <p style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
+                    <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
                 </label>
             </p>
         </div>
@@ -146,6 +156,7 @@ class EventMetaBox {
         update_post_meta($post_id, 'vw_location_id', (int) $_POST['vw_location_id']);
         update_post_meta($post_id, 'vw_max_capacity', $new_capacity);
         update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
+        update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
         
         // Wartelisten-Automatik
         if ($new_capacity > 0 && $new_capacity > $old_capacity) {

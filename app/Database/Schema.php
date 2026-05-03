@@ -75,6 +75,7 @@ class Schema {
             event_post_id bigint(20) NOT NULL,
             person_id mediumint(9) NOT NULL,
             guest_count int(11) DEFAULT 0,
+            message text DEFAULT '',
             status varchar(20) DEFAULT 'eingegangen',
             seats_total int(11) DEFAULT 1,
             registered_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,

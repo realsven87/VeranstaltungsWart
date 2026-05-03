@@ -40,7 +40,8 @@ class RegistrationHandler {
         $email      = sanitize_email($_POST['email']);
         $first_name = sanitize_text_field($_POST['first_name']);
         $last_name  = sanitize_text_field($_POST['last_name']);
-        $guests     = max(0, intval($_POST['guests'])); 
+        $guests     = max(0, intval($_POST['guests']));
+        $message    = isset($_POST['message']) ? sanitize_textarea_field($_POST['message']) : '';
         $total_seats = $guests + 1;
 
         $redirect_base = get_permalink($event_id) ?: home_url();
@@ -80,7 +81,8 @@ class RegistrationHandler {
         $reg_id = $repo->create_registration([
             'event_post_id' => $event_id, 
             'person_id'     => $p_id, 
-            'guest_count'   => $guests, 
+            'guest_count'   => $guests,
+            'message'       => $message,
             'seats_total'   => $total_seats, 
             'status'        => $final_status,
             'registered_at' => current_time('mysql')

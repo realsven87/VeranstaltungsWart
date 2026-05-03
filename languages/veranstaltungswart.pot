@@ -510,7 +510,7 @@ msgstr ""
 msgid "Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar."
 msgstr ""
 
-msgid "Willkommen beim <strong>VeranstaltungsWart</strong>. Hier finden Sie alle Informationen zur Einrichtung Ihres Buchungssystems."
+msgid "Willkommen beim <strong>VeranstaltungsWart</strong>. Hier findest du alle Informationen zur Einrichtung deines Buchungssystems."
 msgstr ""
 
 msgid "Erste Schritte"
@@ -552,10 +552,10 @@ msgstr ""
 msgid "Shortcodes"
 msgstr ""
 
-msgid "Fügen diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein:"
+msgid "Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein, um das Anmeldeformular anzuzeigen:"
 msgstr ""
 
-msgid "Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird."
+msgid "Hinweis: Der Shortcode erkennt automatisch, für welche Veranstaltung er aufgerufen wird."
 msgstr ""
 
 msgid "E-Mail Platzhalter"
@@ -715,4 +715,16 @@ msgid "[ {event_name} ] Neue Anmeldung"
 msgstr ""
 
 msgid "Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart"
+msgstr ""
+
+msgid "Freitextfeld (Anmerkungen) anzeigen"
+msgstr ""
+
+msgid "Anmerkungen / Nachricht (optional)"
+msgstr ""
+
+msgid "Allergien, Platzwünsche oder Besonderheiten..."
+msgstr ""
+
+msgid "Anmerkung"
 msgstr ""

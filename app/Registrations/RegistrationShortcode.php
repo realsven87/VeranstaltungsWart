@@ -28,6 +28,7 @@ class RegistrationShortcode {
         $repo = new EventRepository();
         $stats = $repo->get_registration_stats($event_id);
         $allow_guests = get_post_meta($event_id, 'vw_allow_guests', true) !== '0';
+        $allow_message = get_post_meta($event_id, 'vw_allow_message', true) === '1';
         
         // Berechnung der Restplätze (darf nicht negativ sein)
         $available_seats = max(0, $stats['max'] - $stats['current']);
@@ -141,6 +142,13 @@ class RegistrationShortcode {
                     </div>
                 <?php else: ?>
                     <input type="hidden" name="guests" value="0">
+                <?php endif; ?>
+
+                <?php if ($allow_message): ?>
+                    <div class="vw-form-group" style="background: #fff; padding: 15px; border: 1px solid #eee; border-radius: 4px; margin-bottom: 20px;">
+                        <label class="vw-label"><?php esc_html_e('Anmerkungen / Nachricht (optional)', 'veranstaltungswart'); ?></label>
+                        <textarea name="message" class="vw-input" rows="3" placeholder="<?php esc_attr_e('Allergien, Platzwünsche oder Besonderheiten...', 'veranstaltungswart'); ?>"></textarea>
+                    </div>
                 <?php endif; ?>
                 
                 <div class="vw-gdpr-box">

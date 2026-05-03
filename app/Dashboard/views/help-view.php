@@ -38,7 +38,7 @@
 
 <div class="wrap">
     <h1><?php esc_html_e('Hilfe & Dokumentation', 'veranstaltungswart'); ?></h1>
-    <p><?php echo wp_kses_post(__('Willkommen beim <strong>VeranstaltungsWart</strong>. Hier finden Sie alle Informationen zur Einrichtung Ihres Buchungssystems.', 'veranstaltungswart')); ?></p>
+    <p><?php echo wp_kses_post(__('Willkommen beim <strong>VeranstaltungsWart</strong>. Hier findest du alle Informationen zur Einrichtung deines Buchungssystems.', 'veranstaltungswart')); ?></p>
 
     <div class="vw-help-grid">
         
@@ -61,9 +61,9 @@
 
         <div class="vw-help-card">
             <h2 style="margin-top:0;"><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('Shortcodes', 'veranstaltungswart'); ?></h2>
-            <p><?php esc_html_e('Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein:', 'veranstaltungswart'); ?></p>
+            <p><?php esc_html_e('Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein, um das Anmeldeformular anzuzeigen:', 'veranstaltungswart'); ?></p>
             <code style="display: block; padding: 15px; background: #f0f0f1; font-size: 1.3em; text-align: center; border: 1px dashed #ccc; color: #2271b1;">[event_registration]</code>
-            <p><small><em><?php esc_html_e('Hinweis: Der Shortcode erkennt automatisch, für welches Event er aufgerufen wird.', 'veranstaltungswart'); ?></em></small></p>
+            <p><small><em><?php esc_html_e('Hinweis: Der Shortcode erkennt automatisch, für welche Veranstaltung er aufgerufen wird.', 'veranstaltungswart'); ?></em></small></p>
         </div>
 
         <div class="vw-help-card vw-help-card-full">
