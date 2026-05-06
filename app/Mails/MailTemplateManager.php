@@ -252,6 +252,11 @@ class MailTemplateManager {
                 'content' => __("Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}! Aktuell sind alle Plätze belegt, aber du stehst auf der Warteliste.\n\nSobald ein Platz frei wird, informieren wir dich sofort per E-Mail.\n\nFalls du nicht mehr auf der Warteliste bleiben möchtest, kannst du dich hier wieder abmelden:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
+                'slug'    => 'storno-bestaetigung',
+                'title'   => __('[ {event_name} ] Stornierung bestätigt', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\ndeine Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} wurde erfolgreich storniert.\n\nSchade, dass du nicht dabei sein kannst. Hoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+            ],
+            [
                 'slug'    => 'freigabe-info',
                 'title'   => __('[ {event_name} ] Neue Anmeldung', 'veranstaltungswart'),
                 'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')

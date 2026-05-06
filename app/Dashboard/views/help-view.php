@@ -52,6 +52,7 @@
                         <li>warteliste-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Wartelisten-Platz', 'veranstaltungswart'); ?>)</span></li>
                         <li>anmeldebestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Freigabe', 'veranstaltungswart'); ?>)</span></li>
                         <li>event-absage <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Storno/Ablehnung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>storno-bestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Stornierungsbestätigung', 'veranstaltungswart'); ?>)</span></li>
                     </ul>
                 </li>
                 <li><strong><?php esc_html_e('Orte:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Unter "Veranstaltungsorte" Kapazitäten festlegen.', 'veranstaltungswart'); ?></li>

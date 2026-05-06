@@ -142,6 +142,9 @@ class RegistrationHandler {
             // Status auf storniert setzen
             $repo->update_registration_status($reg_id, 'storniert');
             
+            // NEU: E-Mail-Bestätigung über die erfolgreiche Stornierung senden
+            MailService::send_registration_mail($reg_id, 'storno-bestaetigung');
+            
             // Wichtig: Jetzt Plätze für die Warteliste frei machen!
             $max_cap = (int) get_post_meta($reg->event_post_id, 'vw_max_capacity', true);
             if ($max_cap > 0) {
