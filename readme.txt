@@ -1,6 +1,6 @@
 === VeranstaltungsWart ===
 Contributors: realsven87
-Tags: events, event management, bookings, registration, email templates
+Tags: events, event management, bookings, registration
 Requires at least: 5.8
 Tested up to: 6.5
 Stable tag: 2.0.0
@@ -8,22 +8,22 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit.
+Der Veranstaltungs-Manager für Vereine und Organisationen. Erstelle und verwalte Veranstaltungen, Anmeldungen und E-Mail-Vorlagen mit Leichtigkeit.
 
 == Description ==
 
-Der **VeranstaltungsWart** ist ein leichtgewichtiges Plugin zur Verwaltung von Veranstaltungen, Teilnehmern und Veranstaltungsorten. Es wurde speziell für die Anforderungen von Vereinen, politischen Organisationen und kleinen bis mittleren Veranstaltern entwickelt.
+Der **VeranstaltungsWart** ist ein leichtgewichtiges Plugin zur Verwaltung von Veranstaltungen, Anmeldungen und Veranstaltungsorten. Es wurde für die Anforderungen von Vereinen, Organisationen und kleinen bis mittleren Veranstaltern entwickelt.
 
-Verabschiede dich von unübersichtlichen Excel-Listen! Mit dem VeranstaltungsWart integrierst du in Sekunden ein DSGVO-konformes Anmeldeformular auf deiner Website und verwaltest deine Gäste übersichtlich im WordPress-Backend.
+Verabschiede dich von unübersichtlichen Excel-Listen! Mit dem VeranstaltungsWart integrierst du in Sekunden ein Anmeldeformular auf deiner Website und verwaltest deine Gäste übersichtlich im WordPress-Backend.
 
 ### Hauptfunktionen:
 *   **Veranstaltungs-Verwaltung:** Erstelle Veranstaltungen mit Datum, Uhrzeit, Ort und maximaler Teilnehmerzahl.
 *   **Wartelisten-Automatik:** Wenn eine Veranstaltung ausgebucht ist, landen neue Anmeldungen automatisch auf der Warteliste. Wird ein Platz frei (z.B. durch Storno), rücken Personen automatisch nach.
 *   **Personen & Vertrauensstatus:** Verwalte alle deine Kontakte an einem Ort. Personen können als "freigegeben" markiert werden, sodass ihre zukünftigen Anmeldungen automatisch bestätigt werden.
-*   **Orts-Verwaltung:** Speichere Veranstaltungsorte inklusive Adressen und Standard-Kapazitäten ab, um sie bei neuen Veranstaltungen mit einem Klick auszuwählen.
+*   **Veranstaltungsorts-Verwaltung:** Speichere Veranstaltungsorte inklusive Adressen und Standard-Kapazitäten ab, um sie bei neuen Veranstaltungen mit einem Klick auszuwählen.
 *   **Individuelle E-Mail-Vorlagen:** Erstelle eigene Bestätigungs-, Absage- oder Info-Nachrichten direkt im WordPress-Editor. Nutze praktische Platzhalter wie `{vorname}`, `{event_name}` oder `{storno_link}`.
 *   **Teilnehmer-Export:** Exportiere die Anmeldungen einer Veranstaltung jederzeit als saubere CSV-Datei (perfekt für Einlasskontrollen).
-*   **DSGVO-konform:** Das Plugin integriert sich nahtlos in die WordPress-eigenen Werkzeuge zum Exportieren und Löschen von personenbezogenen Daten. Ein automatischer Cronjob löscht zudem veraltete Daten nach 12 Monaten.
+*   **Datenschutzfreundlich:** Das Plugin integriert sich nahtlos in die WordPress-eigenen Werkzeuge zum Exportieren und Löschen von personenbezogenen Daten. Ein automatischer Cronjob löscht zudem veraltete Daten nach 12 Monaten.
 
 == Installation ==
 
@@ -48,7 +48,7 @@ Ja! Gehe im Dashboard auf "E-Mail-Vorlagen", öffne eine Vorlage und klicke in d
 = Was hat es mit dem "Vertrauensstatus" auf sich? =
 Du kannst in der Personenverwaltung entscheiden, ob Anmeldungen einer Person sofort automatisch auf "Bestätigt" gesetzt werden sollen ("Freigegeben") oder ob sie manuell von dir freigeschaltet werden müssen ("Prüfung erforderlich").
 
-= Sind die Daten DSGVO-konform gesichert? =
+= Sind die Daten Datenschutzfreundlich gesichert? =
 Ja. Der VeranstaltungsWart unterstützt die nativen WordPress-Tools zum Export und zur Löschung von personenbezogenen Daten. Zudem fragt das Anmeldeformular aktiv die Zustimmung zur Datenschutzerklärung ab.
 
 == Screenshots ==
@@ -60,9 +60,3 @@ Ja. Der VeranstaltungsWart unterstützt die nativen WordPress-Tools zum Export u
 5. Das Anmeldeformular für Teilnehmer auf der Website.
 
 == Changelog ==
-
-= 2.0.0 =
-* Initialer Release für das WordPress Plugin-Verzeichnis.
-* Vollständige Internationalisierung (i18n) hinzugefügt.
-* Code-Security (Nonces, Escaping, Sanitization) nach WordPress.org-Standards implementiert.
-* DSGVO-Routinen optimiert.
