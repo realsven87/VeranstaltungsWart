@@ -42,6 +42,8 @@ class EventPostType
         add_filter('manage_edit-vw_event_sortable_columns', [$this, 'set_sortable_event_columns']);
         add_action('pre_get_posts', [$this, 'event_column_orderby']);
         add_action('restrict_manage_posts', [$this, 'add_author_filter']);
+
+        add_action('admin_post_vw_cancel_event', [$this, 'handle_cancel_event']);
     }
 
     /**
@@ -179,7 +181,7 @@ class EventPostType
             if ($status === 'bestätigt') {
                 MailService::send_registration_mail($reg_id, 'anmeldebestaetigung');
             } elseif ($status === 'abgelehnt') {
-                MailService::send_registration_mail($reg_id, 'event-absage');
+                MailService::send_registration_mail($reg_id, 'ablehnung-info');
                 // Nachrücker-Logik triggern
                 if ($event_id) {
                     $max_cap = (int) get_post_meta($event_id, 'vw_max_capacity', true);
@@ -262,6 +264,56 @@ class EventPostType
         exit;
     }
 
+/**
+     * Handler: Komplette Veranstaltung absagen und alle Teilnehmer benachrichtigen
+     */
+    public function handle_cancel_event()
+    {
+        if (!current_user_can('edit_posts')) {
+            wp_die('Keine Berechtigung.');
+        }
+
+        $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
+        check_admin_referer('vw_cancel_event_' . $event_id);
+
+        if ($event_id) {
+            $repo = new EventRepository();
+            // Holt alle Personen, die für dieses Event registriert sind
+            $registrations = $repo->get_registrations_for_event($event_id);
+
+            if (!empty($registrations)) {
+                foreach ($registrations as $reg) {
+                    $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
+                    
+                    // Nur Personen anschreiben, die nicht ohnehin schon storniert oder abgelehnt haben
+                    if ($rid && $reg->status !== 'storniert' && $reg->status !== 'abgelehnt') {
+                        // 1. Absage-Mail senden
+                        MailService::send_registration_mail($rid, 'event-abgesagt');
+                        // 2. Status auf abgelehnt setzen, damit die Plätze freigegeben werden
+                        $repo->update_registration_status($rid, 'abgelehnt');
+                    }
+                }
+            }
+
+            // 3. In den Event-Metadaten hinterlegen, dass das Event abgesagt wurde
+            update_post_meta($event_id, 'vw_event_canceled', '1');
+
+            // Zurück zur Event-Bearbeitungsseite mit Erfolgsmeldung
+            $referer = wp_get_referer();
+            if ($referer) {
+                $redirect_url = remove_query_arg(['cancellation_success'], $referer);
+            } else {
+                $redirect_url = admin_url('post.php?post=' . $event_id . '&action=edit');
+            }
+
+            wp_safe_redirect(add_query_arg('cancellation_success', '1', $redirect_url));
+            exit;
+        }
+
+        wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
+        exit;
+    }
+
     public function set_sortable_event_columns($columns)
     {
         $columns['event_dt'] = 'event_dt';
@@ -298,6 +350,11 @@ class EventPostType
         if (isset($_GET['status_updated']) && $_GET['status_updated'] == '1') {
             echo '<div class="notice notice-success is-dismissible">
                     <p>' . esc_html__('Aktion erfolgreich durchgeführt und Warteliste aktualisiert.', 'veranstaltungswart') . '</p>
+                  </div>';
+        }
+        if (isset($_GET['cancellation_success']) && $_GET['cancellation_success'] == '1') {
+            echo '<div class="notice notice-success is-dismissible">
+                    <p>Die Veranstaltung wurde erfolgreich abgesagt. Alle aktiven Teilnehmer und Wartelisten-Personen wurden per E-Mail benachrichtigt.</p>
                   </div>';
         }
     }

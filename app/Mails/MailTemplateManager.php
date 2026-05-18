@@ -257,6 +257,11 @@ class MailTemplateManager {
                 'content' => __("Hallo {vorname},\n\ndeine Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} wurde erfolgreich storniert.\n\nSchade, dass du nicht dabei sein kannst. Hoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
+                'slug'    => 'event-abgesagt',
+                'title'   => __('[Absage] {event_name} fällt leider aus', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\nleider müssen wir dir mitteilen, dass die Veranstaltung <strong>{event_name}</strong> am {event_datum} aus organisatorischen Gründen abgesagt werden musste.\n\nWir bitten um dein Verständnis.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+            ],
+            [
                 'slug'    => 'freigabe-info',
                 'title'   => __('[ {event_name} ] Neue Anmeldung', 'veranstaltungswart'),
                 'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')

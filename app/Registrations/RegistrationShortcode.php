@@ -25,6 +25,14 @@ class RegistrationShortcode {
         // Sicherstellen, dass wir in einem Event-CPT sind
         if (get_post_type($event_id) !== 'vw_event') return '';
 
+        // --- NEU: Sperre für abgesagte Veranstaltungen ---
+        if (get_post_meta($event_id, 'vw_event_canceled', true) === '1') {
+            return '<div style="padding:15px; background:#f8d7da; color:#721c24; border-left: 5px solid #dc3545; border-radius:4px; margin-bottom:20px; font-weight: bold;">
+                        Diese Veranstaltung wurde abgesagt. Eine Anmeldung ist nicht mehr möglich.
+                    </div>';
+        }
+        // -------------------------------------------------
+
         $repo = new EventRepository();
         $stats = $repo->get_registration_stats($event_id);
         $allow_guests = get_post_meta($event_id, 'vw_allow_guests', true) !== '0';
@@ -120,12 +128,12 @@ class RegistrationShortcode {
                     <div class="vw-form-group">
                         <label class="vw-label"><?php esc_html_e('Vorname *', 'veranstaltungswart'); ?></label>
                         <input type="text" name="first_name" required class="vw-input"
-                                pattern="[A-Za-z \s-]+" title="<?php esc_attr_e('Nur Buchstaben erlaubt', 'veranstaltungswart'); ?>">
+                            pattern="[A-Za-zÄäÖöÜüß\s-]+" title="<?php esc_attr_e('Nur Buchstaben erlaubt', 'veranstaltungswart'); ?>">
                     </div>
                     <div class="vw-form-group">
                         <label class="vw-label"><?php esc_html_e('Nachname *', 'veranstaltungswart'); ?></label>
                         <input type="text" name="last_name" required class="vw-input"
-                                pattern="[A-Za-z \s-]+" title="<?php esc_attr_e('Nur Buchstaben erlaubt', 'veranstaltungswart'); ?>">
+                                pattern="[A-Za-zÄäÖöÜüß\s-]+" title="<?php esc_attr_e('Nur Buchstaben erlaubt', 'veranstaltungswart'); ?>">
                     </div>
                 </div>
 

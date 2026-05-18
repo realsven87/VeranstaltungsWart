@@ -133,6 +133,26 @@ class EventMetaBox {
                 }
             });
         </script>
+        <?php 
+            $is_canceled = get_post_meta($post->ID, 'vw_event_canceled', true) === '1';
+            if (!$is_canceled): 
+                $cancel_url = admin_url('admin-post.php?action=vw_cancel_event&event_id=' . $post->ID);
+                $cancel_url = wp_nonce_url($cancel_url, 'vw_cancel_event_' . $post->ID);
+            ?>
+                <p style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #ccd0d4; text-align: center;">
+                    <a href="<?php echo esc_url($cancel_url); ?>" 
+                       class="button" 
+                       style="background: #d63638; color: white; border-color: #d63638; text-shadow: none; width: 100%; font-weight: bold; padding: 5px 0; height: auto; display: flex; justify-content: center; align-items: center;"
+                       onclick="return confirm('Möchtest du diese Veranstaltung wirklich absagen? Alle angemeldeten Personen und Wartelisten-Teilnehmer werden unwiderruflich per E-Mail informiert!');">
+                        <span class="dashicons dashicons-calendar-cropper" style="vertical-align: middle; margin-top: -3px; margin-right: 5px;"></span> 
+                        Veranstaltung absagen
+                    </a>
+                </p>
+            <?php else: ?>
+                <p style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #ccd0d4; text-align: center; color: #d63638; font-weight: bold; font-size: 14px;">
+                    ⚠️ Diese Veranstaltung wurde abgesagt!
+                </p>
+            <?php endif; ?>
         <?php
     }
 

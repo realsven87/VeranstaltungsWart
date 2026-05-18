@@ -46,13 +46,14 @@
             <h2 style="margin-top:0;"><span class="dashicons dashicons-list-view"></span> <?php esc_html_e('Erste Schritte', 'veranstaltungswart'); ?></h2>
             <ol>
                 <li><strong><?php esc_html_e('E-Mail-Vorlagen:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):', 'veranstaltungswart'); ?>
-                    <ul style="list-style: disc; margin-left: 20px; margin-top: 5px; font-family: monospace;">
-                        <li>eingangsbestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Eingangsbestätigung', 'veranstaltungswart'); ?>)</span></li>
-                        <li>freigabe-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Admin-Benachrichtigung', 'veranstaltungswart'); ?>)</span></li>
-                        <li>warteliste-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Wartelisten-Platz', 'veranstaltungswart'); ?>)</span></li>
-                        <li>anmeldebestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Freigabe', 'veranstaltungswart'); ?>)</span></li>
-                        <li>event-absage <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Storno/Ablehnung', 'veranstaltungswart'); ?>)</span></li>
-                        <li>storno-bestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Stornierungsbestätigung', 'veranstaltungswart'); ?>)</span></li>
+<ul style="list-style: disc; margin-left: 20px; margin-top: 5px; font-family: monospace;">
+                        <li>eingangsbestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Eingangsbestätigung für den Teilnehmer', 'veranstaltungswart'); ?>)</span></li>
+                        <li>freigabe-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Benachrichtigung an den Admin über neue Anmeldung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>warteliste-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Info an Teilnehmer: Platz auf der Warteliste', 'veranstaltungswart'); ?>)</span></li>
+                        <li>anmeldebestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Finale Zusage für die Veranstaltung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>ablehnung-info <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Manuelle Ablehnung durch den Admin', 'veranstaltungswart'); ?>)</span></li>
+                        <li>storno-bestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Bestätigung an Teilnehmer nach eigener Stornierung', 'veranstaltungswart'); ?>)</span></li>
+                        <li>event-abgesagt <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Info an alle Teilnehmer, wenn Veranstaltung komplett abgesagt wird', 'veranstaltungswart'); ?>)</span></li>
                     </ul>
                 </li>
                 <li><strong><?php esc_html_e('Orte:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Unter "Veranstaltungsorte" Kapazitäten festlegen.', 'veranstaltungswart'); ?></li>
