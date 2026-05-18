@@ -189,18 +189,10 @@ class EventPostType
                 }
             }
             
-            // REDIRECT-LOGIK
-            $referer = wp_get_referer();
-            if ($referer) {
-                $redirect_url = remove_query_arg(['status_updated'], $referer);
-            } elseif ($event_id) {
-                $redirect_url = admin_url('post.php?post=' . $event_id . '&action=edit');
-            } else {
-                $redirect_url = admin_url('admin.php?page=vw_dashboard');
-            }
-            wp_safe_redirect(add_query_arg('status_updated', '1', $redirect_url));
-            exit;
+            // Saubere Weiterleitung
+            $this->redirect_back($event_id, 'status_updated');
         }
+        
         wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
         exit;
     }
@@ -248,23 +240,15 @@ class EventPostType
                 $repo->process_waitlist_move_up($event_id, $max_cap);
             }
             
-            // REDIRECT-LOGIK
-            $referer = wp_get_referer();
-            if ($referer) {
-                $redirect_url = remove_query_arg(['status_updated'], $referer);
-            } elseif ($event_id) {
-                $redirect_url = admin_url('post.php?post=' . $event_id . '&action=edit');
-            } else {
-                $redirect_url = admin_url('admin.php?page=vw_dashboard');
-            }
-            wp_safe_redirect(add_query_arg('status_updated', '1', $redirect_url));
-            exit;
+            // Saubere Weiterleitung
+            $this->redirect_back($event_id, 'status_updated');
         }
+        
         wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
         exit;
     }
 
-/**
+    /**
      * Handler: Komplette Veranstaltung absagen und alle Teilnehmer benachrichtigen
      */
     public function handle_cancel_event()
@@ -298,16 +282,8 @@ class EventPostType
             // 3. In den Event-Metadaten hinterlegen, dass das Event abgesagt wurde
             update_post_meta($event_id, 'vw_event_canceled', '1');
 
-            // Zurück zur Event-Bearbeitungsseite mit Erfolgsmeldung
-            $referer = wp_get_referer();
-            if ($referer) {
-                $redirect_url = remove_query_arg(['cancellation_success'], $referer);
-            } else {
-                $redirect_url = admin_url('post.php?post=' . $event_id . '&action=edit');
-            }
-
-            wp_safe_redirect(add_query_arg('cancellation_success', '1', $redirect_url));
-            exit;
+            // Saubere Weiterleitung
+            $this->redirect_back($event_id, 'cancellation_success');
         }
 
         wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
@@ -357,5 +333,21 @@ class EventPostType
                     <p>Die Veranstaltung wurde erfolgreich abgesagt. Alle aktiven Teilnehmer und Wartelisten-Personen wurden per E-Mail benachrichtigt.</p>
                   </div>';
         }
+    }
+
+    /**
+     * Hilfsmethode für saubere Weiterleitungen nach Aktionen (DRY-Prinzip)
+     */
+    private function redirect_back($event_id, $success_arg = 'status_updated') {
+        $referer = wp_get_referer();
+        if ($referer) {
+            $redirect_url = remove_query_arg([$success_arg], $referer);
+        } elseif ($event_id) {
+            $redirect_url = admin_url('post.php?post=' . $event_id . '&action=edit');
+        } else {
+            $redirect_url = admin_url('admin.php?page=vw_dashboard');
+        }
+        wp_safe_redirect(add_query_arg($success_arg, '1', $redirect_url));
+        exit;
     }
 }
