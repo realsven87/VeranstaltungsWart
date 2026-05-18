@@ -20,8 +20,9 @@
             $type = 'error';
         } elseif ($_GET['status'] === 'bulk_success') {
             $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
-            // sprintf für dynamische Werte bei Übersetzungen verwenden
             $msg = sprintf(_n('%s Person wurde erfolgreich aktualisiert/gelöscht.', '%s Personen wurden erfolgreich aktualisiert/gelöscht.', $count, 'veranstaltungswart'), $count);
+        } elseif ($_GET['status'] === 'approved') {
+            $msg = __('Person wurde erfolgreich freigegeben.', 'veranstaltungswart');
         }
     ?>
         <div class="notice notice-<?php echo esc_attr($type); ?> is-dismissible">
@@ -84,7 +85,6 @@
 
     <div class="vw-person-container">
         
-        <!-- LINKE SPALTE: FORMULAR -->
         <div class="vw-person-left">
             <div class="card" style="padding: 15px; margin: 0;">
                 <h2 style="margin-top:0; font-size: 1.3em;">
@@ -133,7 +133,6 @@
             </div>
         </div>
 
-        <!-- RECHTE SPALTE: TABELLE -->
         <div class="vw-person-right">
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" onsubmit="return confirmBulkAction();">
                 <input type="hidden" name="action" value="vw_bulk_person_action">
@@ -185,6 +184,14 @@
                                     </td>
                                     <td style="text-align: right;">
                                         <div class="vw-person-actions">
+                                            
+                                            <?php if ($person->trust_status !== 'freigegeben'): ?>
+                                                <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=vw_approve_person&id=' . $person->id), 'vw_approve_person_nonce_' . $person->id)); ?>" 
+                                                   class="button button-small" style="color: #46b450; border-color: #46b450;" title="<?php esc_attr_e('Jetzt freigeben', 'veranstaltungswart'); ?>">
+                                                    <span class="dashicons dashicons-yes" style="vertical-align: middle;"></span>
+                                                </a>
+                                            <?php endif; ?>
+                                            
                                             <a href="<?php echo esc_url(admin_url('admin.php?page=vw_persons&edit=' . $person->id)); ?>" 
                                                 class="button button-small" title="<?php esc_attr_e('Bearbeiten', 'veranstaltungswart'); ?>">
                                                 <span class="dashicons dashicons-edit" style="vertical-align: middle;"></span>

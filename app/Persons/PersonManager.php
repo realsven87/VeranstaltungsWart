@@ -37,6 +37,8 @@ class PersonManager {
         if (!wp_next_scheduled('vw_daily_gdpr_cleanup')) {
             wp_schedule_event(time(), 'daily', 'vw_daily_gdpr_cleanup');
         }
+
+        add_action('admin_post_vw_approve_person', [$this, 'handle_approve_person']);
     }
 
     /**
@@ -123,6 +125,33 @@ class PersonManager {
         $repo->delete_person($id);
         
         wp_redirect(admin_url('admin.php?page=vw_persons&status=deleted'));
+        exit;
+    }
+
+    /**
+     * Setzt den Status einer einzelnen Person per 1-Klick auf "freigegeben".
+     */
+    public function handle_approve_person() {
+        if (!current_user_can('edit_posts')) {
+            wp_die(__('Keine Berechtigung.', 'veranstaltungswart'));
+        }
+
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        check_admin_referer('vw_approve_person_nonce_' . $id);
+
+        if ($id) {
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'vw_persons';
+            $wpdb->update(
+                $table_name,
+                ['trust_status' => 'freigegeben'],
+                ['id' => $id],
+                ['%s'],
+                ['%d']
+            );
+        }
+
+        wp_safe_redirect(admin_url('admin.php?page=vw_persons&status=approved'));
         exit;
     }
 
