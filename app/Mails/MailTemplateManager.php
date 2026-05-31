@@ -258,7 +258,7 @@ class MailTemplateManager {
             ],
             [
                 'slug'    => 'event-abgesagt',
-                'title'   => __('[Absage] {event_name} fällt leider aus', 'veranstaltungswart'),
+                'title'   => __('[ {event_name} ] Veranstaltung abgesagt', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\nleider müssen wir dir mitteilen, dass die Veranstaltung <strong>{event_name}</strong> am {event_datum} aus organisatorischen Gründen abgesagt werden musste.\n\nWir bitten um dein Verständnis.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
@@ -266,6 +266,11 @@ class MailTemplateManager {
                 'title'   => __('[ {event_name} ] Neue Anmeldung', 'veranstaltungswart'),
                 'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ]
+            [
+                'slug'    => 'event-erinnerung',
+                'title'   => __('[ {event_name} ] Erinnerung an Veranstaltung', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\nDatum: {event_datum}\nOrt: {event_ort}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+            ],
         ];
 
         foreach ($defaults as $tpl) {

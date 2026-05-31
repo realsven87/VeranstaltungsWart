@@ -54,9 +54,10 @@ class EventMetaBox {
         $current_date     = get_post_meta($post->ID, 'vw_event_date', true);
         $allow_guests     = get_post_meta($post->ID, 'vw_allow_guests', true);
         $allow_message    = get_post_meta($post->ID, 'vw_allow_message', true);
-        
-        // Standardmäßig Gäste erlauben
+        $send_reminders   = get_post_meta($post->ID, 'vw_send_reminders', true);
+
         if ($allow_guests === '') $allow_guests = '1'; 
+        if ($send_reminders === '') $send_reminders = '1';
         
         wp_nonce_field('vw_event_settings_nonce', 'vw_event_settings_nonce_field');
         ?>
@@ -114,6 +115,19 @@ class EventMetaBox {
                 <label>
                     <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
                     <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
+                </label>
+            </p>
+            <p style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
+                    <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
+                </label>
+            </p>
+            
+            <p style="margin-top: 10px;">
+                <label>
+                    <input type="checkbox" name="vw_send_reminders" value="1" <?php checked($send_reminders, '1'); ?>>
+                    <strong><?php esc_html_e('Erinnerungen versenden (7 & 3 Tage vor Veranstaltung)', 'veranstaltungswart'); ?></strong>
                 </label>
             </p>
         </div>
@@ -177,7 +191,10 @@ class EventMetaBox {
         update_post_meta($post_id, 'vw_max_capacity', $new_capacity);
         update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
         update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
-        
+        update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
+        update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
+        update_post_meta($post_id, 'vw_send_reminders', isset($_POST['vw_send_reminders']) ? '1' : '0');
+
         // Wartelisten-Automatik
         if ($new_capacity > 0 && $new_capacity > $old_capacity) {
             $repo->process_waitlist_move_up($post_id, $new_capacity);

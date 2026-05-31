@@ -44,6 +44,11 @@ class EventPostType
         add_action('restrict_manage_posts', [$this, 'add_author_filter']);
 
         add_action('admin_post_vw_cancel_event', [$this, 'handle_cancel_event']);
+        // Automatischer Cronjob für Erinnerungs-Mails (1x täglich)
+        add_action('vw_daily_event_reminders', [$this, 'send_event_reminders']);
+        if (!wp_next_scheduled('vw_daily_event_reminders')) {
+            wp_schedule_event(time(), 'daily', 'vw_daily_event_reminders');
+        }
     }
 
     /**
@@ -349,5 +354,57 @@ class EventPostType
         }
         wp_safe_redirect(add_query_arg($success_arg, '1', $redirect_url));
         exit;
+    }
+
+    /**
+     * Cronjob: Versendet Erinnerungen 7 und 3 Tage vor dem Event.
+     */
+    public function send_event_reminders() {
+        $events = get_posts([
+            'post_type' => 'vw_event',
+            'posts_per_page' => -1,
+            'post_status' => 'publish'
+        ]);
+        
+        $today = new \DateTime('today');
+        $repo = new EventRepository();
+
+        foreach ($events as $event) {
+            // Wenn Event abgesagt wurde -> überspringen
+            if (get_post_meta($event->ID, 'vw_event_canceled', true) === '1') continue;
+            
+            // Wenn Opt-Out (Häkchen entfernt) -> überspringen
+            $send_reminders = get_post_meta($event->ID, 'vw_send_reminders', true);
+            if ($send_reminders === '0') continue; // Opt-Out check. Wenn leer oder '1', weitermachen.
+
+            $event_date_raw = get_post_meta($event->ID, 'vw_event_date', true);
+            if (!$event_date_raw) continue;
+
+            try {
+                $event_date = new \DateTime($event_date_raw);
+                $event_date->setTime(0, 0, 0); // Nur das reine Datum vergleichen
+                
+                // Tage bis zum Event berechnen
+                $interval = $today->diff($event_date);
+                $days_diff = (int)$interval->format('%R%a'); // Gibt z.B. +7 oder -2 zurück
+
+                // Befinden wir uns exakt 7 oder 3 Tage vor dem Event?
+                if ($days_diff === 7 || $days_diff === 3) {
+                    $registrations = $repo->get_registrations_for_event($event->ID);
+                    if (!empty($registrations)) {
+                        foreach ($registrations as $reg) {
+                            $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
+                            
+                            // E-Mail NUR an Teilnehmer versenden, die auch wirklich bestätigt sind!
+                            if ($rid && $reg->status === 'bestätigt') {
+                                MailService::send_registration_mail($rid, 'event-erinnerung');
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
     }
 }
