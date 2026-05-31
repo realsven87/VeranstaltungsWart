@@ -110,20 +110,12 @@ class EventMetaBox {
                     <strong><?php esc_html_e('Begleitpersonen erlauben', 'veranstaltungswart'); ?></strong>
                 </label>
             </p>
-            <!-- NEU: Checkbox für das Freitextfeld -->
             <p style="margin-top: 10px;">
                 <label>
                     <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
                     <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
                 </label>
-            </p>
-            <p style="margin-top: 10px;">
-                <label>
-                    <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
-                    <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
-                </label>
-            </p>
-            
+            </p>         
             <p style="margin-top: 10px;">
                 <label>
                     <input type="checkbox" name="vw_send_reminders" value="1" <?php checked($send_reminders, '1'); ?>>

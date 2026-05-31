@@ -265,7 +265,7 @@ class MailTemplateManager {
                 'slug'    => 'freigabe-info',
                 'title'   => __('[ {event_name} ] Neue Anmeldung', 'veranstaltungswart'),
                 'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
-            ]
+            ],
             [
                 'slug'    => 'event-erinnerung',
                 'title'   => __('[ {event_name} ] Erinnerung an Veranstaltung', 'veranstaltungswart'),
