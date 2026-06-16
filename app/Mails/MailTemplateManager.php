@@ -220,7 +220,7 @@ class MailTemplateManager {
         $body = wpautop(do_shortcode($body));
         
         return [
-            'subject' => $subject,
+            'subject' => wp_specialchars_decode($subject, ENT_QUOTES),
             'body'    => $body
         ];
     }
@@ -269,7 +269,7 @@ class MailTemplateManager {
             [
                 'slug'    => 'event-erinnerung',
                 'title'   => __('[ {event_name} ] Erinnerung an Veranstaltung', 'veranstaltungswart'),
-                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\nDatum: {event_datum}\nOrt: {event_ort}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\nDatum: {event_datum}\nOrt: {event_adresse}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
         ];
 
