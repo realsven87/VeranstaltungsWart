@@ -24,7 +24,12 @@ class RegistrationHandler {
         // Stornierung (via E-Mail Link)
         add_action('admin_post_nopriv_vw_cancel_registration', [$this, 'handle_cancellation']);
         add_action('admin_post_vw_cancel_registration', [$this, 'handle_cancellation']);
-    }
+        
+        // ICS Kalender-Download
+        add_action('admin_post_nopriv_vw_download_ics', [$this, 'handle_ics_download']);
+        add_action('admin_post_vw_download_ics', [$this, 'handle_ics_download']);
+    
+        }
 
     /**
      * Verarbeitet das Absenden des Anmeldeformulars.
@@ -156,5 +161,91 @@ class RegistrationHandler {
         }
 
         wp_die('Dieser Stornierungs-Link ist nicht korrekt oder wurde bereits verwendet.');
+    }
+
+    /**
+     * Verarbeitet den Klick auf den Kalender-Link und generiert die .ics Datei on the fly
+     */
+    public function handle_ics_download() {
+        $reg_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        $hash   = isset($_GET['hash']) ? sanitize_text_field($_GET['hash']) : '';
+        
+        if (!$reg_id || !$hash) {
+            wp_die('Ungültiger Aufruf.');
+        }
+
+        global $wpdb;
+        $repo = new EventRepository();
+
+        $reg = $wpdb->get_row($wpdb->prepare("
+            SELECT r.id, p.email, r.event_post_id, post.post_title, post.post_content
+            FROM {$wpdb->prefix}vw_registrations r
+            JOIN {$wpdb->prefix}vw_persons p ON r.person_id = p.id
+            JOIN {$wpdb->posts} post ON r.event_post_id = post.ID
+            WHERE r.id = %d", $reg_id
+        ));
+
+        // Sicherheit: Hash prüfen
+        if ($reg && wp_hash($reg->email . $reg->id) === $hash) {
+            
+            $event_date_raw = get_post_meta($reg->event_post_id, 'vw_event_date', true);
+            if (!$event_date_raw) wp_die('Kein Datum für diese Veranstaltung hinterlegt.');
+
+            // Adresse ermitteln
+            $loc_id = get_post_meta($reg->event_post_id, 'vw_location_id', true);
+            $adresse = '';
+            if ($loc_id) {
+                $location = $repo->get_location($loc_id);
+                // Kombiniere Location-Name und Adresse
+                $adresse = $location ? $location->name . ', ' . $location->address : '';
+            }
+
+            try {
+                // WordPress Zeitzone nutzen
+                $tz = wp_timezone();
+                $start_dt = new \DateTime($event_date_raw, $tz);
+                
+                // Wir gehen pauschal von 2 Stunden Dauer aus
+                $end_dt = clone $start_dt;
+                $end_dt->modify('+2 hours');
+                
+                // ICS-Dateien erwarten das Datum zwingend in UTC (Z)
+                $start_dt->setTimezone(new \DateTimeZone('UTC'));
+                $end_dt->setTimezone(new \DateTimeZone('UTC'));
+            
+                $ics_content = "BEGIN:VCALENDAR\r\n" .
+                               "VERSION:2.0\r\n" .
+                               "PRODID:-//VeranstaltungsWart//DE\r\n" .
+                               "CALSCALE:GREGORIAN\r\n" .
+                               "BEGIN:VEVENT\r\n" .
+                               "DTSTAMP:" . gmdate('Ymd\THis\Z') . "\r\n" .
+                               "DTSTART:" . $start_dt->format('Ymd\THis\Z') . "\r\n" .
+                               "DTEND:" . $end_dt->format('Ymd\THis\Z') . "\r\n" .
+                               "SUMMARY:" . $this->escape_ics($reg->post_title) . "\r\n" .
+                               "LOCATION:" . $this->escape_ics($adresse) . "\r\n" .
+                               "DESCRIPTION:" . $this->escape_ics($desc) . "\r\n" .
+                               "UID:vw-event-" . $reg->event_post_id . "@" . $_SERVER['HTTP_HOST'] . "\r\n" .
+                               "END:VEVENT\r\n" .
+                               "END:VCALENDAR";
+
+                // Sende die Datei an den Browser (Erzwingt den Download)
+                header('Content-Type: text/calendar; charset=utf-8');
+                header('Content-Disposition: attachment; filename="termin.ics"');
+                echo $ics_content;
+                exit;
+
+            } catch (\Exception $e) {
+                wp_die('Fehler beim Generieren der Kalenderdatei.');
+            }
+        }
+
+        wp_die('Dieser Link ist nicht korrekt oder abgelaufen.');
+    }
+
+    /**
+     * Hilfsfunktion: Bereitet Text für die .ics Datei vor (Escaping von Sonderzeichen)
+     */
+    private function escape_ics($text) {
+        return str_replace(["\\", ",", ";", "\n", "\r"], ["\\\\", "\,", "\;", "\\n", ""], $text);
     }
 }

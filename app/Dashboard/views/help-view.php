@@ -65,7 +65,7 @@
         <div class="vw-help-card">
             <h2 style="margin-top:0;"><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('Shortcodes', 'veranstaltungswart'); ?></h2>
             <p><?php esc_html_e('Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein, um das Anmeldeformular anzuzeigen:', 'veranstaltungswart'); ?></p>
-            <code style="displa block; padding: 15px; background: #f0f0f1; font-size: 1.3em; text-align: center; border: 1px dashed #ccc; color: #2271b1;">[event_registration]</code>
+            <code style="display: block; padding: 15px; background: #f0f0f1; font-size: 1.3em; text-align: center; border: 1px dashed #ccc; color: #2271b1;">[event_registration]</code>
             <p><small><em><?php esc_html_e('Hinweis: Der Shortcode erkennt automatisch, für welche Veranstaltung er aufgerufen wird.', 'veranstaltungswart'); ?></em></small></p>
         </div>
 
@@ -90,7 +90,8 @@
                         <tr><td><code>{event_datum}</code> / <code>{event_zeit}</code></td><td><?php esc_html_e('Termindaten', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Am {event_datum} um {event_zeit}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_adresse}</code></td><td><?php esc_html_e('Anschrift des Ortes', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Ort: {event_adresse}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_plaetze}</code></td><td><?php esc_html_e('Anzahl gebuchter Plätze', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Du hast {event_plaetze} Plätze reserviert.', 'veranstaltungswart'); ?></td></tr>
-                        <tr><td><coy:de>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicke hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{kalender_link}</code></td><td><?php esc_html_e('Download-Link für Kalender (.ics)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Termin eintragen: {kalender_link}', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicke hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
                     </tbody>
                 </table>
             </div>

@@ -183,9 +183,6 @@ class EventMetaBox {
         update_post_meta($post_id, 'vw_max_capacity', $new_capacity);
         update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
         update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
-        update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
-        update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
-        update_post_meta($post_id, 'vw_send_reminders', isset($_POST['vw_send_reminders']) ? '1' : '0');
 
         // Wartelisten-Automatik
         if ($new_capacity > 0 && $new_capacity > $old_capacity) {

@@ -63,6 +63,10 @@ class MailService {
         $cancel_url = admin_url('admin-post.php?action=vw_cancel_registration&id=' . $reg->id . '&hash=' . $hash);
         $cancel_link = '<a href="' . esc_url($cancel_url) . '" style="color: #dc3545; font-weight: bold;">Anmeldung hier stornieren</a>';
 
+        // NEU: Kalender-Download-Link generieren
+        $ics_url = admin_url('admin-post.php?action=vw_download_ics&id=' . $reg->id . '&hash=' . $hash);
+        $ics_link = '<a href="' . esc_url($ics_url) . '" style="color: #0073aa; font-weight: bold;">Termin in den Kalender eintragen</a>';
+
         // 4. Platzhalter-Mapping
         // Diese Schlüssel (links) können im Template-Text als {vorname} etc. verwendet werden
         $replacements = [
@@ -75,6 +79,7 @@ class MailService {
             'event_adresse'     => $adresse,
             'event_plaetze'     => $reg->seats_total,
             'storno_link' => $cancel_link,
+            'kalender_link' => $ics_link,
             'admin_link'  => admin_url('admin.php?page=vw_dashboard')
         ];
 
