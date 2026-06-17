@@ -240,7 +240,7 @@ class MailTemplateManager {
             [
                 'slug'    => 'anmeldebestaetigung',
                 'title'   => __('[ {event_name} ] Anmeldung bestätigt', 'veranstaltungswart'),
-                'content' => __("Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit}</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\n{kalender_link}\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'content' => __("Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit} Uhr</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\n{kalender_link}\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'ablehnung-info',
@@ -270,7 +270,7 @@ class MailTemplateManager {
             [
                 'slug'    => 'event-erinnerung',
                 'title'   => __('[ {event_name} ] Erinnerung an Veranstaltung', 'veranstaltungswart'),
-                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\nDatum: {event_datum}\nOrt: {event_adresse}\n\n{kalender_link}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\Wann?: {event_datum}, {event_zeit} Uhr\nWo?: {event_adresse}\n\n{kalender_link}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
         ];
 
