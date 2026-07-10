@@ -55,6 +55,7 @@
                         <li>storno-bestaetigung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Bestätigung an Teilnehmer nach eigener Stornierung', 'veranstaltungswart'); ?>)</span></li>
                         <li>event-abgesagt <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Info an alle Teilnehmer, wenn Veranstaltung komplett abgesagt wird', 'veranstaltungswart'); ?>)</span></li>
                         <li>event-erinnerung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Automatische Erinnerung an Teilnehmer (7 und 3 Tage vor der Veranstaltung)', 'veranstaltungswart'); ?>)</span></li>
+                        <li>event-aenderung <span style="color:#646970; font-family: sans-serif;">(<?php esc_html_e('Benachrichtigung über Änderungen der Veranstaltung', 'veranstaltungswart'); ?>)</span></li>
                     </ul>
                 </li>
                 <li><strong><?php esc_html_e('Orte:', 'veranstaltungswart'); ?></strong> <?php esc_html_e('Unter "Veranstaltungsorte" Kapazitäten festlegen.', 'veranstaltungswart'); ?></li>
@@ -90,6 +91,7 @@
                         <tr><td><code>{event_datum}</code> / <code>{event_zeit}</code></td><td><?php esc_html_e('Termindaten', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Am {event_datum} um {event_zeit}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_adresse}</code></td><td><?php esc_html_e('Anschrift des Ortes', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Ort: {event_adresse}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{event_plaetze}</code></td><td><?php esc_html_e('Anzahl gebuchter Plätze', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Du hast {event_plaetze} Plätze reserviert.', 'veranstaltungswart'); ?></td></tr>
+                        <tr><td><code>{event_hinweis}</code></td><td><?php esc_html_e('Individueller Hinweis aus dem Event', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Hinweis: {event_hinweis}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{kalender_link}</code></td><td><?php esc_html_e('Download-Link für Kalender (.ics)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Termin eintragen: {kalender_link}', 'veranstaltungswart'); ?></td></tr>
                         <tr><td><code>{storno_link}</code></td><td><?php esc_html_e('Abmelde-Link (HTML)', 'veranstaltungswart'); ?></td><td><?php esc_html_e('Klicke hier: {storno_link}', 'veranstaltungswart'); ?></td></tr>
                     </tbody>

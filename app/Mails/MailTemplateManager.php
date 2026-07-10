@@ -78,7 +78,7 @@ class MailTemplateManager {
             </p>
 
             <p><strong><?php esc_html_e('Verfügbare Platzhalter:', 'veranstaltungswart'); ?></strong><br>
-            <code>{vorname}</code>, <code>{nachname}</code>, <code>{email}</code>, <code>{event_name}</code>, <code>{event_datum}</code>, <code>{event_zeit}</code>, <code>{event_adresse}</code>, <code>{event_plaetze}</code>, <code>{storno_link}</code>, <code>{kalender_link}</code></p>
+            <code>{vorname}</code>, <code>{nachname}</code>, <code>{email}</code>, <code>{event_name}</code>, <code>{event_datum}</code>, <code>{event_zeit}</code>, <code>{event_adresse}</code>, <code>{event_plaetze}</code>, <code>{event_hinweis}</code>, <code>{storno_link}</code>, <code>{kalender_link}</code>, <code>{teilnehmer_nachricht}</code></p>
         </div>
         <?php
     }
@@ -141,9 +141,11 @@ class MailTemplateManager {
             'event_zeit'   => '18:00',
             'event_adresse'=> __('Musterstraße 1, 12345 Stadt', 'veranstaltungswart'),
             'event_plaetze'=> '2',
+            'event_hinweis'=> __('Der Einlass erfolgt über den Seiteneingang.', 'veranstaltungswart'),
+            'teilnehmer_nachricht' => __('Wir sind Vegetarier und benötigen einen Parkplatz.', 'veranstaltungswart'),
             'storno_link'  => '<a href="#">' . esc_html__('Anmeldung stornieren', 'veranstaltungswart') . '</a>',
-            'kalender_link'=> '<a href="#">' . esc_html__('Termin in den Kalender eintragen', 'veranstaltungswart') . '</a>'
-        ];
+            'kalender_link'=> '<a href="#">' . esc_html__('Termin in den Kalender eintragen', 'veranstaltungswart') . '</a>',
+            ];
         
         // Mail rendern
         $mail = self::get_rendered_mail($post->post_name, $test_data);
@@ -234,43 +236,48 @@ class MailTemplateManager {
         $defaults = [
             [
                 'slug'    => 'eingangsbestaetigung',
-                'title'   => __('[ {event_name} ] Anmeldung eingegangen', 'veranstaltungswart'),
+                'title'   => __('[{event_name}] Anmeldung eingegangen', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}!\n\nDeine Anmeldung ist eingegangen.\n\nWir prüfen aktuell die Anmeldungen und senden dir in Kürze eine separate Bestätigung zu.\n\nFalls du doch nicht teilnehmen kannst, nutze bitte diesen Link zur Stornierung:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'anmeldebestaetigung',
-                'title'   => __('[ {event_name} ] Anmeldung bestätigt', 'veranstaltungswart'),
-                'content' => __("Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit} Uhr</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\n{kalender_link}\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'title'   => __('[{event_name}] Anmeldung bestätigt', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit} Uhr</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\nHinweis:\n{event_hinweis}\n\n{kalender_link}\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'ablehnung-info',
-                'title'   => __('[ {event_name} ] Anmeldung abgelehnt', 'veranstaltungswart'),
+                'title'   => __('[{event_name}] Anmeldung abgelehnt', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\nleider können wir deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am {event_datum} nicht bestätigen.\n\nHoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'warteliste-info',
-                'title'   => __('[ {event_name} ] Anmeldung auf der Warteliste', 'veranstaltungswart'),
+                'title'   => __('[{event_name}] Anmeldung auf der Warteliste', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}! Aktuell sind alle Plätze belegt, aber du stehst auf der Warteliste.\n\nSobald ein Platz frei wird, informieren wir dich sofort per E-Mail.\n\nFalls du nicht mehr auf der Warteliste bleiben möchtest, kannst du dich hier wieder abmelden:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'storno-bestaetigung',
-                'title'   => __('[ {event_name} ] Stornierung bestätigt', 'veranstaltungswart'),
+                'title'   => __('[{event_name}] Stornierung bestätigt', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\ndeine Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} wurde erfolgreich storniert.\n\nSchade, dass du nicht dabei sein kannst. Hoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'event-abgesagt',
-                'title'   => __('[ {event_name} ] Veranstaltung abgesagt', 'veranstaltungswart'),
+                'title'   => __('[{event_name}] Veranstaltung abgesagt', 'veranstaltungswart'),
                 'content' => __("Hallo {vorname},\n\nleider müssen wir dir mitteilen, dass die Veranstaltung <strong>{event_name}</strong> am {event_datum} aus organisatorischen Gründen abgesagt werden musste.\n\nWir bitten um dein Verständnis.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'freigabe-info',
-                'title'   => __('[ {event_name} ] Neue Anmeldung', 'veranstaltungswart'),
-                'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'title'   => __('[{event_name}] Neue Anmeldung', 'veranstaltungswart'),
+                'content' => __("Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nAnmerkung des Teilnehmers:\n{teilnehmer_nachricht}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
             [
                 'slug'    => 'event-erinnerung',
-                'title'   => __('[ {event_name} ] Erinnerung an Veranstaltung', 'veranstaltungswart'),
-                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n\Wann?: {event_datum}, {event_zeit} Uhr\nWo?: {event_adresse}\n\n{kalender_link}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+                'title'   => __('[{event_name}] Erinnerung an Veranstaltung', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\nwir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\nWann?: {event_datum}, {event_zeit} Uhr\nWo?: {event_adresse}\n\nHinweis:\n{event_hinweis}\n\n{kalender_link}\n\nWir freuen uns auf dich!\n\nSolltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
+            ],
+            [
+                'slug'    => 'event-aenderung',
+                'title'   => __('[{event_name}] Änderung an Veranstaltung', 'veranstaltungswart'),
+                'content' => __("Hallo {vorname},\n\nes gibt eine Änderung bei der Veranstaltung <strong>{event_name}</strong>.\n\nDie aktuellen Veranstaltungsdaten sind:\nDatum: {event_datum}, {event_zeit} Uhr\nOrt: {event_adresse}\n\nHinweis:\n{event_hinweis}\n\n{kalender_link}\n\nSolltest du an der Veranstaltung nicht mehr teilnehmen können, nutze bitte diesen Link zur Stornierung:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart", 'veranstaltungswart')
             ],
         ];
 

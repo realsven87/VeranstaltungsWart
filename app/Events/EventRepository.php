@@ -130,9 +130,14 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
 
     /* --- PERSONEN --- */
 
-    public function get_all_persons()
+    public function get_all_persons($orderby = 'last_name', $order = 'ASC')
     {
-        return $this->wpdb->get_results("SELECT * FROM {$this->table_persons} ORDER BY last_name ASC");
+    // Whitelist für erlaubte Spalten zur Sicherheit (SQL-Injection-Schutz)
+    $allowed = ['last_name', 'first_name', 'email', 'trust_status'];
+    $orderby = in_array($orderby, $allowed) ? $orderby : 'last_name';
+    $order   = ($order === 'DESC') ? 'DESC' : 'ASC';
+
+    return $this->wpdb->get_results("SELECT * FROM {$this->table_persons} ORDER BY $orderby $order");
     }
 
     public function get_person($id)

@@ -127,6 +127,13 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                         <a href="mailto:<?php echo esc_attr($reg->email); ?>" style="text-decoration: none;"><?php echo esc_html($reg->email); ?></a>
                                     </div>
                                 </div>
+                                
+                                <?php if (!empty($reg->message)): ?>
+                                    <div style="margin-top: 10px; font-size: 12px; color: #50575e; background: #f6f7f7; padding: 8px 10px; border-left: 3px solid #2271b1; border-radius: 0 3px 3px 0;">
+                                        <span class="dashicons dashicons-testimonial" style="font-size: 14px; width: 14px; height: 14px; vertical-align: text-bottom; margin-right: 4px; color: #8c8f94;"></span>
+                                        <span style="font-style: italic;"><?php echo nl2br(esc_html($reg->message)); ?></span>
+                                    </div>
+                                <?php endif; ?>
                             </td>
                             <td style="text-align: center;">
                                 <span class="badge" style="background: #eee; padding: 2px 8px; border-radius: 10px; font-weight: 600; border: 1px solid #ddd;">
