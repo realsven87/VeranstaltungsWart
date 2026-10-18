@@ -78,6 +78,8 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.51.1
           npx playwright install --with-deps chromium
           node tests/editor.cjs
+          wp theme install kadence --activate --path=/tmp/vw-wordpress
+          node tests/editor.cjs
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.3'
         with:
