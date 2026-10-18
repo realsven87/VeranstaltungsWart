@@ -73,18 +73,31 @@ const fs = require('node:fs');
     }
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.locator('.vw-registration-container').first().screenshot({ path: '/tmp/vw-screenshots/screenshot-3.png' });
+    // Reproduce theme overrides and optimization plugins wrapping thumbnails in picture.
+    await page.addStyleTag({ content: '.entry-content article { display:flex; flex-direction:column-reverse; min-height:1000px; } .entry-content .vw-card-image img { position:absolute; height:100%; object-fit:cover; }' });
+    await page.locator('.vw-card-image > img').evaluateAll(images => images.forEach(img => {
+        const picture = document.createElement('picture');
+        img.replaceWith(picture);
+        picture.appendChild(img);
+    }));
     // Portrait, landscape and square images must retain their intrinsic ratio in both blocks.
     for (const width of [1280, 390]) {
         await page.setViewportSize({ width, height: 900 });
         for (const [w, h] of [[400, 800], [800, 400], [600, 600]]) {
-            const dimensions = await page.locator('.vw-card-image > img').evaluateAll(async (images, size) => {
+            const dimensions = await page.locator('.vw-card-image img').evaluateAll(async (images, size) => {
                 return Promise.all(images.map(async img => {
                     img.removeAttribute('srcset');
                     img.removeAttribute('sizes');
                     img.src = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${size.w}" height="${size.h}"><rect width="100%" height="100%" fill="blue"/></svg>`);
                     await img.decode();
                     const rect = img.getBoundingClientRect();
-                    const wrapper = img.parentElement.getBoundingClientRect();
+                    const wrapper = img.closest('.vw-card-image').getBoundingClientRect();
+                    const card = img.closest('.vw-event-card').getBoundingClientRect();
+                    const body = img.closest('.vw-event-card').querySelector('.vw-card-body').getBoundingClientRect();
+                    const desktop = window.innerWidth > 700;
+                    const expectedHeight = desktop ? Math.max(wrapper.height, body.height) : wrapper.height + body.height;
+                    if (Math.abs(card.height - expectedHeight - 2) > 3) throw new Error('Card has artificial empty height');
+                    if (desktop ? (wrapper.right > body.x + 2 || Math.abs(wrapper.y - body.y) > 2) : (wrapper.bottom > body.y + 2)) throw new Error('Theme moved image out of position');
                     return { width: rect.width, height: rect.height, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight, clipped: rect.bottom > wrapper.bottom + 1 || rect.right > wrapper.right + 1 };
                 }));
             }, { w, h });

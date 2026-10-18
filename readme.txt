@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 6.5
 Tested up to: 7.1
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ No. It provides export/erasure tools and a privacy-consent field. Site owners mu
 WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata and documentation updates. Back up before updating; do not uninstall.
 
 == Changelog ==
+
+= 3.1.1 =
+* Isolate card geometry from theme layout rules; support picture-wrapped images without cropping.
+* Test desktop and mobile cards with both the default theme and Kadence.
 
 = 3.1.0 =
 * Prepare metadata and documentation for WordPress.org submission.

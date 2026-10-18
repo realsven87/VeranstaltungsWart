@@ -99,12 +99,12 @@ jobs:
           mkdir -p /tmp/vw-package/veranstaltungswart
           cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-package/veranstaltungswart/
           cd /tmp/vw-package
-          zip -qr veranstaltungswart-3.1.0.zip veranstaltungswart
+          zip -qr veranstaltungswart-3.1.1.zip veranstaltungswart
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.3'
         with:
-          name: veranstaltungswart-3.1.0
-          path: /tmp/vw-package/veranstaltungswart-3.1.0.zip
+          name: veranstaltungswart-3.1.1
+          path: /tmp/vw-package/veranstaltungswart-3.1.1.zip
       - name: Upload failure logs
         if: failure()
         uses: actions/upload-artifact@v4

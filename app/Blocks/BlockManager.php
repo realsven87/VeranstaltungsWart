@@ -78,8 +78,9 @@ class BlockManager {
         $stats = (new EventRepository())->get_registration_stats($id);
         $cancelled = get_post_meta($id, 'vw_event_canceled', true) === '1';
         $status = $cancelled ? __('Abgesagt', 'veranstaltungswart') : (EventSettings::closed_reason($id) ? __('Anmeldung geschlossen', 'veranstaltungswart') : ($stats['is_full'] ? __('Ausgebucht · Warteliste', 'veranstaltungswart') : __('Anmeldung geöffnet', 'veranstaltungswart')));
-        $html = '<article class="vw-event-card">';
-        if (($atts['showImage'] ?? true) && has_post_thumbnail($id)) $html .= '<div class="vw-card-image">' . get_the_post_thumbnail($id, 'medium_large') . '</div>';
+        $has_image = ($atts['showImage'] ?? true) && has_post_thumbnail($id);
+        $html = '<article class="vw-event-card' . ($has_image ? ' vw-event-card--has-image' : '') . '">';
+        if ($has_image) $html .= '<div class="vw-card-image">' . get_the_post_thumbnail($id, 'medium_large') . '</div>';
         $html .= '<div class="vw-card-body"><p class="vw-event-status">' . esc_html($status) . '</p><h3><a href="' . esc_url(get_permalink($id)) . '">' . esc_html($v['event_name']) . '</a></h3>';
         $html .= '<p>' . esc_html($v['event_datum'] . ' · ' . $v['event_zeit']) . '</p>';
         if ($atts['showLocation'] ?? true) $html .= '<p>' . esc_html($v['event_ort']) . '</p>';
