@@ -52,6 +52,18 @@ jobs:
           wp option update timezone_string Europe/Berlin --path=/tmp/vw-wordpress
           mkdir -p /tmp/vw-wordpress/wp-content/mu-plugins
           printf '%s\n' '<?php add_filter("pre_wp_mail", "__return_true");' > /tmp/vw-wordpress/wp-content/mu-plugins/test-mail.php
+      - name: WordPress.org Plugin Check
+        if: matrix.php == '8.3'
+        run: |
+          wp plugin install plugin-check --activate --path=/tmp/vw-wordpress
+          wp plugin check veranstaltungswart --require=/tmp/vw-wordpress/wp-content/plugins/plugin-check/cli.php --exclude-directories=tests,.github --format=json --path=/tmp/vw-wordpress > /tmp/vw-plugin-check.json || check_status=$?
+          cat /tmp/vw-plugin-check.json
+          test -s /tmp/vw-plugin-check.json
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.php == '8.3'
+        with:
+          name: wordpress-org-check
+          path: /tmp/vw-plugin-check.json
       - name: WordPress integration tests
         run: wp eval-file "$GITHUB_WORKSPACE/tests/integration.php" --path=/tmp/vw-wordpress
       - name: HTTP registration tests
