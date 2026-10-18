@@ -16,13 +16,13 @@ class EventExporter {
      * Erzeugt eine CSV-Datei der Teilnehmer und sendet sie an den Browser.
      */
 public function download_participants_csv($event_id) {
-    if (!current_user_can('edit_posts')) {
+    if (!\VW\Core\Capabilities::can_manage_event($event_id)) {
         wp_die(esc_html__('Zugriff verweigert.', 'veranstaltungswart'));
     }
 
         $repo = new EventRepository();
         $event_title = get_the_title($event_id);
-        
+
         // Alle Registrierungen holen (alphabetisch nach Nachnamen)
         $registrations = $repo->get_registrations_for_event($event_id, 'last_name', 'ASC');
 
@@ -37,7 +37,7 @@ public function download_participants_csv($event_id) {
             return ($a->status === 'bestätigt') ? -1 : 1;
         });
 
-        $filename = 'teilnehmer-' . sanitize_title($event_title) . '-' . date('Y-m-d') . '.csv';
+        $filename = 'teilnehmer-' . sanitize_title($event_title) . '-' . wp_date('Y-m-d') . '.csv';
 
         // Header für Datei-Download
         header('Content-Type: text/csv; charset=utf-8');
@@ -48,31 +48,37 @@ public function download_participants_csv($event_id) {
         $output = fopen('php://output', 'w');
 
         // UTF-8 BOM für Excel-Kompatibilität
-        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF)); 
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
         // Spaltenüberschriften
         fputcsv($output, [
             'Status',
-            'Nachname', 
-            'Vorname', 
-            'E-Mail', 
-            'Plätze', 
-            'Angemeldet am'
-        ], ';');
+            __('Nachname', 'veranstaltungswart'),
+            __('Vorname', 'veranstaltungswart'),
+            __('E-Mail', 'veranstaltungswart'),
+            __('Plätze', 'veranstaltungswart'),
+            __('Angemeldet am', 'veranstaltungswart'),
+            __('Zusatzantworten', 'veranstaltungswart')
+        ], ';', '"', '');
 
         // Datenzeilen schreiben
         foreach ($active_registrations as $reg) {
             fputcsv($output, [
                 ucfirst($reg->status),
-                $reg->last_name,
-                $reg->first_name,
-                $reg->email,
+                $this->csv_cell($reg->last_name),
+                $this->csv_cell($reg->first_name),
+                $this->csv_cell($reg->email),
                 $reg->seats_total,
-                date_i18n('d.m.Y H:i', strtotime($reg->registered_at))
-            ], ';');
+                date_i18n('d.m.Y H:i', strtotime($reg->registered_at)),
+                $this->csv_cell(RegistrationQuestions::answer_text($reg->answers ?? ''))
+            ], ';', '"', '');
         }
 
-        fclose($output);
+        fclose($output); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Close php://output, not a filesystem file.
         exit;
+    }
+    private function csv_cell($value) {
+        $value = (string) $value;
+        return preg_match('/^[\s]*[=+@\-]/u', $value) ? "'" . $value : $value;
     }
 }

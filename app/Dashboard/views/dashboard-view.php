@@ -2,7 +2,7 @@
 
 <?php 
 // Die aktuelle URL sicher kodieren, damit wir nach der Aktion genau hierher zurückkehren
-$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+$current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
 ?>
 
 <div class="wrap">
@@ -63,13 +63,14 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         }
     </style>
 
+    <p><?php esc_html_e('Hier siehst du ausschließlich Veranstaltungen und Anmeldungen, die du verwalten darfst.', 'veranstaltungswart'); ?></p>
     <div class="vw-dashboard-stats">
         <div class="vw-stat-card" style="border-left: 5px solid #ffa500;">
             <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">
                 <span class="dashicons dashicons-warning" style="vertical-align: text-bottom; color: #ffa500;"></span> 
                 <?php esc_html_e('Offene Anmeldungen', 'veranstaltungswart'); ?>
             </h2>
-            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($total_pending_count); ?></p>
+            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo esc_html(number_format_i18n($total_pending_count)); ?></p>
             <small style="color: #646970;"><?php esc_html_e('Warten auf deine Freigabe', 'veranstaltungswart'); ?></small>
         </div>
 
@@ -78,7 +79,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                 <span class="dashicons dashicons-calendar-alt" style="vertical-align: text-bottom; color: #2271b1;"></span> 
                 <?php esc_html_e('Aktive Veranstaltungen', 'veranstaltungswart'); ?>
             </h2>
-            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($active_events_count); ?></p>
+            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo esc_html(number_format_i18n($active_events_count)); ?></p>
             <small style="color: #646970;"><?php esc_html_e('Zukünftige veröffentlichte Events', 'veranstaltungswart'); ?></small>
         </div>
     </div>
@@ -128,7 +129,10 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                     </div>
                                 </div>
                                 
-                                <?php if (!empty($reg->message)): ?>
+                                <?php if (!empty($reg->answers) && $reg->answers !== '[]'): ?>
+                                <details class="vw-answer-details"><summary><?php esc_html_e('Zusatzantworten', 'veranstaltungswart'); ?></summary><p style="white-space:pre-wrap"><?php echo esc_html(\VW\Events\RegistrationQuestions::answer_text($reg->answers)); ?></p></details>
+                            <?php endif; ?>
+                            <?php if (!empty($reg->message)): ?>
                                     <div style="margin-top: 10px; font-size: 12px; color: #50575e; background: #f6f7f7; padding: 8px 10px; border-left: 3px solid #2271b1; border-radius: 0 3px 3px 0;">
                                         <span class="dashicons dashicons-testimonial" style="font-size: 14px; width: 14px; height: 14px; vertical-align: text-bottom; margin-right: 4px; color: #8c8f94;"></span>
                                         <span style="font-style: italic;"><?php echo nl2br(esc_html($reg->message)); ?></span>
@@ -170,7 +174,16 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         </table>
     </div>
     
+    <?php if ($total_pending_count > 50): ?>
+        <nav aria-label="<?php esc_attr_e('Anmeldungen durchblättern', 'veranstaltungswart'); ?>" class="tablenav"><div class="tablenav-pages">
+            <?php echo wp_kses_post(paginate_links([
+                'base' => add_query_arg('vw_page', '%#%', admin_url('admin.php?page=vw_dashboard')),
+                'format' => '', 'current' => $page, 'total' => (int) ceil($total_pending_count / 50),
+                'prev_text' => __('Zurück', 'veranstaltungswart'), 'next_text' => __('Weiter', 'veranstaltungswart'),
+            ])); ?>
+        </div></nav>
+    <?php endif; ?>
     <div style="margin-top: 20px;">
-        <p class="description"><?php esc_html_e('Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar.', 'veranstaltungswart'); ?></p>
+        <p class="description"><?php esc_html_e('Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind unter der jeweiligen Veranstaltung einsehbar.', 'veranstaltungswart'); ?></p>
     </div>
 </div>
