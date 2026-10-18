@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 5.8
 Tested up to: 6.5
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -114,6 +114,9 @@ Seiten mit Formularen sollten von lang laufendem Full-Page-Caching ausgeschlosse
 werden, damit die WordPress-Formulartokens aktuell bleiben.
 
 == Changelog ==
+
+= 3.0.2 =
+* Veranstaltungsbilder in Karten und Listen vollständig im ursprünglichen Seitenverhältnis anzeigen, ohne Beschnitt oder Verzerrung.
 
 = 3.0.1 =
 * Optionale Bilder in Veranstaltungskarten und -listen: Desktop links, mobil oberhalb.

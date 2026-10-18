@@ -2,7 +2,7 @@
 /**
  * Plugin Name: VeranstaltungsWart
  * Description: Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit.
- * Version:     3.0.1
+ * Version:     3.0.2
  * Author:      Sven Epple
  * Text Domain: veranstaltungswart
  * Domain Path: /languages
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
  */
 define('VW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('VW_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('VW_VERSION', '3.0.1');
+define('VW_VERSION', '3.0.2');
 
 /**
  * Loader einbinden und Autoloader registrieren.
