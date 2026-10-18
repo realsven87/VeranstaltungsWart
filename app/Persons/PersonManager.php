@@ -31,6 +31,14 @@ class PersonManager {
         // NEU: Import-Funktion
         add_action('admin_post_vw_import_persons', [$this, 'handle_import_persons']);
 
+        add_action('admin_init', function() {
+            if (function_exists('wp_add_privacy_policy_content')) {
+                wp_add_privacy_policy_content('VeranstaltungsWart', wp_kses_post(
+                    __('VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website.', 'veranstaltungswart')
+                ));
+            }
+        });
+
         // DSGVO / Datenschutz-Integration
         add_filter('wp_privacy_personal_data_exporters', [$this, 'register_privacy_exporter']);
         add_filter('wp_privacy_personal_data_erasers', [$this, 'register_privacy_eraser']);

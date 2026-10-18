@@ -45,15 +45,19 @@ class LocationManager {
         if (!current_user_can('manage_options')) wp_die(esc_html__('Keine ausreichenden Rechte.', 'veranstaltungswart'));
         check_admin_referer('vw_location_action', 'vw_location_nonce');
 
+        foreach (['location_id', 'name', 'address', 'default_capacity'] as $key) {
+            if (isset($_POST[$key]) && !is_scalar($_POST[$key])) wp_die(esc_html__('Ungültige Ortsangaben.', 'veranstaltungswart'));
+        }
         $repo = new EventRepository();
-        $id   = intval($_POST['location_id']);
+        $id   = absint($_POST['location_id'] ?? 0);
 
         $data = [
-            'name'             => sanitize_text_field(wp_unslash($_POST['name'])),
-            'address'          => sanitize_textarea_field($_POST['address']),
-            'default_capacity' => max(0, intval($_POST['default_capacity']))
+            'name'             => sanitize_text_field(wp_unslash($_POST['name'] ?? '')),
+            'address'          => sanitize_textarea_field(wp_unslash($_POST['address'] ?? '')),
+            'default_capacity' => max(0, intval($_POST['default_capacity'] ?? 0))
         ];
 
+        if ($data['name'] === '') wp_die(esc_html__('Bitte einen Ortsnamen angeben.', 'veranstaltungswart'));
         $repo->save_location($id, $data);
         wp_safe_redirect(admin_url('admin.php?page=vw_locations&status=success'));
         exit;
@@ -65,7 +69,7 @@ class LocationManager {
     public function handle_delete_location() {
         if (!current_user_can('manage_options')) wp_die(esc_html__('Keine ausreichenden Rechte.', 'veranstaltungswart'));
 
-        $id = intval($_GET['id']);
+        $id = absint($_GET['id'] ?? 0);
         check_admin_referer('vw_delete_nonce_' . $id);
 
         global $wpdb;

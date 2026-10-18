@@ -1,6 +1,7 @@
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 (async () => {
+    fs.mkdirSync('/tmp/vw-screenshots', { recursive: true });
     const browser = await chromium.launch({ headless: true });
     const page = await browser.newPage();
     const errors = [];
@@ -34,6 +35,7 @@ const fs = require('node:fs');
     if (await capacity.inputValue() !== '0') throw new Error('Unlimited capacity not inherited');
     await location.selectOption({ label: 'Geheimer Ort' });
     await capacity.fill('7');
+    await page.screenshot({ path: '/tmp/vw-screenshots/screenshot-2.png', fullPage: true });
     const gaps = await page.locator('.vw-settings-fields:visible').first().evaluate(container => {
         const fields = [...container.querySelectorAll(':scope > .vw-setting-field')];
         return fields.slice(1).map((field, index) => field.getBoundingClientRect().top - fields[index].getBoundingClientRect().bottom);
@@ -68,6 +70,8 @@ const fs = require('node:fs');
             if (width <= 700 && (item.image.bottom > item.body.y + 2 || Math.abs(item.image.x - item.body.x) > 2)) throw new Error('Mobile image is not above body');
         }
     }
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.locator('.vw-registration-container').first().screenshot({ path: '/tmp/vw-screenshots/screenshot-3.png' });
     // Portrait, landscape and square images must retain their intrinsic ratio in both blocks.
     for (const width of [1280, 390]) {
         await page.setViewportSize({ width, height: 900 });
@@ -89,6 +93,18 @@ const fs = require('node:fs');
             }
         }
     }
+    // Exercise actual authenticated CSV uploads, including invalid extension and invalid email rows.
+    await page.goto('http://127.0.0.1:8080/wp-admin/admin.php?page=vw_persons');
+    const importNonce = await page.locator('[name="vw_import_nonce"]').inputValue();
+    const upload = async (name, text) => page.request.post('http://127.0.0.1:8080/wp-admin/admin-post.php', {
+        multipart: { action: 'vw_import_persons', vw_import_nonce: importNonce, csv_file: { name, mimeType: 'text/csv', buffer: Buffer.from(text) } }
+    });
+    const invalid = await upload('contacts.php', 'Demo;Person;demo@example.org');
+    if (invalid.status() !== 500 || !(await invalid.text()).includes('gültige CSV-Datei')) throw new Error('Invalid upload extension accepted');
+    const imported = await upload('contacts.csv', 'Import;Example;import@example.org\nBad;Email;not-an-email');
+    if (!imported.ok() || !imported.url().includes('count=1')) throw new Error('CSV valid-row import failed');
+    await page.goto('http://127.0.0.1:8080/wp-admin/admin.php?page=vw_dashboard');
+    await page.locator('#wpbody-content').screenshot({ path: '/tmp/vw-screenshots/screenshot-1.png' });
     await browser.close();
     console.log('PASS: Gutenberg registers, edits settings and saves/reloads all three blocks');
 })().catch(error => { console.error(error); process.exit(1); });

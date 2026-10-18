@@ -114,3 +114,10 @@ $attachment = wp_insert_attachment(['post_title' => 'Layout image', 'post_mime_t
 wp_update_attachment_metadata($attachment, ['width' => 1, 'height' => 1, 'file' => _wp_relative_upload_path($upload['file'])]);
 set_post_thumbnail($http, $attachment);
 vw_assert(strpos((new VW\Blocks\BlockManager())->card($http, ['showImage' => false]), 'vw-card-image') === false, 'Optional image can still be hidden');
+
+// CSV output must not turn contact names or email addresses into spreadsheet formulas.
+$csv_method = new ReflectionMethod(VW\Events\EventExporter::class, 'csv_cell');
+$csv_method->setAccessible(true);
+$exporter = new VW\Events\EventExporter();
+vw_assert($csv_method->invoke($exporter, '=SUM(1,2)') === "'=SUM(1,2)", 'CSV formula cell is neutralized');
+vw_assert($csv_method->invoke($exporter, 'Normal Name') === 'Normal Name', 'CSV normal text is unchanged');

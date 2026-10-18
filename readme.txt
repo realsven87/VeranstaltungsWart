@@ -30,12 +30,6 @@ Features:
 
 The interface currently uses German source strings and supports translations. This plugin does not process payments or sell tickets.
 
-= Deutsch =
-
-VeranstaltungsWart verwaltet Veranstaltungen, Orte und Anmeldungen für Vereine und Organisationen. Drei Blöcke ermöglichen Anmeldeformulare, Veranstaltungskarten und Veranstaltungslisten auch in normalen Beiträgen und Seiten. Begleitpersonen, Freitextfeld, Kapazität und private Ortsangaben werden zentral pro Veranstaltung eingestellt.
-
-Autoren verwalten eigene Veranstaltungen; Administratoren und Redakteure können auch fremde Veranstaltungen bearbeiten. Personen, Vertrauensstatus und Orte verwalten Administratoren.
-
 = Data and privacy =
 
 The plugin stores names, email addresses, registration status, guest counts, free-text messages, registration timestamps, contact trust status and optional contact-list membership in the local WordPress database. Email content may contain these details and is sent through your site's configured WordPress mail service. The plugin does not include analytics or send data to the developer.

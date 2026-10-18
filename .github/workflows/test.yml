@@ -55,12 +55,12 @@ jobs:
       - name: WordPress.org Plugin Check
         if: matrix.php == '8.3'
         run: |
-          wp plugin install plugin-check --activate --path=/tmp/vw-wordpress
+          wp plugin install plugin-check --version=2.1.0 --activate --path=/tmp/vw-wordpress
           mkdir -p /tmp/vw-release/veranstaltungswart
           cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-release/veranstaltungswart/
           wp plugin check /tmp/vw-release/veranstaltungswart --require=/tmp/vw-wordpress/wp-content/plugins/plugin-check/cli.php --format=json --path=/tmp/vw-wordpress > /tmp/vw-plugin-check.json || check_status=$?
           cat /tmp/vw-plugin-check.json
-          test -s /tmp/vw-plugin-check.json
+          python3 tests/check_plugin_report.py /tmp/vw-plugin-check.json
       - uses: actions/upload-artifact@v4
         if: always() && matrix.php == '8.3'
         with:
@@ -78,6 +78,11 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.51.1
           npx playwright install --with-deps chromium
           node tests/editor.cjs
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.3'
+        with:
+          name: wordpress-org-screenshots
+          path: /tmp/vw-screenshots/*.png
       - name: Generate translation template
         if: matrix.php == '8.3'
         run: |

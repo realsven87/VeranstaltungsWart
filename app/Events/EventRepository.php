@@ -63,7 +63,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
         global $wpdb;
         $whitelist = ['first_name', 'last_name', 'email', 'registered_at', 'seats_total'];
         $orderby = in_array($orderby, $whitelist) ? $orderby : 'registered_at';
-        $order = ($order === 'ASC') ? 'ASC' : 'DESC';
+        $order = esc_sql(($order === 'ASC') ? 'ASC' : 'DESC');
 
         return $wpdb->get_results($wpdb->prepare("
             SELECT r.*, p.first_name, p.last_name, p.email, p.trust_status
@@ -175,7 +175,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
     // Whitelist für erlaubte Spalten zur Sicherheit (SQL-Injection-Schutz)
     $allowed = ['last_name', 'first_name', 'email', 'trust_status'];
     $orderby = in_array($orderby, $allowed) ? $orderby : 'last_name';
-    $order   = ($order === 'DESC') ? 'DESC' : 'ASC';
+    $order   = esc_sql(($order === 'DESC') ? 'DESC' : 'ASC');
 
     return $wpdb->get_results($wpdb->prepare("SELECT * FROM %i ORDER BY %i $order", $this->table_persons, $orderby));
     }

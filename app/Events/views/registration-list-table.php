@@ -6,7 +6,7 @@ $already_confirmed = intval($stats['confirmed_count']);
 $theoretical_free_slots = ($max_cap > 0) ? ($max_cap - $already_confirmed) : 9999;
 
 // Die aktuelle URL sicher kodieren, damit wir nach der Aktion genau hierher zurückkehren
-$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+$current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
 ?>
 <style>
     /* Styling für die Statistik-Box (Responsive) */
@@ -53,19 +53,19 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
 <div class="vw-registration-stats">
     <div><strong><?php esc_html_e('Gesamt-Kapazität:', 'veranstaltungswart'); ?></strong>
-        <?php echo $max_cap > 0 ? $max_cap : esc_html__('Unbegrenzt', 'veranstaltungswart'); ?></div>
+        <?php echo $max_cap > 0 ? (int) $max_cap : esc_html__('Unbegrenzt', 'veranstaltungswart'); ?></div>
 
     <div><strong><?php esc_html_e('Bestätigte Teilnehmer:', 'veranstaltungswart'); ?></strong> <span
             style="color: #46b450; font-weight: bold;"><?php echo (int) $already_confirmed; ?></span></div>
 
-    <div><strong>Prüfung offen:</strong> <?php echo (int) $stats['pending_count']; ?></div>
+    <div><strong><?php esc_html_e('Prüfung offen:', 'veranstaltungswart'); ?></strong> <?php echo (int) $stats['pending_count']; ?></div>
 
     <div><strong><?php esc_html_e('Auf Warteliste:', 'veranstaltungswart'); ?></strong> <span
             style="color: #dba617; font-weight: bold;"><?php echo isset($stats['waitlist']) ? intval($stats['waitlist']) : 0; ?></span></div>
 
     <div><strong><?php esc_html_e('Verfügbare Plätze:', 'veranstaltungswart'); ?></strong>
         <span style="font-weight: bold;">
-            <?php echo $max_cap > 0 ? max(0, $theoretical_free_slots) : '&infin;'; ?>
+            <?php echo $max_cap > 0 ? (int) max(0, $theoretical_free_slots) : '&infin;'; ?>
         </span>
     </div>
 </div>

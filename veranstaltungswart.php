@@ -52,7 +52,7 @@ class VeranstaltungsWart {
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
         // WICHTIG: Sprachdateien laden, damit unsere Übersetzungen funktionieren!
-        add_action('plugins_loaded', [$this, 'load_textdomain']);
+        add_action('init', [$this, 'load_textdomain'], 0);
 
         // Initialisierung der Module
         $this->init_modules();

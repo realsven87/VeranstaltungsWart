@@ -70,7 +70,7 @@ class RegistrationHandler {
     public function handle_cancellation() {
         $reg = $this->token_registration();
         // GET only displays confirmation: mail scanners must not cancel registrations.
-        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+        if (sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'] ?? 'GET')) !== 'POST') {
             nocache_headers();
             $html = '<h1>' . esc_html__('Anmeldung stornieren?', 'veranstaltungswart') . '</h1><p>' . esc_html(get_the_title($reg->event_post_id)) . '</p><form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
             foreach (['action' => 'vw_cancel_registration', 'id' => $reg->id, 'hash' => wp_hash($reg->email . $reg->id)] as $name => $value) $html .= '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';

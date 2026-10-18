@@ -2,7 +2,7 @@
 
 <?php 
 // Die aktuelle URL sicher kodieren, damit wir nach der Aktion genau hierher zurückkehren
-$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
+$current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
 ?>
 
 <div class="wrap">

@@ -47,7 +47,7 @@ class BlockManager {
             $events = [];
             foreach (get_posts($query) as $post) {
                 if (!EventSettings::is_public($post->ID) && !Capabilities::can_manage_event($post->ID)) continue;
-                $events[] = ['id' => $post->ID, 'title' => $post->post_title ?: '(Ohne Titel)', 'editable' => Capabilities::can_manage_event($post->ID)];
+                $events[] = ['id' => $post->ID, 'title' => $post->post_title ?: __('(Ohne Titel)', 'veranstaltungswart'), 'editable' => Capabilities::can_manage_event($post->ID)];
             }
             return rest_ensure_response($events);
         }]);

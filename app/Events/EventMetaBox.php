@@ -48,7 +48,7 @@ class EventMetaBox {
      */
     public function render_settings_meta_box($post) {
         if (function_exists('use_block_editor_for_post') && use_block_editor_for_post($post)) {
-            echo '<p>Die Einstellungen findest du rechts im Bereich „VeranstaltungsWart“ oder im Anmeldeblock. Dort separat speichern.</p>';
+            echo '<p>' . esc_html__('Die Einstellungen findest du rechts im Bereich „VeranstaltungsWart“ oder im Anmeldeblock. Dort separat speichern.', 'veranstaltungswart') . '</p>';
             return;
         }
         wp_nonce_field('vw_event_settings_nonce', 'vw_event_settings_nonce_field');
@@ -60,7 +60,7 @@ class EventMetaBox {
             if ($field[1] === 'boolean') {
                 echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . '>';
             } elseif ($key === 'vw_location_id') {
-                echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">Kein Ort</option>';
+                echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">' . esc_html__('Kein Ort', 'veranstaltungswart') . '</option>';
                 foreach ($locations as $location) echo '<option data-capacity="' . esc_attr(max(0, (int) $location->default_capacity)) . '" value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
                 echo '</select>';
             } else {
@@ -102,13 +102,13 @@ class EventMetaBox {
      */
     public function render_registration_list($post) {
         if (get_post_meta($post->ID, 'vw_event_canceled', true) === '1') {
-            echo '<p><strong>Diese Veranstaltung wurde abgesagt.</strong></p>';
+            echo '<p><strong>' . esc_html__('Diese Veranstaltung wurde abgesagt.', 'veranstaltungswart') . '</strong></p>';
         } else {
             $url = wp_nonce_url(admin_url('admin-post.php?action=vw_cancel_event&event_id=' . $post->ID), 'vw_cancel_event_' . $post->ID);
-            echo '<p><a class="button" onclick="return confirm(\'Veranstaltung absagen und alle aktiven Teilnehmer informieren?\')" href="' . esc_url($url) . '">Veranstaltung absagen</a></p>';
+            echo '<p><a class="button" onclick="' . esc_attr('return confirm(' . wp_json_encode(__('Veranstaltung absagen und alle aktiven Teilnehmer informieren?', 'veranstaltungswart')) . ')') . '" href="' . esc_url($url) . '">' . esc_html__('Veranstaltung absagen', 'veranstaltungswart') . '</a></p>';
         }
         $notify = wp_nonce_url(admin_url('admin-post.php?action=vw_notify_event_change&event_id=' . $post->ID), 'vw_notify_event_' . $post->ID);
-        echo '<p>Änderungen zuerst speichern. Danach: <a class="button" onclick="return confirm(\'Aktuelle Veranstaltungsdaten per E-Mail an alle aktiven Teilnehmer senden?\')" href="' . esc_url($notify) . '">Teilnehmer über Änderungen informieren</a></p>';
+        echo '<p>' . esc_html__('Änderungen zuerst speichern. Danach:', 'veranstaltungswart') . ' <a class="button" onclick="' . esc_attr('return confirm(' . wp_json_encode(__('Aktuelle Veranstaltungsdaten per E-Mail an alle aktiven Teilnehmer senden?', 'veranstaltungswart')) . ')') . '" href="' . esc_url($notify) . '">' . esc_html__('Teilnehmer über Änderungen informieren', 'veranstaltungswart') . '</a></p>';
         $repo = new EventRepository();
         $registrations = $repo->get_registrations_for_event($post->ID);
         $stats = $repo->get_registration_stats($post->ID);
@@ -125,7 +125,7 @@ class EventMetaBox {
         $view_file = VW_PLUGIN_DIR . 'app/Events/views/registration-list-table.php';
         if (file_exists($view_file)) {
             // Aktuelle URL für Referer-Logik
-            $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+            $current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
             include $view_file;
         } else {
             echo '<p>' . esc_html__('Teilnehmerliste konnte nicht geladen werden.', 'veranstaltungswart') . '</p>';

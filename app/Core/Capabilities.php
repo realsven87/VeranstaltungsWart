@@ -8,7 +8,7 @@ class Capabilities {
             $role = get_role('author');
             if (!current_user_can('manage_options') || !$role || (!$role->has_cap('edit_others_posts') && !$role->has_cap('delete_others_posts'))) return;
             $url = wp_nonce_url(admin_url('admin-post.php?action=vw_repair_author_rights'), 'vw_repair_author_rights');
-            echo '<div class="notice notice-warning"><p>VeranstaltungsWart 2.0 hat Autoren zusätzliche Rechte für fremde Blogbeiträge erteilt. Falls diese Rechte nicht bewusst benötigt werden: <a href="' . esc_url($url) . '">Zusätzliche Autorenrechte für fremde Beiträge entfernen</a>. Veranstaltungsrechte bleiben erhalten.</p></div>';
+            echo '<div class="notice notice-warning"><p>' . esc_html__('VeranstaltungsWart 2.0 hat Autoren zusätzliche Rechte für fremde Blogbeiträge erteilt. Falls diese Rechte nicht bewusst benötigt werden:', 'veranstaltungswart') . ' <a href="' . esc_url($url) . '">' . esc_html__('Zusätzliche Autorenrechte für fremde Beiträge entfernen', 'veranstaltungswart') . '</a>. ' . esc_html__('Veranstaltungsrechte bleiben erhalten.', 'veranstaltungswart') . '</p></div>';
         });
         add_action('admin_post_vw_repair_author_rights', function() {
             if (!current_user_can('manage_options')) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));

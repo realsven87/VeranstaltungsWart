@@ -22,7 +22,7 @@ public function download_participants_csv($event_id) {
 
         $repo = new EventRepository();
         $event_title = get_the_title($event_id);
-        
+
         // Alle Registrierungen holen (alphabetisch nach Nachnamen)
         $registrations = $repo->get_registrations_for_event($event_id, 'last_name', 'ASC');
 
@@ -48,15 +48,15 @@ public function download_participants_csv($event_id) {
         $output = fopen('php://output', 'w');
 
         // UTF-8 BOM für Excel-Kompatibilität
-        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF)); 
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
         // Spaltenüberschriften
         fputcsv($output, [
             'Status',
-            __('Nachname', 'veranstaltungswart'), 
-            __('Vorname', 'veranstaltungswart'), 
-            __('E-Mail', 'veranstaltungswart'), 
-            __('Plätze', 'veranstaltungswart'), 
+            __('Nachname', 'veranstaltungswart'),
+            __('Vorname', 'veranstaltungswart'),
+            __('E-Mail', 'veranstaltungswart'),
+            __('Plätze', 'veranstaltungswart'),
             __('Angemeldet am', 'veranstaltungswart')
         ], ';', '"', '');
 
