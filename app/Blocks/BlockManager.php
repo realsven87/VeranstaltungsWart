@@ -19,11 +19,12 @@ class BlockManager {
         wp_register_style('vw-blocks', VW_PLUGIN_URL . 'assets/blocks.css', [], VW_VERSION);
         wp_register_style('vw-editor-settings', VW_PLUGIN_URL . 'assets/editor.css', [], VW_VERSION);
         wp_register_script('vw-editor', VW_PLUGIN_URL . 'assets/editor.js', ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-api-fetch', 'wp-rich-text', 'wp-i18n', 'wp-plugins', 'wp-edit-post'], VW_VERSION, true);
+        wp_set_script_translations('vw-editor', 'veranstaltungswart', VW_PLUGIN_DIR . 'languages');
         wp_localize_script('vw-editor', 'vwEditor', ['fields' => EventSettings::fields()]);
         $shared = ['eventId' => ['type' => 'integer', 'default' => 0]];
         $definitions = [
-            'registration' => ['heading' => ['type' => 'string', 'default' => 'Anmeldung'], 'button' => ['type' => 'string', 'default' => 'Jetzt anmelden'], 'showPlaces' => ['type' => 'boolean', 'default' => true]],
-            'event-card' => ['showImage' => ['type' => 'boolean', 'default' => true], 'showLocation' => ['type' => 'boolean', 'default' => true], 'button' => ['type' => 'string', 'default' => 'Zur Veranstaltung']],
+            'registration' => ['heading' => ['type' => 'string', 'default' => __('Anmeldung', 'veranstaltungswart')], 'button' => ['type' => 'string', 'default' => __('Jetzt anmelden', 'veranstaltungswart')], 'showPlaces' => ['type' => 'boolean', 'default' => true]],
+            'event-card' => ['showImage' => ['type' => 'boolean', 'default' => true], 'showLocation' => ['type' => 'boolean', 'default' => true], 'button' => ['type' => 'string', 'default' => __('Zur Veranstaltung', 'veranstaltungswart')]],
             'event-list' => ['count' => ['type' => 'integer', 'default' => 6], 'columns' => ['type' => 'integer', 'default' => 3], 'category' => ['type' => 'integer', 'default' => 0], 'showPast' => ['type' => 'boolean', 'default' => false], 'showCanceled' => ['type' => 'boolean', 'default' => true], 'emptyText' => ['type' => 'string', 'default' => ''], 'showImage' => ['type' => 'boolean', 'default' => true], 'showLocation' => ['type' => 'boolean', 'default' => true]],
         ];
         foreach ($definitions as $name => $attributes) register_block_type('veranstaltungswart/' . $name, [
@@ -35,7 +36,7 @@ class BlockManager {
                 $id = absint($attributes['eventId'] ?? 0) ?: absint($block->context['postId'] ?? get_the_ID());
                 if ($name === 'event-list') $html = $this->listing($attributes);
                 elseif ($name === 'event-card') $html = $this->card($id, $attributes);
-                else $html = (new \VW\Registrations\RegistrationShortcode())->render_form(['id' => $id, 'heading' => $attributes['heading'] ?? 'Anmeldung', 'button' => $attributes['button'] ?? 'Jetzt anmelden', 'show_places' => $attributes['showPlaces'] ?? true]);
+                else $html = (new \VW\Registrations\RegistrationShortcode())->render_form(['id' => $id, 'heading' => $attributes['heading'] ?? __('Anmeldung', 'veranstaltungswart'), 'button' => $attributes['button'] ?? __('Jetzt anmelden', 'veranstaltungswart'), 'show_places' => $attributes['showPlaces'] ?? true]);
                 return $html === '' ? '' : '<div ' . get_block_wrapper_attributes(['class' => 'vw-block']) . '>' . $html . '</div>';
             }
         ]);
@@ -57,7 +58,7 @@ class BlockManager {
                 $id = (int) $request['id'];
                 if ($request->get_method() === 'POST') {
                     $input = $request->get_json_params();
-                    if (!is_array($input)) return new \WP_Error('invalid_body', 'Ungültige Einstellungen.', ['status' => 400]);
+                    if (!is_array($input)) return new \WP_Error('invalid_body', __('Ungültige Einstellungen.', 'veranstaltungswart'), ['status' => 400]);
                     $result = EventSettings::save($id, $input);
                     if (is_wp_error($result)) return $result;
                 }
@@ -76,13 +77,13 @@ class BlockManager {
         $v = EventPresentation::values($id);
         $stats = (new EventRepository())->get_registration_stats($id);
         $cancelled = get_post_meta($id, 'vw_event_canceled', true) === '1';
-        $status = $cancelled ? 'Abgesagt' : (EventSettings::closed_reason($id) ? 'Anmeldung geschlossen' : ($stats['is_full'] ? 'Ausgebucht · Warteliste' : 'Anmeldung geöffnet'));
+        $status = $cancelled ? __('Abgesagt', 'veranstaltungswart') : (EventSettings::closed_reason($id) ? __('Anmeldung geschlossen', 'veranstaltungswart') : ($stats['is_full'] ? __('Ausgebucht · Warteliste', 'veranstaltungswart') : __('Anmeldung geöffnet', 'veranstaltungswart')));
         $html = '<article class="vw-event-card">';
         if (($atts['showImage'] ?? true) && has_post_thumbnail($id)) $html .= '<div class="vw-card-image">' . get_the_post_thumbnail($id, 'medium_large') . '</div>';
         $html .= '<div class="vw-card-body"><p class="vw-event-status">' . esc_html($status) . '</p><h3><a href="' . esc_url(get_permalink($id)) . '">' . esc_html($v['event_name']) . '</a></h3>';
         $html .= '<p>' . esc_html($v['event_datum'] . ' · ' . $v['event_zeit']) . '</p>';
         if ($atts['showLocation'] ?? true) $html .= '<p>' . esc_html($v['event_ort']) . '</p>';
-        $html .= '<a class="wp-element-button" href="' . esc_url(get_permalink($id)) . '">' . esc_html($atts['button'] ?? 'Zur Veranstaltung') . '</a></div></article>';
+        $html .= '<a class="wp-element-button" href="' . esc_url(get_permalink($id)) . '">' . esc_html($atts['button'] ?? __('Zur Veranstaltung', 'veranstaltungswart')) . '</a></div></article>';
         return $html;
     }
     public function listing($atts) {

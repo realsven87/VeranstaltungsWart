@@ -63,14 +63,14 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
         }
     </style>
 
-    <p>Hier siehst du ausschließlich Veranstaltungen und Anmeldungen, die du verwalten darfst.</p>
+    <p><?php esc_html_e('Hier siehst du ausschließlich Veranstaltungen und Anmeldungen, die du verwalten darfst.', 'veranstaltungswart'); ?></p>
     <div class="vw-dashboard-stats">
         <div class="vw-stat-card" style="border-left: 5px solid #ffa500;">
             <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">
                 <span class="dashicons dashicons-warning" style="vertical-align: text-bottom; color: #ffa500;"></span> 
                 <?php esc_html_e('Offene Anmeldungen', 'veranstaltungswart'); ?>
             </h2>
-            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($total_pending_count); ?></p>
+            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo esc_html(number_format_i18n($total_pending_count)); ?></p>
             <small style="color: #646970;"><?php esc_html_e('Warten auf deine Freigabe', 'veranstaltungswart'); ?></small>
         </div>
 
@@ -79,7 +79,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
                 <span class="dashicons dashicons-calendar-alt" style="vertical-align: text-bottom; color: #2271b1;"></span> 
                 <?php esc_html_e('Aktive Veranstaltungen', 'veranstaltungswart'); ?>
             </h2>
-            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo number_format_i18n($active_events_count); ?></p>
+            <p style="font-size: 32px; font-weight: bold; margin: 12px 0; color: #2c3338;"><?php echo esc_html(number_format_i18n($active_events_count)); ?></p>
             <small style="color: #646970;"><?php esc_html_e('Zukünftige veröffentlichte Events', 'veranstaltungswart'); ?></small>
         </div>
     </div>
@@ -172,11 +172,11 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
     </div>
     
     <?php if ($total_pending_count > 50): ?>
-        <nav aria-label="Anmeldungen durchblättern" class="tablenav"><div class="tablenav-pages">
+        <nav aria-label="<?php esc_attr_e('Anmeldungen durchblättern', 'veranstaltungswart'); ?>" class="tablenav"><div class="tablenav-pages">
             <?php echo wp_kses_post(paginate_links([
                 'base' => add_query_arg('vw_page', '%#%', admin_url('admin.php?page=vw_dashboard')),
                 'format' => '', 'current' => $page, 'total' => (int) ceil($total_pending_count / 50),
-                'prev_text' => 'Zurück', 'next_text' => 'Weiter',
+                'prev_text' => __('Zurück', 'veranstaltungswart'), 'next_text' => __('Weiter', 'veranstaltungswart'),
             ])); ?>
         </div></nav>
     <?php endif; ?>

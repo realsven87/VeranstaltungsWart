@@ -156,7 +156,7 @@ class EventPostType
                 $stats = $repo->get_registration_stats($post_id);
                 // (VOLL) übersetzbar gemacht
                 $full_label = $stats['is_full'] ? ' <span style="color:#d63638; font-weight:bold;">' . esc_html__('(VOLL)', 'veranstaltungswart') . '</span>' : '';
-                echo '<strong>' . intval($stats['current']) . '</strong> / ' . ($stats['max'] ?: '-') . $full_label;
+                echo '<strong>' . intval($stats['current']) . '</strong> / ' . esc_html($stats['max'] ?: '-') . wp_kses_post($full_label);
 
                 if ($stats['pending_count'] > 0) echo '<br><small>Prüfung offen: ' . (int) $stats['pending_count'] . ' Plätze</small>';
                 if ($stats['waitlist'] > 0) {
@@ -176,7 +176,7 @@ class EventPostType
         check_admin_referer('vw_reg_action_' . $reg_id);
         $repo = new EventRepository();
         $reg = $repo->get_registration($reg_id);
-        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die('Keine Berechtigung.');
+        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         $result = $repo->change_status($reg_id, sanitize_text_field(wp_unslash($_GET['new_status'] ?? '')));
         if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
         $this->redirect_back($reg->event_post_id, 'status_updated');
@@ -194,7 +194,7 @@ class EventPostType
         $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
         check_admin_referer('vw_export_nonce');
 
-        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die('Keine Berechtigung.');
+        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         if ($event_id) {
             $exporter = new EventExporter();
             $exporter->download_participants_csv($event_id);
@@ -218,10 +218,10 @@ class EventPostType
 
         $repo = new EventRepository();
         $reg = $repo->get_registration($reg_id);
-        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die('Keine Berechtigung.');
+        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         $event_id = $reg->event_post_id;
         $result = $repo->with_event_lock($event_id, function() use ($repo, $reg_id, $event_id) {
-            if ($repo->delete_registration($reg_id) === false) return new \WP_Error('database', 'Löschen fehlgeschlagen.');
+            if ($repo->delete_registration($reg_id) === false) return new \WP_Error('database', __('Löschen fehlgeschlagen.', 'veranstaltungswart'));
             $repo->process_waitlist_move_up($event_id, (int) EventSettings::get($event_id, 'vw_max_capacity'));
         });
         if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
@@ -237,13 +237,13 @@ class EventPostType
     public function handle_cancel_event()
     {
         if (!current_user_can('manage_vw_events')) {
-            wp_die('Keine Berechtigung.');
+            wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         }
 
         $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
         check_admin_referer('vw_cancel_event_' . $event_id);
 
-        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die('Keine Berechtigung.');
+        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         $repo = new EventRepository();
         $result = $repo->with_event_lock($event_id, function() use ($repo, $event_id) {
             if (get_post_meta($event_id, 'vw_event_canceled', true) === '1') return;
@@ -265,7 +265,7 @@ class EventPostType
     public function notify_change() {
         $id = absint($_GET['event_id'] ?? 0);
         check_admin_referer('vw_notify_event_' . $id);
-        if (!\VW\Core\Capabilities::can_manage_event($id)) wp_die('Keine Berechtigung.');
+        if (!\VW\Core\Capabilities::can_manage_event($id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         foreach ((new EventRepository())->get_registrations_for_event($id) as $reg) {
             if (in_array($reg->status, ['eingegangen', 'warteliste', 'bestätigt'], true)) MailService::send_registration_mail($reg->id, 'event-aenderung');
         }

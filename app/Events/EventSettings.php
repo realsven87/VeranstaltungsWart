@@ -6,20 +6,20 @@ if (!defined('ABSPATH')) exit;
 class EventSettings {
     public static function fields() {
         return [
-            'vw_event_date' => ['Datum und Beginn', 'date', ''],
-            'vw_event_end' => ['Ende (optional)', 'date', ''],
-            'vw_registration_deadline' => ['Anmeldeschluss (optional)', 'date', ''],
+            'vw_event_date' => [__('Datum und Beginn', 'veranstaltungswart'), 'date', ''],
+            'vw_event_end' => [__('Ende (optional)', 'veranstaltungswart'), 'date', ''],
+            'vw_registration_deadline' => [__('Anmeldeschluss (optional)', 'veranstaltungswart'), 'date', ''],
             'vw_location_id' => ['Veranstaltungsort', 'integer', 0],
-            'vw_max_capacity' => ['Maximale Teilnehmerzahl (0 = unbegrenzt)', 'integer', 0],
-            'vw_allow_guests' => ['Begleitpersonen erlauben', 'boolean', '1'],
-            'vw_max_guests' => ['Maximale Begleitpersonen pro Anmeldung', 'integer', 5],
-            'vw_allow_message' => ['Freitextfeld anzeigen', 'boolean', '0'],
-            'vw_message_label' => ['Beschriftung Freitextfeld', 'text', 'Anmerkungen / Nachricht'],
-            'vw_message_hint' => ['Hinweis im Freitextfeld', 'text', ''],
-            'vw_message_required' => ['Freitextfeld ist Pflichtfeld', 'boolean', '0'],
-            'vw_location_private' => ['Ort erst nach bestätigter Anmeldung mitteilen', 'boolean', '1'],
-            'vw_event_notes' => ['Hinweise für Teilnehmer', 'text', ''],
-            'vw_send_reminders' => ['Erinnerungen 7 und 3 Tage vorher senden', 'boolean', '1'],
+            'vw_max_capacity' => [__('Maximale Teilnehmerzahl (0 = unbegrenzt)', 'veranstaltungswart'), 'integer', 0],
+            'vw_allow_guests' => [__('Begleitpersonen erlauben', 'veranstaltungswart'), 'boolean', '1'],
+            'vw_max_guests' => [__('Maximale Begleitpersonen pro Anmeldung', 'veranstaltungswart'), 'integer', 5],
+            'vw_allow_message' => [__('Freitextfeld anzeigen', 'veranstaltungswart'), 'boolean', '0'],
+            'vw_message_label' => [__('Beschriftung Freitextfeld', 'veranstaltungswart'), 'text', __('Anmerkungen / Nachricht', 'veranstaltungswart')],
+            'vw_message_hint' => [__('Hinweis im Freitextfeld', 'veranstaltungswart'), 'text', ''],
+            'vw_message_required' => [__('Freitextfeld ist Pflichtfeld', 'veranstaltungswart'), 'boolean', '0'],
+            'vw_location_private' => [__('Ort erst nach bestätigter Anmeldung mitteilen', 'veranstaltungswart'), 'boolean', '1'],
+            'vw_event_notes' => [__('Hinweise für Teilnehmer', 'veranstaltungswart'), 'text', ''],
+            'vw_send_reminders' => [__('Erinnerungen 7 und 3 Tage vorher senden', 'veranstaltungswart'), 'boolean', '1'],
         ];
     }
     public static function get($id, $key) {
@@ -45,17 +45,17 @@ class EventSettings {
         foreach (self::fields() as $key => $field) {
             if (!array_key_exists($key, $input)) continue;
             $value = $input[$key];
-            if (!is_scalar($value)) return new \WP_Error('invalid_setting', 'Ungültiger Einstellungswert.');
+            if (!is_scalar($value)) return new \WP_Error('invalid_setting', __('Ungültiger Einstellungswert.', 'veranstaltungswart'));
             switch ($field[1]) {
                 case 'date':
                     $dt = self::date((string) $value);
-                    if ($value !== '' && !$dt) return new \WP_Error('invalid_date', 'Bitte ein gültiges Datum angeben.');
+                    if ($value !== '' && !$dt) return new \WP_Error('invalid_date', __('Bitte ein gültiges Datum angeben.', 'veranstaltungswart'));
                     $value = $dt ? $dt->format('Y-m-d H:i:s') : '';
                     break;
                 case 'integer':
-                    if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 0) return new \WP_Error('invalid_number', 'Bitte eine nichtnegative ganze Zahl angeben.');
+                    if (filter_var($value, FILTER_VALIDATE_INT) === false || (int) $value < 0) return new \WP_Error('invalid_number', __('Bitte eine nichtnegative ganze Zahl angeben.', 'veranstaltungswart'));
                     $value = (int) $value;
-                    if ($key === 'vw_max_guests' && $value > 100) return new \WP_Error('invalid_guests', 'Maximal 100 Begleitpersonen erlaubt.');
+                    if ($key === 'vw_max_guests' && $value > 100) return new \WP_Error('invalid_guests', __('Maximal 100 Begleitpersonen erlaubt.', 'veranstaltungswart'));
                     break;
                 case 'boolean': $value = in_array($value, [true, 1, '1'], true) ? '1' : '0'; break;
                 default: $value = sanitize_textarea_field($value);
@@ -70,13 +70,13 @@ class EventSettings {
         $start = self::date($data['vw_event_date']);
         $end = self::date($data['vw_event_end']);
         $deadline = self::date($data['vw_registration_deadline']);
-        if ($end && (!$start || $end <= $start)) return new \WP_Error('invalid_end', 'Das Ende muss nach dem Beginn liegen.');
-        if ($deadline && (!$start || $deadline > $start)) return new \WP_Error('invalid_deadline', 'Der Anmeldeschluss muss vor oder beim Beginn liegen.');
-        if ($data['vw_location_id'] && !(new EventRepository())->get_location($data['vw_location_id'])) return new \WP_Error('invalid_location', 'Veranstaltungsort nicht gefunden.');
+        if ($end && (!$start || $end <= $start)) return new \WP_Error('invalid_end', __('Das Ende muss nach dem Beginn liegen.', 'veranstaltungswart'));
+        if ($deadline && (!$start || $deadline > $start)) return new \WP_Error('invalid_deadline', __('Der Anmeldeschluss muss vor oder beim Beginn liegen.', 'veranstaltungswart'));
+        if ($data['vw_location_id'] && !(new EventRepository())->get_location($data['vw_location_id'])) return new \WP_Error('invalid_location', __('Veranstaltungsort nicht gefunden.', 'veranstaltungswart'));
         $repo = new EventRepository();
         return $repo->with_event_lock($id, function() use ($id, $data, $repo) {
             $stats = $repo->get_registration_stats($id);
-            if ($data['vw_max_capacity'] > 0 && $data['vw_max_capacity'] < $stats['current']) return new \WP_Error('capacity', 'Die Kapazität darf nicht unter den bereits bestätigten Plätzen liegen.');
+            if ($data['vw_max_capacity'] > 0 && $data['vw_max_capacity'] < $stats['current']) return new \WP_Error('capacity', __('Die Kapazität darf nicht unter den bereits bestätigten Plätzen liegen.', 'veranstaltungswart'));
             $old = (int) self::get($id, 'vw_max_capacity');
             foreach ($data as $key => $value) update_post_meta($id, $key, $value);
             if ($old > 0 && ($data['vw_max_capacity'] == 0 || $data['vw_max_capacity'] > $old)) $repo->process_waitlist_move_up($id, (int) $data['vw_max_capacity']);
@@ -88,12 +88,12 @@ class EventSettings {
         return $post && $post->post_type === 'vw_event' && $post->post_status === 'publish' && !$post->post_password;
     }
     public static function closed_reason($id) {
-        if (!self::is_public($id)) return 'Diese Veranstaltung ist nicht zur Anmeldung verfügbar.';
-        if (get_post_meta($id, 'vw_event_canceled', true) === '1') return 'Diese Veranstaltung wurde abgesagt.';
+        if (!self::is_public($id)) return __('Diese Veranstaltung ist nicht zur Anmeldung verfügbar.', 'veranstaltungswart');
+        if (get_post_meta($id, 'vw_event_canceled', true) === '1') return __('Diese Veranstaltung wurde abgesagt.', 'veranstaltungswart');
         $start = self::date(self::get($id, 'vw_event_date'));
-        if (!$start) return 'Für diese Veranstaltung ist noch kein Termin hinterlegt.';
+        if (!$start) return __('Für diese Veranstaltung ist noch kein Termin hinterlegt.', 'veranstaltungswart');
         $deadline = self::date(self::get($id, 'vw_registration_deadline')) ?: $start;
-        if ($deadline <= current_datetime()) return 'Die Anmeldung ist geschlossen.';
+        if ($deadline <= current_datetime()) return __('Die Anmeldung ist geschlossen.', 'veranstaltungswart');
         return '';
     }
 }

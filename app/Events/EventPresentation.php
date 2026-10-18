@@ -18,7 +18,7 @@ class EventPresentation {
             'event_wochentag' => $start ? wp_date('l', $start->getTimestamp(), wp_timezone()) : '',
             'event_zeit' => $start ? wp_date(get_option('time_format'), $start->getTimestamp(), wp_timezone()) : '',
             'event_ende' => $end ? wp_date(get_option('date_format') . ' ' . get_option('time_format'), $end->getTimestamp(), wp_timezone()) : '',
-            'event_ort' => $show && $location ? $location->name : 'Ort wird nach Bestätigung mitgeteilt',
+            'event_ort' => $show && $location ? $location->name : __('Ort wird nach Bestätigung mitgeteilt', 'veranstaltungswart'),
             'event_adresse' => $show && $location ? $location->address : '',
             'event_hinweis' => EventSettings::get($id, 'vw_event_notes'),
         ];

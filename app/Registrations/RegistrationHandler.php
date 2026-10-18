@@ -22,7 +22,7 @@ class RegistrationHandler {
     }
     public function handle_registration() {
         $id = absint($_POST['event_id'] ?? 0);
-        if (!isset($_POST['vw_reg_nonce_field']) || !is_string($_POST['vw_reg_nonce_field']) || !wp_verify_nonce($_POST['vw_reg_nonce_field'], 'vw_reg_nonce_action_' . $id)) $this->redirect($id, 'reg_error', 'nonce_fail');
+        if (!isset($_POST['vw_reg_nonce_field']) || !is_string($_POST['vw_reg_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vw_reg_nonce_field'])), 'vw_reg_nonce_action_' . $id)) $this->redirect($id, 'reg_error', 'nonce_fail');
         $repo = new EventRepository();
         $result = $repo->with_event_lock($id, function() use ($id, $repo) {
             if (EventSettings::closed_reason($id)) return new \WP_Error('closed');
@@ -64,7 +64,7 @@ class RegistrationHandler {
         $id = absint($_REQUEST['id'] ?? 0);
         $hash = isset($_REQUEST['hash']) && is_string($_REQUEST['hash']) ? sanitize_text_field(wp_unslash($_REQUEST['hash'])) : '';
         $reg = $wpdb->get_row($wpdb->prepare("SELECT r.*, p.email FROM {$wpdb->prefix}vw_registrations r JOIN {$wpdb->prefix}vw_persons p ON r.person_id = p.id WHERE r.id = %d", $id));
-        if (!$reg || !$hash || !hash_equals(wp_hash($reg->email . $reg->id), $hash)) wp_die('Dieser Link ist ungültig.');
+        if (!$reg || !$hash || !hash_equals(wp_hash($reg->email . $reg->id), $hash)) wp_die(esc_html__('Dieser Link ist ungültig.', 'veranstaltungswart'));
         return $reg;
     }
     public function handle_cancellation() {
@@ -72,11 +72,13 @@ class RegistrationHandler {
         // GET only displays confirmation: mail scanners must not cancel registrations.
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
             nocache_headers();
-            $html = '<h1>Anmeldung stornieren?</h1><p>' . esc_html(get_the_title($reg->event_post_id)) . '</p><form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
+            $html = '<h1>' . esc_html__('Anmeldung stornieren?', 'veranstaltungswart') . '</h1><p>' . esc_html(get_the_title($reg->event_post_id)) . '</p><form method="post" action="' . esc_url(admin_url('admin-post.php')) . '">';
             foreach (['action' => 'vw_cancel_registration', 'id' => $reg->id, 'hash' => wp_hash($reg->email . $reg->id)] as $name => $value) $html .= '<input type="hidden" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
             $html .= wp_nonce_field('vw_cancel_' . $reg->id, '_wpnonce', true, false);
-            $html .= '<button type="submit">Stornierung bestätigen</button></form>';
-            wp_die($html, 'Anmeldung stornieren', ['response' => 200]);
+            $html .= '<button type="submit">' . esc_html__('Stornierung bestätigen', 'veranstaltungswart') . '</button></form>';
+            // All text, URLs and attributes were escaped while constructing this form; wp_kses_post would remove its input fields.
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped form HTML assembled immediately above.
+            wp_die($html, esc_html__('Anmeldung stornieren', 'veranstaltungswart'), ['response' => 200]);
         }
         check_admin_referer('vw_cancel_' . $reg->id);
         $result = (new EventRepository())->change_status($reg->id, 'storniert');
@@ -86,10 +88,10 @@ class RegistrationHandler {
     }
     public function handle_ics_download() {
         $reg = $this->token_registration();
-        if ($reg->status !== 'bestätigt' || get_post_meta($reg->event_post_id, 'vw_event_canceled', true) === '1') wp_die('Der Kalenderdownload steht nur für bestätigte Anmeldungen zur Verfügung.');
+        if ($reg->status !== 'bestätigt' || get_post_meta($reg->event_post_id, 'vw_event_canceled', true) === '1') wp_die(esc_html__('Der Kalenderdownload steht nur für bestätigte Anmeldungen zur Verfügung.', 'veranstaltungswart'));
         $start = EventSettings::date(EventSettings::get($reg->event_post_id, 'vw_event_date'));
         $end = EventSettings::date(EventSettings::get($reg->event_post_id, 'vw_event_end'));
-        if (!$start) wp_die('Kein gültiger Termin hinterlegt.');
+        if (!$start) wp_die(esc_html__('Kein gültiger Termin hinterlegt.', 'veranstaltungswart'));
         $data = EventPresentation::values($reg->event_post_id, true);
         $utc = new \DateTimeZone('UTC');
         $lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//VeranstaltungsWart//DE', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', 'DTSTAMP:' . gmdate('Ymd\THis\Z'), 'DTSTART:' . $start->setTimezone($utc)->format('Ymd\THis\Z')];
@@ -112,6 +114,7 @@ class RegistrationHandler {
         nocache_headers();
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="termin.ics"');
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/calendar response, not HTML; every user-supplied ICS value is escaped by escape_ics().
         echo implode("\r\n", $folded) . "\r\n";
         exit;
     }

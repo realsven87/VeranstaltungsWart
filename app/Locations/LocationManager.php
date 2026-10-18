@@ -49,13 +49,13 @@ class LocationManager {
         $id   = intval($_POST['location_id']);
 
         $data = [
-            'name'             => sanitize_text_field($_POST['name']),
+            'name'             => sanitize_text_field(wp_unslash($_POST['name'])),
             'address'          => sanitize_textarea_field($_POST['address']),
             'default_capacity' => max(0, intval($_POST['default_capacity']))
         ];
 
         $repo->save_location($id, $data);
-        wp_redirect(admin_url('admin.php?page=vw_locations&status=success'));
+        wp_safe_redirect(admin_url('admin.php?page=vw_locations&status=success'));
         exit;
     }
 
@@ -71,7 +71,7 @@ class LocationManager {
         global $wpdb;
         $wpdb->delete($wpdb->prefix . 'vw_locations', ['id' => $id], ['%d']);
 
-        wp_redirect(admin_url('admin.php?page=vw_locations&status=deleted'));
+        wp_safe_redirect(admin_url('admin.php?page=vw_locations&status=deleted'));
         exit;
     }
 }

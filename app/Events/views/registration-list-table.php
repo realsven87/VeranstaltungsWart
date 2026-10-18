@@ -56,7 +56,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         <?php echo $max_cap > 0 ? $max_cap : esc_html__('Unbegrenzt', 'veranstaltungswart'); ?></div>
 
     <div><strong><?php esc_html_e('Bestätigte Teilnehmer:', 'veranstaltungswart'); ?></strong> <span
-            style="color: #46b450; font-weight: bold;"><?php echo $already_confirmed; ?></span></div>
+            style="color: #46b450; font-weight: bold;"><?php echo (int) $already_confirmed; ?></span></div>
 
     <div><strong>Prüfung offen:</strong> <?php echo (int) $stats['pending_count']; ?></div>
 
@@ -101,7 +101,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                     // Link-Aufbau inkl. _wp_http_referer für die kugelsichere Rückleitung
                     $base_url = admin_url('admin-post.php?action=vw_update_reg_status&id=' . $rid . '&event_id=' . $eid . '&_wp_http_referer=' . $current_url);
                     ?>
-                    <tr style="<?php echo $row_style; ?>">
+                    <tr style="<?php echo esc_attr($row_style); ?>">
                         <td>
                             <strong><?php echo esc_html($reg->last_name . ', ' . $reg->first_name); ?></strong>
 
@@ -130,7 +130,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
                         <td style="text-align: center;">
                             <span style="background: #eee; padding: 2px 8px; border-radius: 10px; font-weight: 600; border: 1px solid #ddd;">
-                                <?php echo $seats; ?>
+                                <?php echo (int) $seats; ?>
                             </span>
                         </td>
 
@@ -147,7 +147,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                 $status_color = '#dba617'; // Orange (Eingegangen / Warteliste)
                             }
                             ?>
-                            <span style="color: <?php echo $status_color; ?>; font-weight: 600;">
+                            <span style="color: <?php echo esc_attr($status_color); ?>; font-weight: 600;">
                                 <?php
                                 // Die Statuswerte kommen aus der Datenbank, idealerweise mappen wir sie hier für die Übersetzung.
                                 // Ansonsten ist die einfache Ausgabe mit esc_html in Ordnung, wenn die Datenbankwerte ohnehin deutsch sind.

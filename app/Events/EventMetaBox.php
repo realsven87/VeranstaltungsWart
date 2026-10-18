@@ -61,7 +61,7 @@ class EventMetaBox {
                 echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . '>';
             } elseif ($key === 'vw_location_id') {
                 echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">Kein Ort</option>';
-                foreach ($locations as $location) echo '<option data-capacity="' . max(0, (int) $location->default_capacity) . '" value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
+                foreach ($locations as $location) echo '<option data-capacity="' . esc_attr(max(0, (int) $location->default_capacity)) . '" value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
                 echo '</select>';
             } else {
                 $type = $field[1] === 'date' ? 'datetime-local' : ($field[1] === 'integer' ? 'number' : 'text');
@@ -86,7 +86,7 @@ class EventMetaBox {
     }
 
     public function save($post_id) {
-        if (get_post_type($post_id) !== 'vw_event' || !isset($_POST['vw_event_settings_nonce_field']) || !wp_verify_nonce($_POST['vw_event_settings_nonce_field'], 'vw_event_settings_nonce')) return;
+        if (get_post_type($post_id) !== 'vw_event' || !isset($_POST['vw_event_settings_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vw_event_settings_nonce_field'])), 'vw_event_settings_nonce')) return;
         if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || !current_user_can('edit_post', $post_id)) return;
         $input = [];
         foreach (EventSettings::fields() as $key => $field) {

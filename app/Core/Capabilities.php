@@ -11,7 +11,7 @@ class Capabilities {
             echo '<div class="notice notice-warning"><p>VeranstaltungsWart 2.0 hat Autoren zusätzliche Rechte für fremde Blogbeiträge erteilt. Falls diese Rechte nicht bewusst benötigt werden: <a href="' . esc_url($url) . '">Zusätzliche Autorenrechte für fremde Beiträge entfernen</a>. Veranstaltungsrechte bleiben erhalten.</p></div>';
         });
         add_action('admin_post_vw_repair_author_rights', function() {
-            if (!current_user_can('manage_options')) wp_die('Keine Berechtigung.');
+            if (!current_user_can('manage_options')) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
             check_admin_referer('vw_repair_author_rights');
             $role = get_role('author');
             if ($role) { $role->remove_cap('edit_others_posts'); $role->remove_cap('delete_others_posts'); }

@@ -1,119 +1,121 @@
 === VeranstaltungsWart ===
 Contributors: realsven87
 Tags: events, event management, bookings, registration
-Requires at least: 5.8
-Tested up to: 6.5
-Stable tag: 3.0.2
+Requires at least: 6.5
+Tested up to: 7.1
+Stable tag: 3.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Der Veranstaltungs-Manager für Vereine und Organisationen. Erstelle und verwalte Veranstaltungen, Anmeldungen und E-Mail-Vorlagen mit Leichtigkeit.
+Manage events, registrations, waiting lists and venues with three native blocks, approval workflows and optional private locations.
 
 == Description ==
 
-Der **VeranstaltungsWart** ist ein leichtgewichtiges Plugin zur Verwaltung von Veranstaltungen, Anmeldungen und Veranstaltungsorten. Es wurde für die Anforderungen von Vereinen, Organisationen und kleinen bis mittleren Veranstaltern entwickelt.
+VeranstaltungsWart helps clubs, associations and event organisers manage events and registrations in WordPress. Registration data is stored in your site's database. No external account or paid service is required.
 
-Verabschiede dich von unübersichtlichen Excel-Listen! Mit dem VeranstaltungsWart integrierst du in Sekunden ein Anmeldeformular auf deiner Website und verwaltest deine Gäste übersichtlich im WordPress-Backend.
+Features:
 
-### Hauptfunktionen:
-*   **Veranstaltungs-Verwaltung:** Erstelle Veranstaltungen mit Datum, Uhrzeit, Ort und maximaler Teilnehmerzahl.
-*   **Wartelisten-Automatik:** Wenn eine Veranstaltung ausgebucht ist, landen neue Anmeldungen automatisch auf der Warteliste. Wird ein Platz frei (z.B. durch Storno), rücken Personen automatisch nach.
-*   **Personen & Vertrauensstatus:** Verwalte alle deine Kontakte an einem Ort. Personen können als "freigegeben" markiert werden, sodass ihre zukünftigen Anmeldungen automatisch bestätigt werden.
-*   **Veranstaltungsorts-Verwaltung:** Speichere Veranstaltungsorte inklusive Adressen und Standard-Kapazitäten ab, um sie bei neuen Veranstaltungen mit einem Klick auszuwählen.
-*   **Individuelle E-Mail-Vorlagen:** Erstelle eigene Bestätigungs-, Absage- oder Info-Nachrichten direkt im WordPress-Editor. Nutze praktische Platzhalter wie `{vorname}`, `{event_name}` oder `{storno_link}`.
-*   **Teilnehmer-Export:** Exportiere die Anmeldungen einer Veranstaltung jederzeit als saubere CSV-Datei (perfekt für Einlasskontrollen).
-*   **Datenschutzfreundlich:** Das Plugin integriert sich nahtlos in die WordPress-eigenen Werkzeuge zum Exportieren und Löschen von personenbezogenen Daten. Ein automatischer Cronjob löscht zudem veraltete Daten nach 12 Monaten.
+* Three dynamic blocks: registration form, event card and event list. Embed events in posts and pages.
+* Event date, optional end time and registration deadline.
+* Optional accompanying guests and a configurable free-text field, including required input.
+* Venue capacity copied when a venue is selected, with a manual override.
+* Manual approval and automatic confirmation for trusted contacts. Confirmed seats count towards capacity; pending requests do not reserve seats.
+* Waiting lists with automatic promotion of eligible trusted contacts when enough seats become available for their entire group.
+* Authors manage their own events. Administrators and editors can manage other authors' events. Dashboard counters use the same permissions.
+* Optional private locations, disclosed only in generated information for confirmed registrations.
+* Email templates, cancellation links, calendar downloads and participant CSV exports.
+* Event images shown without cropping: left on desktop, above the text on mobile.
+* WordPress personal-data export and erasure integration.
+
+The interface currently uses German source strings and supports translations. This plugin does not process payments or sell tickets.
+
+= Deutsch =
+
+VeranstaltungsWart verwaltet Veranstaltungen, Orte und Anmeldungen für Vereine und Organisationen. Drei Blöcke ermöglichen Anmeldeformulare, Veranstaltungskarten und Veranstaltungslisten auch in normalen Beiträgen und Seiten. Begleitpersonen, Freitextfeld, Kapazität und private Ortsangaben werden zentral pro Veranstaltung eingestellt.
+
+Autoren verwalten eigene Veranstaltungen; Administratoren und Redakteure können auch fremde Veranstaltungen bearbeiten. Personen, Vertrauensstatus und Orte verwalten Administratoren.
+
+= Data and privacy =
+
+The plugin stores names, email addresses, registration status, guest counts, free-text messages, registration timestamps, contact trust status and optional contact-list membership in the local WordPress database. Email content may contain these details and is sent through your site's configured WordPress mail service. The plugin does not include analytics or send data to the developer.
+
+A daily WordPress cron task removes contacts and their registrations when their most recent registration is older than twelve months. This is based on the registration timestamp, not the event date; contacts without registrations are not selected by this task. Configure your site's privacy notice to explain the actual processing and retention. Avoid collecting unnecessary sensitive information in the free-text field.
+
+Deactivation stops scheduled tasks and preserves data. Deleting the plugin removes its custom tables (including registrations, contacts, lists and venues), plugin capabilities and reminder markers. Event posts and email-template posts are retained in the WordPress posts table. Back up before deletion or upgrades. Do not uninstall as an update procedure.
+
+No external service is required by this plugin. Your hosting, mail delivery and any other plugins remain separate services managed by you.
+
+= Requirements and limitations =
+
+* WordPress 6.5 or newer; PHP 7.4 or newer.
+* MySQL/MariaDB must support GET_LOCK. If a booking lock cannot be acquired, the request fails safely instead of booking without protection.
+* WordPress cron must run for reminders and cleanup to execute. Timing depends on site traffic or a configured server cron.
+* Configure and test WordPress email delivery. A saved registration does not guarantee email delivery.
+* Exclude pages containing registration forms from long-lived full-page caching so that form tokens remain valid.
+* Multisite network activation is not supported; use individual site activation and verify on a test site.
 
 == Installation ==
 
-1. Lade den Ordner `veranstaltungswart` in das Verzeichnis `/wp-content/plugins/` hoch oder installiere das Plugin direkt als ZIP-Datei über das WordPress-Backend.
-2. Aktiviere das Plugin im Menü "Plugins" in WordPress.
-3. Gehe im neuen Menü "VeranstaltungsWart" auf **Orte** und lege deinen ersten Veranstaltungsort an.
-4. Erstelle unter **Veranstaltungen** eine neue Veranstaltung und wähle den Ort sowie die Kapazität aus.
-5. Füge den Shortcode `[event_registration]` in den Textbereich deiner Veranstaltung ein. Das Anmeldeformular erscheint nun automatisch auf deiner Seite!
-6. (Optional) Passe unter **E-Mail-Vorlagen** die Texte für Bestätigungen und Wartelisten-Infos an.
+1. Install the plugin ZIP under Plugins > Add New > Upload Plugin, then activate it.
+2. As an administrator, create a venue under VeranstaltungsWart > Orte.
+3. Create an event and set its date, venue, capacity and registration rules.
+4. In the block editor, open the VeranstaltungsWart document panel or the registration block settings. Click “Veranstaltungseinstellungen speichern” to save these settings separately from the post. In the classic editor, settings save with the event.
+5. Add the “VeranstaltungsWart – Anmeldung” block to the event and publish it.
+6. Add event cards or event lists to any post or page. Select an event explicitly when embedding an individual event in another post.
+7. Review email templates and run a test registration and test email before accepting real registrations.
+8. Publish your privacy notice and select it in WordPress Settings > Privacy.
 
 == Frequently Asked Questions ==
 
-= Wie binde ich das Anmeldeformular ein? =
-Füge den Shortcode `[event_registration]` in den Standard-Editor (Gutenberg) deiner Veranstaltung ein. Das System erkennt automatisch, auf welcher Veranstaltungsseite es sich befindet.
+= Can I keep using shortcodes? =
 
-= Wie funktioniert die Warteliste? =
-Sobald die definierte "Max. Teilnehmer"-Zahl einesr Veranstaltung erreicht ist, schaltet das Formular automatisch in den Wartelisten-Modus. Wenn du eine bestätigte Anmeldung stornierst oder löschst, berechnet das System die Plätze neu und bestätigt passende freigegebene Personen automatisch. Ungeprüfte Personen benötigen weiterhin deine Freigabe.
+Yes. Use [event_registration] inside an event or [event_registration id="123"] in another post or page. Existing shortcodes continue to work.
 
-= Kann ich die E-Mails testen, bevor sie an Teilnehmer rausgehen? =
-Ja! Gehe im Dashboard auf "E-Mail-Vorlagen", öffne eine Vorlage und klicke in der rechten Seitenleiste auf den Button "Test-Mail jetzt senden". Du erhältst dann eine E-Mail mit Beispieldaten an die E-Mail-Adresse des Administrators.
+= Which event placeholders are available? =
 
-= Was hat es mit dem "Vertrauensstatus" auf sich? =
-Du kannst in der Personenverwaltung entscheiden, ob Anmeldungen einer Person sofort automatisch auf "Bestätigt" gesetzt werden sollen ("Freigegeben") oder ob sie manuell von dir freigeschaltet werden müssen ("Prüfung erforderlich").
+Inside event content: {event_name}, {event_datum}, {event_wochentag}, {event_zeit}, {event_ende}, {event_ort}, {event_adresse}, {event_hinweis}.
 
-= Sind die Daten Datenschutzfreundlich gesichert? =
-Ja. Der VeranstaltungsWart unterstützt die nativen WordPress-Tools zum Export und zur Löschung von personenbezogenen Daten. Zudem fragt das Anmeldeformular aktiv die Zustimmung zur Datenschutzerklärung ab.
+The paragraph toolbar offers “Veranstaltungsdaten einfügen”. Elsewhere, use [event_data id="123" field="event_datum"]. Dates and times follow your site's formats and timezone.
 
-== Screenshots ==
+= How does the waiting list work? =
 
-1. Das übersichtliche Dashboard mit den aktuellen Warteschlangen.
-2. Die detaillierte Event-Ansicht inklusive Teilnehmer-Tabelle und CSV-Export.
-3. Verwaltung der E-Mail-Vorlagen mit dynamischen Platzhaltern.
-4. Die Personenverwaltung zur schnellen Freigabe von Teilnehmern.
-5. Das Anmeldeformular für Teilnehmer auf der Website.
+Only confirmed seats occupy capacity. Trusted contacts can be confirmed automatically; unreviewed contacts require manual approval. When seats become available, eligible trusted waiting-list contacts move up in registration order if their entire group fits. Groups that do not fit are skipped. A waiting-list message is not a confirmation.
 
-== Version 3.0: Blöcke und dynamische Daten ==
+= How are private locations protected? =
 
-Drei native Blöcke stehen im Block-Editor zur Verfügung:
-* VeranstaltungsWart – Anmeldung
-* VeranstaltungsWart – Veranstaltungskarte
-* VeranstaltungsWart – Veranstaltungsliste
+Locations are private by default. Generated public event information hides the venue and address until confirmation. This does not hide addresses you manually include in text or images. Calendar downloads require a confirmed registration and its private link.
 
-Im Anmeldeblock kann eine Veranstaltung ausgewählt werden. Ohne Auswahl wird die
-aktuelle Veranstaltung verwendet. So funktionieren Formulare auch auf Beiträgen
-und Seiten. Zentral gespeicherte Formularregeln gelten für alle Einbettungen.
+= What happens when I change the venue? =
 
-Die Veranstaltungseinstellungen befinden sich im Block und in der Dokument-Seitenleiste.
-Mit „Veranstaltungseinstellungen speichern“ werden sie SOFORT separat gespeichert.
-Die Veröffentlichung des Beitrags speichert diese Einstellungen nicht automatisch.
-Im klassischen Editor werden die Felder weiterhin zusammen mit dem Beitrag gespeichert.
+The new venue's capacity is copied into the event. Zero means unlimited. You may then override the capacity manually. A capacity lower than already confirmed seats is rejected.
 
-Platzhalter im Veranstaltungstext: {event_name}, {event_datum}, {event_wochentag},
-{event_zeit}, {event_ende}, {event_ort}, {event_adresse}, {event_hinweis}.
-Im Absatz-Editor gibt es ein Menü „Veranstaltungsdaten einfügen“.
-In anderen Beiträgen: [event_data id="123" field="event_datum"]
-Anmeldung in anderen Beiträgen: [event_registration id="123"]
+= Can I hide empty lists and change images? =
 
-Orte sind standardmäßig nicht öffentlich. Die Einstellung „Ort erst nach bestätigter
-Anmeldung mitteilen“ schützt generierte Ortsangaben in Karten, Platzhaltern und
-E-Mails. Ein Kalenderdownload ist nur mit bestätigter Anmeldung möglich.
-Bereits manuell in Texte oder Bilder geschriebene Adressen werden nicht entfernt.
+Leave the event list's empty-message setting blank to hide empty lists. Both card and list blocks can hide featured images. When displayed, images retain their aspect ratio without cropping, left on desktop and above the text on mobile.
 
-Endzeit und Anmeldeschluss sind optional. Ohne Anmeldeschluss endet die Anmeldung
-mit Beginn. Ohne Endzeit wird keine Dauer für den Kalenderdownload erfunden.
+= How do I upgrade from 2.0? =
 
-Die Blöcke unterstützen Theme-Farben und Abstände. Die Liste filtert nach Kategorie,
-Anzahl, vergangenen und abgesagten Veranstaltungen. Ein leerer Hinweistext blendet
-Listen ohne Treffer vollständig aus.
+Back up and test the update first. Existing database records and shortcodes are retained. Do not delete the plugin before updating.
 
-== Upgrade von 2.0 ==
+Version 2.0 could grant authors general rights over other authors' blog posts. An administrator-only notice offers an explicit repair. The plugin does not silently remove those general rights, as they may have been assigned intentionally.
 
-Datenbank und bestehende Shortcodes bleiben erhalten. Vor dem Update sichern und
-auf einer Testinstallation prüfen. Nicht deinstallieren: uninstall.php löscht Daten!
-Autoren bearbeiten nur eigene Veranstaltungen; Administratoren und Redakteure
-können auch fremde Veranstaltungen bearbeiten. Personen und Orte verwalten Admins.
-Falls Version 2.0 Autoren allgemeine Rechte für fremde Blogbeiträge erteilt hat,
-zeigt ein Admin-Hinweis eine ausdrücklich auslösbare Reparatur an. Diese Rechte
-werden nicht automatisch gelöscht, da sie auch bewusst vergeben worden sein können.
+= Does the plugin guarantee privacy compliance or email delivery? =
 
-Nur bestätigte Plätze belegen die Kapazität. Eingegangene Anmeldungen reservieren
-keine Plätze. Die automatische Warteliste verarbeitet freigegebene Personen nach
-Eingangszeit und überspringt Gruppen, die nicht vollständig passen. Ungeprüfte
-Personen benötigen weiterhin eine manuelle Bestätigung.
+No. It provides export/erasure tools and a privacy-consent field. Site owners must configure their own notices, access rules, retention processes and email delivery appropriately.
 
-Das Datenbanksystem muss MySQL/MariaDB GET_LOCK unterstützen. Bei nicht verfügbarem
-Lock wird die Anmeldung mit einer Fehlermeldung abgelehnt, statt ungesichert zu buchen.
-Seiten mit Formularen sollten von lang laufendem Full-Page-Caching ausgeschlossen
-werden, damit die WordPress-Formulartokens aktuell bleiben.
+== Upgrade Notice ==
+
+= 3.1.0 =
+WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata and documentation updates. Back up before updating; do not uninstall.
 
 == Changelog ==
+
+= 3.1.0 =
+* Prepare metadata and documentation for WordPress.org submission.
+* Make new event settings, blocks and registration messages translatable.
+* Add official Plugin Check to the release verification workflow.
+* Align the minimum WordPress version with the tested 6.5 baseline.
 
 = 3.0.2 =
 * Veranstaltungsbilder in Karten und Listen vollständig im ursprünglichen Seitenverhältnis anzeigen, ohne Beschnitt oder Verzerrung.

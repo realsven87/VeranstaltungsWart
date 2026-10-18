@@ -37,7 +37,7 @@ public function download_participants_csv($event_id) {
             return ($a->status === 'bestätigt') ? -1 : 1;
         });
 
-        $filename = 'teilnehmer-' . sanitize_title($event_title) . '-' . date('Y-m-d') . '.csv';
+        $filename = 'teilnehmer-' . sanitize_title($event_title) . '-' . wp_date('Y-m-d') . '.csv';
 
         // Header für Datei-Download
         header('Content-Type: text/csv; charset=utf-8');
@@ -53,26 +53,30 @@ public function download_participants_csv($event_id) {
         // Spaltenüberschriften
         fputcsv($output, [
             'Status',
-            'Nachname', 
-            'Vorname', 
-            'E-Mail', 
-            'Plätze', 
-            'Angemeldet am'
-        ], ';');
+            __('Nachname', 'veranstaltungswart'), 
+            __('Vorname', 'veranstaltungswart'), 
+            __('E-Mail', 'veranstaltungswart'), 
+            __('Plätze', 'veranstaltungswart'), 
+            __('Angemeldet am', 'veranstaltungswart')
+        ], ';', '"', '');
 
         // Datenzeilen schreiben
         foreach ($active_registrations as $reg) {
             fputcsv($output, [
                 ucfirst($reg->status),
-                $reg->last_name,
-                $reg->first_name,
-                $reg->email,
+                $this->csv_cell($reg->last_name),
+                $this->csv_cell($reg->first_name),
+                $this->csv_cell($reg->email),
                 $reg->seats_total,
                 date_i18n('d.m.Y H:i', strtotime($reg->registered_at))
-            ], ';');
+            ], ';', '"', '');
         }
 
-        fclose($output);
+        fclose($output); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Close php://output, not a filesystem file.
         exit;
+    }
+    private function csv_cell($value) {
+        $value = (string) $value;
+        return preg_match('/^[\s]*[=+@\-]/u', $value) ? "'" . $value : $value;
     }
 }

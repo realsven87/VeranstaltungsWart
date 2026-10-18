@@ -159,7 +159,7 @@ class MailTemplateManager {
         );
 
         // Zurückleiten mit Parameter
-        wp_redirect(get_edit_post_link($template_id, 'url') . '&test_sent=1');
+        wp_safe_redirect(get_edit_post_link($template_id, 'url') . '&test_sent=1');
         exit;
     }
 
@@ -184,7 +184,7 @@ class MailTemplateManager {
         if ($column === 'slug') {
             $post = get_post($post_id);
             echo '<code style="background:#f0f0f1; padding:3px 5px; border-radius:3px; color:#c92c2c; font-weight:bold;">' . esc_html($post->post_name) . '</code>';
-            echo '<br><small style="color:#666;">(ID: ' . $post_id . ')</small>';
+            echo '<br><small style="color:#666;">(ID: ' . (int) $post_id . ')</small>';
         }
     }
 
