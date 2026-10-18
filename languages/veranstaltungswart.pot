@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: VeranstaltungsWart 3.1.0\n"
+"Project-Id-Version: VeranstaltungsWart 3.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/VeranstaltungsWart\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-18T08:25:23+00:00\n"
+"POT-Creation-Date: 2026-10-18T10:05:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: veranstaltungswart\n"
@@ -33,48 +33,48 @@ msgstr ""
 msgid "Sven Epple"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:26
-#: app/Blocks/BlockManager.php:39
+#: app/Blocks/BlockManager.php:33
+#: app/Blocks/BlockManager.php:46
 #: app/Registrations/RegistrationShortcode.php:9
-#: assets/editor.js:76
-#: assets/editor.js:80
+#: assets/editor.js:77
+#: assets/editor.js:81
 msgid "Anmeldung"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:26
-#: app/Blocks/BlockManager.php:39
+#: app/Blocks/BlockManager.php:33
+#: app/Blocks/BlockManager.php:46
 #: app/Registrations/RegistrationShortcode.php:9
-#: assets/editor.js:80
+#: assets/editor.js:81
 msgid "Jetzt anmelden"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:27
-#: app/Blocks/BlockManager.php:86
-#: assets/editor.js:81
+#: app/Blocks/BlockManager.php:34
+#: app/Blocks/BlockManager.php:94
+#: assets/editor.js:82
 msgid "Zur Veranstaltung"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:50
+#: app/Blocks/BlockManager.php:57
 msgid "(Ohne Titel)"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:61
+#: app/Blocks/BlockManager.php:68
 msgid "Ungültige Einstellungen."
 msgstr ""
 
-#: app/Blocks/BlockManager.php:80
+#: app/Blocks/BlockManager.php:87
 msgid "Abgesagt"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:80
+#: app/Blocks/BlockManager.php:87
 msgid "Anmeldung geschlossen"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:80
+#: app/Blocks/BlockManager.php:87
 msgid "Ausgebucht · Warteliste"
 msgstr ""
 
-#: app/Blocks/BlockManager.php:80
+#: app/Blocks/BlockManager.php:87
 msgid "Anmeldung geöffnet"
 msgstr ""
 
@@ -227,37 +227,44 @@ msgstr ""
 msgid "Event bearbeiten"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:148
-#: app/Events/views/registration-list-table.php:172
+#: app/Dashboard/views/dashboard-view.php:133
+#: app/Events/EventExporter.php:61
+#: app/Events/views/registration-list-table.php:122
+#: app/Persons/PersonManager.php:287
+msgid "Zusatzantworten"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:151
+#: app/Events/views/registration-list-table.php:175
 msgid "Jetzt bestätigen"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:154
-#: app/Events/views/registration-list-table.php:179
+#: app/Dashboard/views/dashboard-view.php:157
+#: app/Events/views/registration-list-table.php:182
 msgid "Ablehnen"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:155
+#: app/Dashboard/views/dashboard-view.php:158
 msgid "Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail."
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:166
+#: app/Dashboard/views/dashboard-view.php:169
 msgid "Keine offenen Anmeldungen vorhanden. Alles erledigt!"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:175
+#: app/Dashboard/views/dashboard-view.php:178
 msgid "Anmeldungen durchblättern"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:179
+#: app/Dashboard/views/dashboard-view.php:182
 msgid "Zurück"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:179
+#: app/Dashboard/views/dashboard-view.php:182
 msgid "Weiter"
 msgstr ""
 
-#: app/Dashboard/views/dashboard-view.php:184
+#: app/Dashboard/views/dashboard-view.php:187
 msgid "Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind unter der jeweiligen Veranstaltung einsehbar."
 msgstr ""
 
@@ -441,6 +448,23 @@ msgstr ""
 msgid "Klicke hier: {storno_link}"
 msgstr ""
 
+#: app/Dashboard/views/question-totals.php:2
+msgid "Zusatzfragen auswerten"
+msgstr ""
+
+#: app/Dashboard/views/question-totals.php:5
+msgid "Veranstaltung für Auswertung"
+msgstr ""
+
+#: app/Dashboard/views/question-totals.php:7
+#: app/Events/RegistrationQuestions.php:149
+msgid "Bitte auswählen"
+msgstr ""
+
+#: app/Dashboard/views/question-totals.php:12
+msgid "Auswertung anzeigen"
+msgstr ""
+
 #: app/Events/EventExporter.php:20
 #: app/Mails/MailTemplateManager.php:124
 #: app/Persons/PersonManager.php:197
@@ -484,41 +508,41 @@ msgstr ""
 msgid "Die Einstellungen findest du rechts im Bereich „VeranstaltungsWart“ oder im Anmeldeblock. Dort separat speichern."
 msgstr ""
 
-#: app/Events/EventMetaBox.php:63
-#: assets/editor.js:47
+#: app/Events/EventMetaBox.php:65
+#: assets/editor.js:48
 msgid "Kein Ort"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:105
-#: app/Events/EventSettings.php:92
+#: app/Events/EventMetaBox.php:110
+#: app/Events/EventSettings.php:99
 msgid "Diese Veranstaltung wurde abgesagt."
 msgstr ""
 
-#: app/Events/EventMetaBox.php:108
+#: app/Events/EventMetaBox.php:113
 msgid "Veranstaltung absagen und alle aktiven Teilnehmer informieren?"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:108
+#: app/Events/EventMetaBox.php:113
 msgid "Veranstaltung absagen"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:111
+#: app/Events/EventMetaBox.php:116
 msgid "Änderungen zuerst speichern. Danach:"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:111
+#: app/Events/EventMetaBox.php:116
 msgid "Aktuelle Veranstaltungsdaten per E-Mail an alle aktiven Teilnehmer senden?"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:111
+#: app/Events/EventMetaBox.php:116
 msgid "Teilnehmer über Änderungen informieren"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:121
+#: app/Events/EventMetaBox.php:127
 msgid "Teilnehmerliste (CSV) exportieren"
 msgstr ""
 
-#: app/Events/EventMetaBox.php:131
+#: app/Events/EventMetaBox.php:137
 msgid "Teilnehmerliste konnte nicht geladen werden."
 msgstr ""
 
@@ -560,7 +584,7 @@ msgid "Kategorien suchen"
 msgstr ""
 
 #: app/Events/EventPostType.php:100
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Alle Kategorien"
 msgstr ""
 
@@ -585,7 +609,7 @@ msgid "Datum & Uhrzeit"
 msgstr ""
 
 #: app/Events/EventPostType.php:123
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Ort"
 msgstr ""
 
@@ -713,49 +737,130 @@ msgstr ""
 msgid "Erinnerungen 7 und 3 Tage vorher senden"
 msgstr ""
 
-#: app/Events/EventSettings.php:48
+#: app/Events/EventSettings.php:23
+#: assets/questions-editor.js:11
+msgid "Zusatzfragen"
+msgstr ""
+
+#: app/Events/EventSettings.php:55
 msgid "Ungültiger Einstellungswert."
 msgstr ""
 
-#: app/Events/EventSettings.php:52
+#: app/Events/EventSettings.php:59
 msgid "Bitte ein gültiges Datum angeben."
 msgstr ""
 
-#: app/Events/EventSettings.php:56
+#: app/Events/EventSettings.php:63
 msgid "Bitte eine nichtnegative ganze Zahl angeben."
 msgstr ""
 
-#: app/Events/EventSettings.php:58
+#: app/Events/EventSettings.php:65
 msgid "Maximal 100 Begleitpersonen erlaubt."
 msgstr ""
 
-#: app/Events/EventSettings.php:73
+#: app/Events/EventSettings.php:80
 msgid "Das Ende muss nach dem Beginn liegen."
 msgstr ""
 
-#: app/Events/EventSettings.php:74
+#: app/Events/EventSettings.php:81
 msgid "Der Anmeldeschluss muss vor oder beim Beginn liegen."
 msgstr ""
 
-#: app/Events/EventSettings.php:75
+#: app/Events/EventSettings.php:82
 msgid "Veranstaltungsort nicht gefunden."
 msgstr ""
 
-#: app/Events/EventSettings.php:79
+#: app/Events/EventSettings.php:86
 msgid "Die Kapazität darf nicht unter den bereits bestätigten Plätzen liegen."
 msgstr ""
 
-#: app/Events/EventSettings.php:91
+#: app/Events/EventSettings.php:98
 msgid "Diese Veranstaltung ist nicht zur Anmeldung verfügbar."
 msgstr ""
 
-#: app/Events/EventSettings.php:94
+#: app/Events/EventSettings.php:101
 msgid "Für diese Veranstaltung ist noch kein Termin hinterlegt."
 msgstr ""
 
-#: app/Events/EventSettings.php:96
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Events/EventSettings.php:103
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Die Anmeldung ist geschlossen."
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:13
+msgid "Bitte Fragen und Optionen prüfen: maximal 20 Fragen, 30 Optionen je Frage, eindeutige Kennungen und mindestens eine aktive Option je aktiver Auswahlfrage. Typ und Geltungsbereich bestehender Fragen bleiben unverändert."
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:53
+msgid "Bitte alle Zusatzfragen vollständig beantworten. Falls die Fragen geändert wurden, lade das Formular neu."
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:93
+msgid "Gesamte Anmeldung"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:94
+#: app/Registrations/views/form-view.php:36
+msgid "Du"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:94
+msgid "Hauptperson"
+msgstr ""
+
+#. translators: %d: guest number, not a name.
+#: app/Events/RegistrationQuestions.php:96
+#: app/Registrations/views/form-view.php:33
+#, php-format
+msgid "Begleitperson %d"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:125
+msgid "Auswertung der Zusatzfragen"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:126
+msgid "Gezählt werden ausgewählte Optionen, pro Person oder pro Anmeldung. Stornierte und abgelehnte Anmeldungen zählen nicht. Freitext steht bei der jeweiligen Anmeldung."
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:127
+msgid "Noch keine Auswahlantworten vorhanden."
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+msgid "Frage"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+msgid "Option"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+#: assets/questions-editor.js:18
+msgid "Abfrage"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+#: app/Events/views/registration-list-table.php:159
+msgid "Bestätigt"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+#: app/Events/views/registration-list-table.php:163
+msgid "Warteliste"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:129
+msgid "Prüfung offen"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:131
+#: assets/questions-editor.js:18
+msgid "Pro Person"
+msgstr ""
+
+#: app/Events/RegistrationQuestions.php:131
+msgid "Pro Anmeldung"
 msgstr ""
 
 #: app/Events/views/registration-list-table.php:55
@@ -784,7 +889,7 @@ msgstr ""
 
 #: app/Events/views/registration-list-table.php:77
 #: app/Locations/views/admin-page.php:124
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Name"
 msgstr ""
 
@@ -802,65 +907,57 @@ msgstr ""
 msgid "Platz frei! Dieser Teilnehmer kann jetzt bestätigt werden."
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:123
+#: app/Events/views/registration-list-table.php:126
 msgid "Anmerkung"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:156
-msgid "Bestätigt"
-msgstr ""
-
-#: app/Events/views/registration-list-table.php:157
+#: app/Events/views/registration-list-table.php:160
 msgid "Abgelehnt"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:158
+#: app/Events/views/registration-list-table.php:161
 msgid "Storniert"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:159
+#: app/Events/views/registration-list-table.php:162
 msgid "Eingegangen"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:160
-msgid "Warteliste"
-msgstr ""
-
-#: app/Events/views/registration-list-table.php:180
+#: app/Events/views/registration-list-table.php:183
 msgid "Teilnehmer ablehnen?"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:186
+#: app/Events/views/registration-list-table.php:189
 msgid "Anmeldung endgültig löschen?"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:187
+#: app/Events/views/registration-list-table.php:190
 #: app/Locations/views/admin-page.php:145
 #: app/Persons/views/admin-page.php:97
 msgid "Löschen"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:196
+#: app/Events/views/registration-list-table.php:199
 msgid "Noch keine Anmeldungen für dieses Event vorhanden."
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:205
+#: app/Events/views/registration-list-table.php:208
 msgid "Status-Info:"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:206
+#: app/Events/views/registration-list-table.php:209
 msgid "\"Eingegangen\" sind neue Anmeldungen."
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:209
+#: app/Events/views/registration-list-table.php:212
 msgid "Grün markierte Zeilen"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:212
+#: app/Events/views/registration-list-table.php:215
 msgid "haben aktuell Platz im Event. Das"
 msgstr ""
 
-#: app/Events/views/registration-list-table.php:214
+#: app/Events/views/registration-list-table.php:217
 msgid "Icon zeigt global vertrauenswürdige Personen."
 msgstr ""
 
@@ -928,7 +1025,7 @@ msgid "Abbrechen"
 msgstr ""
 
 #: app/Locations/views/admin-page.php:125
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Adresse"
 msgstr ""
 
@@ -1027,7 +1124,7 @@ msgid "Wir sind Vegetarier und benötigen einen Parkplatz."
 msgstr ""
 
 #: app/Mails/MailTemplateManager.php:146
-#: app/Registrations/RegistrationHandler.php:81
+#: app/Registrations/RegistrationHandler.php:83
 msgid "Anmeldung stornieren"
 msgstr ""
 
@@ -1238,7 +1335,7 @@ msgid ""
 msgstr ""
 
 #: app/Persons/PersonManager.php:37
-msgid "VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website."
+msgid "VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten, Antworten auf veranstaltungsspezifische Zusatzfragen (auch je nummerierter Begleitperson) und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website."
 msgstr ""
 
 #: app/Persons/PersonManager.php:81
@@ -1284,15 +1381,15 @@ msgstr ""
 msgid "Nachricht"
 msgstr ""
 
-#: app/Persons/PersonManager.php:287
+#: app/Persons/PersonManager.php:288
 msgid "Gesamtplätze"
 msgstr ""
 
-#: app/Persons/PersonManager.php:291
+#: app/Persons/PersonManager.php:292
 msgid "VeranstaltungsWart - Anmeldungen"
 msgstr ""
 
-#: app/Persons/PersonManager.php:321
+#: app/Persons/PersonManager.php:322
 msgid "Fehler beim Löschen der Personendaten im VeranstaltungsWart."
 msgstr ""
 
@@ -1396,71 +1493,75 @@ msgstr ""
 msgid "Keine Teilnehmer gefunden."
 msgstr ""
 
-#: app/Registrations/RegistrationHandler.php:67
+#: app/Registrations/RegistrationHandler.php:69
 msgid "Dieser Link ist ungültig."
 msgstr ""
 
-#: app/Registrations/RegistrationHandler.php:75
+#: app/Registrations/RegistrationHandler.php:77
 msgid "Anmeldung stornieren?"
 msgstr ""
 
-#: app/Registrations/RegistrationHandler.php:78
+#: app/Registrations/RegistrationHandler.php:80
 msgid "Stornierung bestätigen"
 msgstr ""
 
-#: app/Registrations/RegistrationHandler.php:91
+#: app/Registrations/RegistrationHandler.php:93
 msgid "Der Kalenderdownload steht nur für bestätigte Anmeldungen zur Verfügung."
 msgstr ""
 
-#: app/Registrations/RegistrationHandler.php:94
+#: app/Registrations/RegistrationHandler.php:96
 msgid "Kein gültiger Termin hinterlegt."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
+msgid "Bitte beantworte die Zusatzfragen vollständig. Falls die Fragen inzwischen geändert wurden, lade das Formular neu."
+msgstr ""
+
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Bitte lade die Seite neu und versuche es erneut."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Bitte prüfe Name, E-Mail-Adresse und Datenschutzzustimmung."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Die Anzahl der Begleitpersonen ist nicht erlaubt."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Bitte prüfe das Freitextfeld (maximal 5.000 Zeichen/Bytes)."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Für diese E-Mail-Adresse besteht bereits eine aktive Anmeldung."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Bitte versuche es gleich noch einmal."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:27
+#: app/Registrations/RegistrationShortcode.php:29
 msgid "Die Anmeldung konnte nicht gespeichert werden. Bitte erneut versuchen."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:28
+#: app/Registrations/RegistrationShortcode.php:30
 msgid "Vielen Dank! Deine Anmeldung ist bestätigt."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:28
+#: app/Registrations/RegistrationShortcode.php:30
 msgid "Deine Anmeldung ist eingegangen und wird geprüft. Die Bestätigung erfolgt separat."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:28
+#: app/Registrations/RegistrationShortcode.php:30
 msgid "Du stehst auf der Warteliste. Dies ist noch keine Teilnahmebestätigung."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:31
+#: app/Registrations/RegistrationShortcode.php:33
 msgid "Ein Fehler ist aufgetreten."
 msgstr ""
 
-#: app/Registrations/RegistrationShortcode.php:32
+#: app/Registrations/RegistrationShortcode.php:34
 msgid "Deine Anmeldung wurde storniert."
 msgstr ""
 
@@ -1500,15 +1601,24 @@ msgstr ""
 msgid " (optional)"
 msgstr ""
 
-#: app/Registrations/views/form-view.php:30
+#. translators: %d: guest number, not a name.
+#: app/Registrations/views/form-view.php:33
+msgid "Bitte mindestens eine Option auswählen."
+msgstr ""
+
+#: app/Registrations/views/form-view.php:45
+msgid "Bitte JavaScript aktivieren, um die Zusatzfragen für dich und deine Begleitpersonen auszufüllen."
+msgstr ""
+
+#: app/Registrations/views/form-view.php:47
 msgid "Ich stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anmeldung zu. Informationen in der"
 msgstr ""
 
-#: app/Registrations/views/form-view.php:30
+#: app/Registrations/views/form-view.php:47
 msgid "Datenschutzerklärung"
 msgstr ""
 
-#: app/Registrations/views/form-view.php:31
+#: app/Registrations/views/form-view.php:48
 msgid "Auf Warteliste setzen"
 msgstr ""
 
@@ -1537,129 +1647,195 @@ msgstr ""
 msgid "Gespeichert. Die Einstellungen gelten für alle Formulare dieser Veranstaltung."
 msgstr ""
 
-#: assets/editor.js:46
+#: assets/editor.js:47
 msgid "Beim Ortswechsel wird die Kapazität übernommen. Danach kannst du sie unten anpassen."
 msgstr ""
 
-#: assets/editor.js:57
+#: assets/editor.js:58
 msgid "Diese zentralen Einstellungen werden mit dem folgenden Button sofort gespeichert, unabhängig vom Beitrag."
 msgstr ""
 
-#: assets/editor.js:57
+#: assets/editor.js:58
 msgid "Speichert …"
 msgstr ""
 
-#: assets/editor.js:57
+#: assets/editor.js:58
 msgid "Veranstaltungseinstellungen speichern"
 msgstr ""
 
-#: assets/editor.js:69
+#: assets/editor.js:70
 msgid "Überschrift"
 msgstr ""
 
-#: assets/editor.js:69
-#: assets/editor.js:72
+#: assets/editor.js:70
+#: assets/editor.js:73
 msgid "Buttontext"
 msgstr ""
 
-#: assets/editor.js:69
+#: assets/editor.js:70
 msgid "Freie Plätze anzeigen"
 msgstr ""
 
-#: assets/editor.js:71
+#: assets/editor.js:72
 msgid "Beitragsbild anzeigen"
 msgstr ""
 
-#: assets/editor.js:71
+#: assets/editor.js:72
 msgid "Ort anzeigen"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Anzahl"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Spalten"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Kategorie"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Vergangene Veranstaltungen einschließen"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Abgesagte Veranstaltungen anzeigen"
 msgstr ""
 
-#: assets/editor.js:73
+#: assets/editor.js:74
 msgid "Text bei leerer Liste (leer = ausblenden)"
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Block-Einstellungen"
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Zentrale Veranstaltungseinstellungen"
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Veranstaltungskarte"
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Veranstaltungsliste"
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Bitte eine Veranstaltung in den Block-Einstellungen auswählen."
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 msgid "Formular mit Name, E-Mail und den zentral eingestellten Zusatzfeldern. Die Vorschau nimmt keine Anmeldungen entgegen."
 msgstr ""
 
-#: assets/editor.js:76
+#: assets/editor.js:77
 #, js-format
 msgid "Dynamische Liste: %1$d Veranstaltungen, %2$d Spalten. Die Website zeigt die aktuellen Termine."
 msgstr ""
 
-#: assets/editor.js:80
+#: assets/editor.js:81
 msgid "VeranstaltungsWart – Anmeldung"
 msgstr ""
 
-#: assets/editor.js:81
+#: assets/editor.js:82
 msgid "VeranstaltungsWart – Veranstaltungskarte"
 msgstr ""
 
-#: assets/editor.js:82
+#: assets/editor.js:83
 msgid "VeranstaltungsWart – Veranstaltungsliste"
 msgstr ""
 
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Datum"
 msgstr ""
 
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Wochentag"
 msgstr ""
 
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Beginn"
 msgstr ""
 
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Ende"
 msgstr ""
 
-#: assets/editor.js:90
+#: assets/editor.js:91
 msgid "Hinweise"
 msgstr ""
 
-#: assets/editor.js:92
-#: assets/editor.js:96
+#: assets/editor.js:93
+#: assets/editor.js:97
 msgid "Veranstaltungsdaten einfügen"
+msgstr ""
+
+#: assets/questions-editor.js:12
+msgid "Fragen gelten für diese Veranstaltung. Deaktivierte Fragen und Optionen verschwinden aus neuen Formularen; gespeicherte Antworten bleiben erhalten. Zum Ändern von Typ oder Abfrage eine neue Frage anlegen."
+msgstr ""
+
+#: assets/questions-editor.js:14
+#, js-format
+msgid "Frage %d"
+msgstr ""
+
+#: assets/questions-editor.js:15
+msgid "Bezeichnung"
+msgstr ""
+
+#: assets/questions-editor.js:16
+msgid "Erklärung (optional)"
+msgstr ""
+
+#: assets/questions-editor.js:17
+msgid "Feldtyp"
+msgstr ""
+
+#: assets/questions-editor.js:17
+msgid "Einzelauswahl"
+msgstr ""
+
+#: assets/questions-editor.js:17
+msgid "Mehrfachauswahl"
+msgstr ""
+
+#: assets/questions-editor.js:17
+msgid "Freitext"
+msgstr ""
+
+#: assets/questions-editor.js:18
+msgid "Einmal pro Anmeldung"
+msgstr ""
+
+#: assets/questions-editor.js:19
+msgid "Pflichtfeld"
+msgstr ""
+
+#: assets/questions-editor.js:20
+msgid "Frage aktiv"
+msgstr ""
+
+#: assets/questions-editor.js:23
+#, js-format
+msgid "Option %d"
+msgstr ""
+
+#: assets/questions-editor.js:24
+msgid "Option aktiv"
+msgstr ""
+
+#: assets/questions-editor.js:26
+msgid "Option hinzufügen"
+msgstr ""
+
+#: assets/questions-editor.js:28
+msgid "Ungespeicherte Frage entfernen"
+msgstr ""
+
+#: assets/questions-editor.js:30
+msgid "Frage hinzufügen"
 msgstr ""
