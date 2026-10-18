@@ -17,6 +17,8 @@ GitHub may remain the development repository. Release deployment to SVN can be a
 
 ## Review evidence
 
+Preparation run https://github.com/realsven87/VeranstaltungsWart/actions/runs/39111266525 passed both supported test environments. Plugin Check 2.1.0 reported **0 errors and 221 warnings**; the detailed report is retained without warning filters.
+
 Each CI run publishes a `wordpress-org-check` artifact. The official Plugin Check includes static and runtime checks. Its warnings require review; a passing check is not a guarantee of directory approval or an independent security audit.
 
 Database queries use WordPress's database API. Booking state must be read fresh while holding the per-event MySQL advisory lock, so booking reads deliberately avoid persistent caching. SQL sort direction is limited to literal ASC/DESC values and columns to a fixed allowlist.

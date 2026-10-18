@@ -1,730 +1,1665 @@
+# Copyright (C) 2026 Sven Epple
+# This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: VeranstaltungsWart 2.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 12:00+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: VeranstaltungsWart 3.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/VeranstaltungsWart\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Handcrafted\n"
+"POT-Creation-Date: 2026-10-18T08:25:23+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: veranstaltungswart\n"
 
-#. Plugin Name
+#. Plugin Name of the plugin
+#: veranstaltungswart.php
+#: app/Dashboard/DashboardManager.php:44
+#: app/Dashboard/DashboardManager.php:45
+#: app/Persons/PersonManager.php:237
+#: app/Persons/PersonManager.php:248
 msgid "VeranstaltungsWart"
 msgstr ""
 
-#. Plugin Description
+#. Description of the plugin
+#: veranstaltungswart.php
 msgid "Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit."
 msgstr ""
 
-msgid "Veranstaltungen"
+#. Author of the plugin
+#: veranstaltungswart.php
+msgid "Sven Epple"
 msgstr ""
 
-msgid "Veranstaltung"
+#: app/Blocks/BlockManager.php:26
+#: app/Blocks/BlockManager.php:39
+#: app/Registrations/RegistrationShortcode.php:9
+#: assets/editor.js:76
+#: assets/editor.js:80
+msgid "Anmeldung"
 msgstr ""
 
+#: app/Blocks/BlockManager.php:26
+#: app/Blocks/BlockManager.php:39
+#: app/Registrations/RegistrationShortcode.php:9
+#: assets/editor.js:80
+msgid "Jetzt anmelden"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:27
+#: app/Blocks/BlockManager.php:86
+#: assets/editor.js:81
+msgid "Zur Veranstaltung"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:50
+msgid "(Ohne Titel)"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:61
+msgid "Ungültige Einstellungen."
+msgstr ""
+
+#: app/Blocks/BlockManager.php:80
+msgid "Abgesagt"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:80
+msgid "Anmeldung geschlossen"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:80
+msgid "Ausgebucht · Warteliste"
+msgstr ""
+
+#: app/Blocks/BlockManager.php:80
+msgid "Anmeldung geöffnet"
+msgstr ""
+
+#: app/Core/Capabilities.php:11
+msgid "VeranstaltungsWart 2.0 hat Autoren zusätzliche Rechte für fremde Blogbeiträge erteilt. Falls diese Rechte nicht bewusst benötigt werden:"
+msgstr ""
+
+#: app/Core/Capabilities.php:11
+msgid "Zusätzliche Autorenrechte für fremde Beiträge entfernen"
+msgstr ""
+
+#: app/Core/Capabilities.php:11
+msgid "Veranstaltungsrechte bleiben erhalten."
+msgstr ""
+
+#: app/Core/Capabilities.php:14
+#: app/Events/EventPostType.php:179
+#: app/Events/EventPostType.php:191
+#: app/Events/EventPostType.php:197
+#: app/Events/EventPostType.php:211
+#: app/Events/EventPostType.php:221
+#: app/Events/EventPostType.php:240
+#: app/Events/EventPostType.php:246
+#: app/Events/EventPostType.php:268
+#: app/Persons/PersonManager.php:139
+msgid "Keine Berechtigung."
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:54
+msgid "Dashboard"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:55
+#: app/Events/EventPostType.php:66
 msgid "Alle Veranstaltungen"
 msgstr ""
 
+#: app/Dashboard/DashboardManager.php:55
+#: app/Events/EventPostType.php:63
+#: app/Events/EventPostType.php:65
+msgid "Veranstaltungen"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:56
+#: app/Events/EventPostType.php:97
+msgid "Event-Kategorien"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:56
+#: app/Events/EventPostType.php:105
+msgid "Kategorien"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:57
+#: app/Locations/views/admin-page.php:4
+msgid "Veranstaltungsorte"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:57
+msgid "Orte"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:58
+msgid "Personen-Verwaltung"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:58
+msgid "Personen"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:59
+#: app/Dashboard/views/help-view.php:40
+msgid "Hilfe & Dokumentation"
+msgstr ""
+
+#: app/Dashboard/DashboardManager.php:59
+msgid "Hilfe"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:9
+msgid "VeranstaltungsWart Dashboard"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:15
+msgid "Aktion erfolgreich!"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:15
+msgid "Die Anmeldung wurde aktualisiert und die entsprechende E-Mail versendet."
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:66
+msgid "Hier siehst du ausschließlich Veranstaltungen und Anmeldungen, die du verwalten darfst."
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:71
+msgid "Offene Anmeldungen"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:74
+msgid "Warten auf deine Freigabe"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:80
+msgid "Aktive Veranstaltungen"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:83
+msgid "Zukünftige veröffentlichte Events"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:87
+msgid "Aktuelle Warteschlange (Eingegangen)"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:93
+msgid "Eingang am"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:94
+#: app/Events/EventPostType.php:64
+#: app/Events/EventPostType.php:121
+#: app/Persons/PersonManager.php:282
+#: assets/editor.js:26
+msgid "Veranstaltung"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:95
+msgid "Teilnehmer"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:96
+#: app/Events/EventExporter.php:59
+#: app/Events/views/registration-list-table.php:79
+msgid "Plätze"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:97
+#: app/Events/views/registration-list-table.php:81
+#: app/Locations/views/admin-page.php:127
+msgid "Aktionen"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:109
+#: app/Events/EventPostType.php:143
+msgid "Uhr"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:115
+msgid "Event bearbeiten"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:148
+#: app/Events/views/registration-list-table.php:172
+msgid "Jetzt bestätigen"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:154
+#: app/Events/views/registration-list-table.php:179
+msgid "Ablehnen"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:155
+msgid "Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail."
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:166
+msgid "Keine offenen Anmeldungen vorhanden. Alles erledigt!"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:175
+msgid "Anmeldungen durchblättern"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:179
+msgid "Zurück"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:179
+msgid "Weiter"
+msgstr ""
+
+#: app/Dashboard/views/dashboard-view.php:184
+msgid "Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind unter der jeweiligen Veranstaltung einsehbar."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:41
+msgid "Willkommen beim <strong>VeranstaltungsWart</strong>. Hier findest du alle Informationen zur Einrichtung deines Buchungssystems."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:46
+msgid "Erste Schritte"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:48
+msgid "E-Mail-Vorlagen:"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:48
+msgid "Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:50
+msgid "Eingangsbestätigung für den Teilnehmer"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:51
+msgid "Benachrichtigung an den Admin über neue Anmeldung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:52
+msgid "Info an Teilnehmer: Platz auf der Warteliste"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:53
+msgid "Finale Zusage für die Veranstaltung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:54
+msgid "Manuelle Ablehnung durch den Admin"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:55
+msgid "Bestätigung an Teilnehmer nach eigener Stornierung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:56
+msgid "Info an alle Teilnehmer, wenn Veranstaltung komplett abgesagt wird"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:57
+msgid "Automatische Erinnerung an Teilnehmer (7 und 3 Tage vor der Veranstaltung)"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:58
+msgid "Benachrichtigung über Änderungen der Veranstaltung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:61
+msgid "Orte:"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:61
+msgid "Unter \"Veranstaltungsorte\" Kapazitäten festlegen."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:62
+msgid "Event:"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:62
+msgid "Veranstaltung erstellen und Shortcode einfügen."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:67
+msgid "Shortcodes"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:68
+msgid "Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein, um das Anmeldeformular anzuzeigen:"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:70
+msgid "Hinweis: Der Shortcode erkennt automatisch, für welche Veranstaltung er aufgerufen wird."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:74
+msgid "E-Mail Platzhalter"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:75
+msgid "Diese Platzhalter kannst du in den Betreff oder Inhalt deiner E-Mail-Vorlagen einbauen:"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:81
+msgid "Platzhalter"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:82
+msgid "Beschreibung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:83
+msgid "Beispiel"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:87
+msgid "Vorname des Teilnehmers"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:87
+msgid "Hallo {vorname},"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:88
+msgid "Nachname des Teilnehmers"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:88
+msgid "Familie {nachname}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:89
+msgid "E-Mail des Teilnehmers"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:89
+msgid "Kontakt: {email}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:90
+msgid "Name der Veranstaltung"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:90
+msgid "Deine Buchung für {event_name}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:91
+msgid "Termindaten"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:91
+msgid "Am {event_datum} um {event_zeit}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:92
+msgid "Anschrift des Ortes"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:92
+msgid "Ort: {event_adresse}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:93
+msgid "Anzahl gebuchter Plätze"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:93
+msgid "Du hast {event_plaetze} Plätze reserviert."
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:94
+msgid "Individueller Hinweis aus dem Event"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:94
+msgid "Hinweis: {event_hinweis}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:95
+msgid "Download-Link für Kalender (.ics)"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:95
+msgid "Termin eintragen: {kalender_link}"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:96
+msgid "Abmelde-Link (HTML)"
+msgstr ""
+
+#: app/Dashboard/views/help-view.php:96
+msgid "Klicke hier: {storno_link}"
+msgstr ""
+
+#: app/Events/EventExporter.php:20
+#: app/Mails/MailTemplateManager.php:124
+#: app/Persons/PersonManager.php:197
+msgid "Zugriff verweigert."
+msgstr ""
+
+#: app/Events/EventExporter.php:56
+#: app/Persons/PersonManager.php:268
+#: app/Persons/views/admin-page.php:60
+#: app/Persons/views/admin-page.php:109
+msgid "Nachname"
+msgstr ""
+
+#: app/Events/EventExporter.php:57
+#: app/Persons/PersonManager.php:267
+#: app/Persons/views/admin-page.php:59
+#: app/Persons/views/admin-page.php:110
+msgid "Vorname"
+msgstr ""
+
+#: app/Events/EventExporter.php:58
+#: app/Events/views/registration-list-table.php:78
+#: app/Persons/PersonManager.php:269
+#: app/Persons/views/admin-page.php:111
+msgid "E-Mail"
+msgstr ""
+
+#: app/Events/EventExporter.php:60
+msgid "Angemeldet am"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:25
+msgid "Veranstaltungs-Details"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:35
+msgid "Angemeldete Teilnehmer & Warteliste"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:51
+msgid "Die Einstellungen findest du rechts im Bereich „VeranstaltungsWart“ oder im Anmeldeblock. Dort separat speichern."
+msgstr ""
+
+#: app/Events/EventMetaBox.php:63
+#: assets/editor.js:47
+msgid "Kein Ort"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:105
+#: app/Events/EventSettings.php:92
+msgid "Diese Veranstaltung wurde abgesagt."
+msgstr ""
+
+#: app/Events/EventMetaBox.php:108
+msgid "Veranstaltung absagen und alle aktiven Teilnehmer informieren?"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:108
+msgid "Veranstaltung absagen"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:111
+msgid "Änderungen zuerst speichern. Danach:"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:111
+msgid "Aktuelle Veranstaltungsdaten per E-Mail an alle aktiven Teilnehmer senden?"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:111
+msgid "Teilnehmer über Änderungen informieren"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:121
+msgid "Teilnehmerliste (CSV) exportieren"
+msgstr ""
+
+#: app/Events/EventMetaBox.php:131
+msgid "Teilnehmerliste konnte nicht geladen werden."
+msgstr ""
+
+#: app/Events/EventPostType.php:67
 msgid "Neue hinzufügen"
 msgstr ""
 
+#: app/Events/EventPostType.php:68
 msgid "Neue Veranstaltung anlegen"
 msgstr ""
 
+#: app/Events/EventPostType.php:69
 msgid "Veranstaltung bearbeiten"
 msgstr ""
 
+#: app/Events/EventPostType.php:70
 msgid "Anzeigen"
 msgstr ""
 
+#: app/Events/EventPostType.php:71
 msgid "Veranstaltungen suchen"
 msgstr ""
 
+#: app/Events/EventPostType.php:72
 msgid "Keine Veranstaltungen gefunden"
 msgstr ""
 
+#: app/Events/EventPostType.php:83
 msgctxt "URL slug"
 msgid "veranstaltungen"
 msgstr ""
 
-msgid "Event-Kategorien"
-msgstr ""
-
+#: app/Events/EventPostType.php:98
 msgid "Event-Kategorie"
 msgstr ""
 
+#: app/Events/EventPostType.php:99
 msgid "Kategorien suchen"
 msgstr ""
 
+#: app/Events/EventPostType.php:100
+#: assets/editor.js:73
 msgid "Alle Kategorien"
 msgstr ""
 
+#: app/Events/EventPostType.php:101
 msgid "Kategorie bearbeiten"
 msgstr ""
 
+#: app/Events/EventPostType.php:102
 msgid "Kategorie aktualisieren"
 msgstr ""
 
+#: app/Events/EventPostType.php:103
 msgid "Neue Kategorie hinzufügen"
 msgstr ""
 
+#: app/Events/EventPostType.php:104
 msgid "Name der neuen Kategorie"
 msgstr ""
 
-msgid "Kategorien"
-msgstr ""
-
+#: app/Events/EventPostType.php:122
 msgid "Datum & Uhrzeit"
 msgstr ""
 
+#: app/Events/EventPostType.php:123
+#: assets/editor.js:90
 msgid "Ort"
 msgstr ""
 
+#: app/Events/EventPostType.php:124
 msgid "Belegung"
 msgstr ""
 
+#: app/Events/EventPostType.php:125
 msgid "Verantwortlich"
 msgstr ""
 
-msgid "Uhr"
-msgstr ""
-
+#: app/Events/EventPostType.php:145
 msgid "Formatfehler"
 msgstr ""
 
+#: app/Events/EventPostType.php:158
 msgid "(VOLL)"
 msgstr ""
 
+#: app/Events/EventPostType.php:164
 msgid "Warteliste:"
 msgstr ""
 
-msgid "Keine Berechtigung."
+#: app/Events/EventPostType.php:224
+msgid "Löschen fehlgeschlagen."
 msgstr ""
 
+#: app/Events/EventPostType.php:297
 msgid "Alle Verantwortlichen"
 msgstr ""
 
+#: app/Events/EventPostType.php:310
 msgid "Aktion erfolgreich durchgeführt und Warteliste aktualisiert."
 msgstr ""
 
-msgid "Veranstaltungs-Details"
+#: app/Events/EventPresentation.php:21
+msgid "Ort wird nach Bestätigung mitgeteilt"
 msgstr ""
 
-msgid "Angemeldete Teilnehmer & Warteliste"
+#: app/Events/EventRepository.php:104
+msgid "Die Veranstaltung wird gerade bearbeitet. Bitte erneut versuchen."
 msgstr ""
 
-msgid "Datum & Uhrzeit:"
+#: app/Events/EventRepository.php:127
+msgid "Ungültige Anmeldung oder Status."
 msgstr ""
 
-msgid "Veranstaltungsort:"
+#: app/Events/EventRepository.php:130
+msgid "Anmeldung nicht gefunden."
 msgstr ""
 
-msgid "-- Ort wählen --"
+#: app/Events/EventRepository.php:133
+msgid "Die Veranstaltung ist nicht mehr zur Anmeldung geöffnet."
 msgstr ""
 
-msgid "Max. Teilnehmer:"
+#: app/Events/EventRepository.php:134
+msgid "Stornierte Anmeldung kann nicht bestätigt werden."
 msgstr ""
 
-msgid "0 = Unbegrenzt"
+#: app/Events/EventRepository.php:136
+msgid "Eine andere aktive Anmeldung existiert bereits."
 msgstr ""
 
+#: app/Events/EventRepository.php:138
+msgid "Nicht genügend freie Plätze."
+msgstr ""
+
+#: app/Events/EventRepository.php:140
+msgid "Speichern fehlgeschlagen."
+msgstr ""
+
+#: app/Events/EventSettings.php:9
+msgid "Datum und Beginn"
+msgstr ""
+
+#: app/Events/EventSettings.php:10
+msgid "Ende (optional)"
+msgstr ""
+
+#: app/Events/EventSettings.php:11
+msgid "Anmeldeschluss (optional)"
+msgstr ""
+
+#: app/Events/EventSettings.php:13
+msgid "Maximale Teilnehmerzahl (0 = unbegrenzt)"
+msgstr ""
+
+#: app/Events/EventSettings.php:14
 msgid "Begleitpersonen erlauben"
 msgstr ""
 
-msgid "Teilnehmerliste (CSV) exportieren"
+#: app/Events/EventSettings.php:15
+msgid "Maximale Begleitpersonen pro Anmeldung"
 msgstr ""
 
-msgid "Teilnehmerliste konnte nicht geladen werden."
+#: app/Events/EventSettings.php:16
+msgid "Freitextfeld anzeigen"
 msgstr ""
 
+#: app/Events/EventSettings.php:17
+msgid "Beschriftung Freitextfeld"
+msgstr ""
+
+#: app/Events/EventSettings.php:17
+msgid "Anmerkungen / Nachricht"
+msgstr ""
+
+#: app/Events/EventSettings.php:18
+msgid "Hinweis im Freitextfeld"
+msgstr ""
+
+#: app/Events/EventSettings.php:19
+msgid "Freitextfeld ist Pflichtfeld"
+msgstr ""
+
+#: app/Events/EventSettings.php:20
+msgid "Ort erst nach bestätigter Anmeldung mitteilen"
+msgstr ""
+
+#: app/Events/EventSettings.php:21
+msgid "Hinweise für Teilnehmer"
+msgstr ""
+
+#: app/Events/EventSettings.php:22
+msgid "Erinnerungen 7 und 3 Tage vorher senden"
+msgstr ""
+
+#: app/Events/EventSettings.php:48
+msgid "Ungültiger Einstellungswert."
+msgstr ""
+
+#: app/Events/EventSettings.php:52
+msgid "Bitte ein gültiges Datum angeben."
+msgstr ""
+
+#: app/Events/EventSettings.php:56
+msgid "Bitte eine nichtnegative ganze Zahl angeben."
+msgstr ""
+
+#: app/Events/EventSettings.php:58
+msgid "Maximal 100 Begleitpersonen erlaubt."
+msgstr ""
+
+#: app/Events/EventSettings.php:73
+msgid "Das Ende muss nach dem Beginn liegen."
+msgstr ""
+
+#: app/Events/EventSettings.php:74
+msgid "Der Anmeldeschluss muss vor oder beim Beginn liegen."
+msgstr ""
+
+#: app/Events/EventSettings.php:75
+msgid "Veranstaltungsort nicht gefunden."
+msgstr ""
+
+#: app/Events/EventSettings.php:79
+msgid "Die Kapazität darf nicht unter den bereits bestätigten Plätzen liegen."
+msgstr ""
+
+#: app/Events/EventSettings.php:91
+msgid "Diese Veranstaltung ist nicht zur Anmeldung verfügbar."
+msgstr ""
+
+#: app/Events/EventSettings.php:94
+msgid "Für diese Veranstaltung ist noch kein Termin hinterlegt."
+msgstr ""
+
+#: app/Events/EventSettings.php:96
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Die Anmeldung ist geschlossen."
+msgstr ""
+
+#: app/Events/views/registration-list-table.php:55
 msgid "Gesamt-Kapazität:"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:56
 msgid "Unbegrenzt"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:58
 msgid "Bestätigte Teilnehmer:"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:61
+msgid "Prüfung offen:"
+msgstr ""
+
+#: app/Events/views/registration-list-table.php:63
 msgid "Auf Warteliste:"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:66
 msgid "Verfügbare Plätze:"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:77
+#: app/Locations/views/admin-page.php:124
+#: assets/editor.js:90
 msgid "Name"
 msgstr ""
 
-msgid "E-Mail"
-msgstr ""
-
-msgid "Plätze"
-msgstr ""
-
+#: app/Events/views/registration-list-table.php:80
+#: app/Persons/PersonManager.php:284
+#: app/Persons/views/admin-page.php:112
 msgid "Status"
 msgstr ""
 
-msgid "Aktionen"
-msgstr ""
-
+#: app/Events/views/registration-list-table.php:112
 msgid "Global bestätigte Person (Vertrauenswürdig)"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:118
 msgid "Platz frei! Dieser Teilnehmer kann jetzt bestätigt werden."
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:123
+msgid "Anmerkung"
+msgstr ""
+
+#: app/Events/views/registration-list-table.php:156
 msgid "Bestätigt"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:157
 msgid "Abgelehnt"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:158
 msgid "Storniert"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:159
 msgid "Eingegangen"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:160
 msgid "Warteliste"
 msgstr ""
 
-msgid "Jetzt bestätigen"
-msgstr ""
-
-msgid "Ablehnen"
-msgstr ""
-
+#: app/Events/views/registration-list-table.php:180
 msgid "Teilnehmer ablehnen?"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:186
 msgid "Anmeldung endgültig löschen?"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:187
+#: app/Locations/views/admin-page.php:145
+#: app/Persons/views/admin-page.php:97
 msgid "Löschen"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:196
 msgid "Noch keine Anmeldungen für dieses Event vorhanden."
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:205
 msgid "Status-Info:"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:206
 msgid "\"Eingegangen\" sind neue Anmeldungen."
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:209
 msgid "Grün markierte Zeilen"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:212
 msgid "haben aktuell Platz im Event. Das"
 msgstr ""
 
+#: app/Events/views/registration-list-table.php:214
 msgid "Icon zeigt global vertrauenswürdige Personen."
 msgstr ""
 
-msgid "Anmeldung zu Warteliste"
+#: app/Locations/LocationManager.php:45
+#: app/Locations/LocationManager.php:70
+msgid "Keine ausreichenden Rechte."
 msgstr ""
 
-msgid "Anmeldung zu Veranstaltung"
+#: app/Locations/LocationManager.php:49
+msgid "Ungültige Ortsangaben."
 msgstr ""
 
-msgid "Diese Veranstaltung ist aktuell ausgebucht. Du kannst dich auf die Warteliste setzen lassen."
+#: app/Locations/LocationManager.php:60
+msgid "Bitte einen Ortsnamen angeben."
 msgstr ""
 
-msgid "Nur noch %s Plätze verfügbar!"
+#: app/Locations/views/admin-page.php:9
+msgid "Ort erfolgreich gespeichert."
 msgstr ""
 
-msgid "Vorname *"
+#: app/Locations/views/admin-page.php:9
+msgid "Ort wurde gelöscht."
 msgstr ""
 
-msgid "Nur Buchstaben erlaubt"
+#: app/Locations/views/admin-page.php:86
+msgid "Ort bearbeiten"
 msgstr ""
 
-msgid "Nachname *"
+#: app/Locations/views/admin-page.php:86
+msgid "Neuen Ort hinzufügen"
 msgstr ""
 
-msgid "E-Mail-Adresse *"
+#: app/Locations/views/admin-page.php:94
+msgid "Name des Ortes"
 msgstr ""
 
-msgid "Zusätzliche Begleitpersonen"
+#: app/Locations/views/admin-page.php:95
+msgid "z.B. Gemeindesaal"
 msgstr ""
 
-msgid "Personen, die du mitbringst."
+#: app/Locations/views/admin-page.php:99
+msgid "Anschrift / Adresse"
 msgstr ""
 
-msgid "Bitte stimme der Datenschutzerklärung zu, um dich verbindlich anzumelden."
+#: app/Locations/views/admin-page.php:100
+msgid "Straße, PLZ Ort"
 msgstr ""
 
-msgid "Ich stimme zu, dass meine Angaben aus diesem Formular zur Bearbeitung meiner Anmeldung erhoben und verarbeitet werden. Weitere Informationen findest du in der"
+#: app/Locations/views/admin-page.php:104
+msgid "Standardkapazität"
 msgstr ""
 
-msgid "Datenschutzerklärung"
+#: app/Locations/views/admin-page.php:109
+#: app/Persons/views/admin-page.php:70
+msgid "Speichern"
 msgstr ""
 
-msgid "Auf Warteliste setzen"
+#: app/Locations/views/admin-page.php:109
+msgid "Ort anlegen"
 msgstr ""
 
-msgid "Jetzt anmelden"
+#: app/Locations/views/admin-page.php:111
+#: app/Persons/views/admin-page.php:71
+msgid "Abbrechen"
 msgstr ""
 
-msgid "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+#: app/Locations/views/admin-page.php:125
+#: assets/editor.js:90
+msgid "Adresse"
 msgstr ""
 
-msgid "Bitte gib einen gültigen Namen an."
+#: app/Locations/views/admin-page.php:126
+msgid "Kap."
 msgstr ""
 
-msgid "Bitte gib eine gültige E-Mail-Adresse an."
+#: app/Locations/views/admin-page.php:138
+msgid "Bearbeiten"
 msgstr ""
 
-msgid "Sicherheits-Check fehlgeschlagen. Bitte lade die Seite neu."
+#: app/Locations/views/admin-page.php:144
+msgid "Ort wirklich löschen?"
 msgstr ""
 
-msgid "Vielen Dank! Deine Anmeldung war erfolgreich."
+#: app/Locations/views/admin-page.php:152
+msgid "Noch keine Orte hinterlegt."
 msgstr ""
 
-msgid "Du wurdest erfolgreich auf die Warteliste gesetzt."
+#: app/Mails/MailTemplateManager.php:39
+#: app/Mails/MailTemplateManager.php:44
+#: app/Mails/MailTemplateManager.php:45
+msgid "E-Mail-Vorlagen"
 msgstr ""
 
-msgid "Ihre Anmeldung wurde erfolgreich storniert."
+#: app/Mails/MailTemplateManager.php:40
+msgid "E-Mail-Vorlage"
 msgstr ""
 
+#: app/Mails/MailTemplateManager.php:41
+msgid "Neue Vorlage"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:42
+msgid "Neue E-Mail-Vorlage erstellen"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:43
+msgid "E-Mail-Vorlage bearbeiten"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:72
+msgid "Test-Mail wurde versendet!"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:72
+msgid "Prüfe dein Postfach."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:77
+msgid "Hinweis: Der <strong>Titel</strong> dieser Vorlage wird automatisch als <strong>E-Mail-Betreff</strong> verwendet."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:80
+msgid "Verfügbare Platzhalter:"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:92
+msgid "E-Mail testen"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:105
+msgid "Bitte die Vorlage erst <strong>veröffentlichen</strong>, um eine Test-Mail zu senden."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:111
+msgid "Sende diese Vorlage mit Beispieldaten an deine Adresse:"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:115
+msgid "Test-Mail jetzt senden"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:130
+msgid "Vorlage nicht gefunden."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:137
+msgid "(Test-Nachname)"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:139
+msgid "Demo-Veranstaltung am Sonntag"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:142
+msgid "Musterstraße 1, 12345 Stadt"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:144
+msgid "Der Einlass erfolgt über den Seiteneingang."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:145
+msgid "Wir sind Vegetarier und benötigen einen Parkplatz."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:146
+#: app/Registrations/RegistrationHandler.php:81
+msgid "Anmeldung stornieren"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:147
+msgid "Termin in den Kalender eintragen"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:174
+msgid "Technischer Name (Slug)"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:207
+msgid "Benachrichtigung"
+msgstr ""
+
+#. translators: %s: Slug der fehlenden Vorlage
+#: app/Mails/MailTemplateManager.php:209
+#, php-format
+msgid "Systemfehler: E-Mail-Vorlage \"%s\" wurde nicht gefunden."
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:240
+msgid "[{event_name}] Anmeldung eingegangen"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:241
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"vielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}!\n"
+"\n"
+"Deine Anmeldung ist eingegangen.\n"
+"\n"
+"Wir prüfen aktuell die Anmeldungen und senden dir in Kürze eine separate Bestätigung zu.\n"
+"\n"
+"Falls du doch nicht teilnehmen kannst, nutze bitte diesen Link zur Stornierung:\n"
+"{storno_link}\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:245
+msgid "[{event_name}] Anmeldung bestätigt"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:246
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"vielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit} Uhr</strong>.\n"
+"\n"
+"Deine Anmeldung ist hiermit <strong>bestätigt</strong>!\n"
+"\n"
+"Die Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n"
+"\n"
+"Hinweis:\n"
+"{event_hinweis}\n"
+"\n"
+"{kalender_link}\n"
+"\n"
+"Solltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n"
+"{storno_link}\n"
+"\n"
+"Wir freuen uns auf dich!\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:250
+msgid "[{event_name}] Anmeldung abgelehnt"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:251
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"leider können wir deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am {event_datum} nicht bestätigen.\n"
+"\n"
+"Hoffentlich klappt es beim nächsten Mal!\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:255
+msgid "[{event_name}] Anmeldung auf der Warteliste"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:256
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"vielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}! Aktuell sind alle Plätze belegt, aber du stehst auf der Warteliste.\n"
+"\n"
+"Sobald ein Platz frei wird, informieren wir dich sofort per E-Mail.\n"
+"\n"
+"Falls du nicht mehr auf der Warteliste bleiben möchtest, kannst du dich hier wieder abmelden:\n"
+"{storno_link}\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:260
+msgid "[{event_name}] Stornierung bestätigt"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:261
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"deine Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} wurde erfolgreich storniert.\n"
+"\n"
+"Schade, dass du nicht dabei sein kannst. Hoffentlich klappt es beim nächsten Mal!\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:265
+msgid "[{event_name}] Veranstaltung abgesagt"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:266
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"leider müssen wir dir mitteilen, dass die Veranstaltung <strong>{event_name}</strong> am {event_datum} aus organisatorischen Gründen abgesagt werden musste.\n"
+"\n"
+"Wir bitten um dein Verständnis.\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:270
+msgid "[{event_name}] Neue Anmeldung"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:271
+msgid ""
+"Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n"
+"\n"
+"Name: <strong>{vorname} {nachname}</strong>\n"
+"E-Mail-Adresse: {email}\n"
+"\n"
+"Anmerkung des Teilnehmers:\n"
+"{teilnehmer_nachricht}\n"
+"\n"
+"Bitte prüfe die Anmeldung.\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:275
+msgid "[{event_name}] Erinnerung an Veranstaltung"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:276
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"wir möchten dich kurz daran erinnern, dass die Veranstaltung <strong>{event_name}</strong> in wenigen Tagen stattfindet!\n"
+"Wann?: {event_datum}, {event_zeit} Uhr\n"
+"Wo?: {event_adresse}\n"
+"\n"
+"Hinweis:\n"
+"{event_hinweis}\n"
+"\n"
+"{kalender_link}\n"
+"\n"
+"Wir freuen uns auf dich!\n"
+"\n"
+"Solltest du wider Erwarten nicht teilnehmen können, nutze bitte diesen Link zur Stornierung, damit jemand von der Warteliste nachrücken kann:\n"
+"{storno_link}\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:280
+msgid "[{event_name}] Änderung an Veranstaltung"
+msgstr ""
+
+#: app/Mails/MailTemplateManager.php:281
+msgid ""
+"Hallo {vorname},\n"
+"\n"
+"es gibt eine Änderung bei der Veranstaltung <strong>{event_name}</strong>.\n"
+"\n"
+"Die aktuellen Veranstaltungsdaten sind:\n"
+"Datum: {event_datum}, {event_zeit} Uhr\n"
+"Ort: {event_adresse}\n"
+"\n"
+"Hinweis:\n"
+"{event_hinweis}\n"
+"\n"
+"{kalender_link}\n"
+"\n"
+"Solltest du an der Veranstaltung nicht mehr teilnehmen können, nutze bitte diesen Link zur Stornierung:\n"
+"{storno_link}\n"
+"\n"
+"Viele Grüße,\n"
+"dein VeranstaltungsWart"
+msgstr ""
+
+#: app/Persons/PersonManager.php:37
+msgid "VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website."
+msgstr ""
+
+#: app/Persons/PersonManager.php:81
+#: app/Persons/PersonManager.php:121
+#: app/Persons/PersonManager.php:166
 msgid "Du hast nicht die erforderlichen Rechte."
 msgstr ""
 
-msgid "Vorname"
+#: app/Persons/PersonManager.php:201
+msgid "Bitte eine CSV-Datei auswählen."
 msgstr ""
 
-msgid "Nachname"
+#: app/Persons/PersonManager.php:209
+msgid "Bitte eine gültige CSV-Datei mit maximal 2 MB hochladen."
 msgstr ""
 
+#: app/Persons/PersonManager.php:213
+msgid "Die CSV-Datei konnte nicht gelesen werden."
+msgstr ""
+
+#: app/Persons/PersonManager.php:270
+#: app/Persons/views/admin-page.php:63
 msgid "Vertrauensstatus"
 msgstr ""
 
+#: app/Persons/PersonManager.php:274
 msgid "VeranstaltungsWart - Personendaten"
 msgstr ""
 
+#: app/Persons/PersonManager.php:282
 msgid "Gelöschte Veranstaltung"
 msgstr ""
 
+#: app/Persons/PersonManager.php:283
 msgid "Registriert am"
 msgstr ""
 
+#: app/Persons/PersonManager.php:285
 msgid "Begleitpersonen"
 msgstr ""
 
+#: app/Persons/PersonManager.php:286
+msgid "Nachricht"
+msgstr ""
+
+#: app/Persons/PersonManager.php:287
 msgid "Gesamtplätze"
 msgstr ""
 
+#: app/Persons/PersonManager.php:291
 msgid "VeranstaltungsWart - Anmeldungen"
 msgstr ""
 
+#: app/Persons/PersonManager.php:321
 msgid "Fehler beim Löschen der Personendaten im VeranstaltungsWart."
 msgstr ""
 
+#: app/Persons/views/admin-page.php:4
 msgid "Personenverwaltung"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:14
 msgid "Änderungen gespeichert."
 msgstr ""
 
+#: app/Persons/views/admin-page.php:18
 msgid "Person wurde dauerhaft gelöscht."
 msgstr ""
 
+#: app/Persons/views/admin-page.php:20
 msgid "Fehler: Diese E-Mail-Adresse wird bereits von einer anderen Person verwendet!"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:23
 msgid "Fehler: Bitte geben Sie eine gültige E-Mail-Adresse ein!"
 msgstr ""
 
+#. translators: %d: number of processed contacts.
+#: app/Persons/views/admin-page.php:28
+#, php-format
 msgid "%s Person wurde erfolgreich aktualisiert/gelöscht."
 msgid_plural "%s Personen wurden erfolgreich aktualisiert/gelöscht."
 msgstr[0] ""
 msgstr[1] ""
 
+#: app/Persons/views/admin-page.php:30
+msgid "Person wurde erfolgreich freigegeben."
+msgstr ""
+
+#: app/Persons/views/admin-page.php:53
 msgid "Daten bearbeiten"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:53
 msgid "Neue Person anlegen"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:61
+msgid "E-Mail-Adresse"
+msgstr ""
+
+#: app/Persons/views/admin-page.php:65
 msgid "Prüfung erforderlich"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:66
 msgid "Freigegeben (Sofort-Bestätigung)"
 msgstr ""
 
-msgid "Neue manuelle Einträge sind standardmäßig freigegeben."
-msgstr ""
-
-msgid "Speichern"
-msgstr ""
-
+#: app/Persons/views/admin-page.php:70
 msgid "Person anlegen"
 msgstr ""
 
-msgid "Abbrechen"
+#: app/Persons/views/admin-page.php:77
+msgid "Personen importieren (CSV)"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:82
+msgid "Format: Vorname;Nachname;E-Mail"
+msgstr ""
+
+#: app/Persons/views/admin-page.php:83
+msgid "Importieren"
+msgstr ""
+
+#: app/Persons/views/admin-page.php:95
 msgid "Aktion wählen"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:96
 msgid "Als freigegeben markieren"
 msgstr ""
 
-msgid "Auf \"Prüfung\" zurücksetzen"
-msgstr ""
-
+#: app/Persons/views/admin-page.php:99
 msgid "Übernehmen"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:120
 msgid "Aktion"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:130
 msgid "Freigegeben"
 msgstr ""
 
-msgid "Wartet auf Prüfung"
-msgstr ""
-
+#: app/Persons/views/admin-page.php:130
 msgid "Prüfung"
 msgstr ""
 
-msgid "Bearbeiten"
-msgstr ""
-
+#: app/Persons/views/admin-page.php:137
 msgid "Person wirklich löschen?"
 msgstr ""
 
+#: app/Persons/views/admin-page.php:142
 msgid "Keine Teilnehmer gefunden."
 msgstr ""
 
-msgid "Bitte wähle zuerst eine Aktion aus dem Dropdown-Menü."
+#: app/Registrations/RegistrationHandler.php:67
+msgid "Dieser Link ist ungültig."
 msgstr ""
 
-msgid "Bist du sicher, dass du alle markierten Personen endgültig löschen möchtest? (Achtung: Verbundene Anmeldungen werden ebenfalls gelöscht!)"
+#: app/Registrations/RegistrationHandler.php:75
+msgid "Anmeldung stornieren?"
 msgstr ""
 
-msgid "Keine ausreichenden Rechte."
+#: app/Registrations/RegistrationHandler.php:78
+msgid "Stornierung bestätigen"
 msgstr ""
 
-msgid "Veranstaltungsorte"
+#: app/Registrations/RegistrationHandler.php:91
+msgid "Der Kalenderdownload steht nur für bestätigte Anmeldungen zur Verfügung."
 msgstr ""
 
-msgid "Ort erfolgreich gespeichert."
+#: app/Registrations/RegistrationHandler.php:94
+msgid "Kein gültiger Termin hinterlegt."
 msgstr ""
 
-msgid "Ort wurde gelöscht."
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Bitte lade die Seite neu und versuche es erneut."
 msgstr ""
 
-msgid "Ort bearbeiten"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Bitte prüfe Name, E-Mail-Adresse und Datenschutzzustimmung."
 msgstr ""
 
-msgid "Neuen Ort hinzufügen"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Die Anzahl der Begleitpersonen ist nicht erlaubt."
 msgstr ""
 
-msgid "Name des Ortes"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Bitte prüfe das Freitextfeld (maximal 5.000 Zeichen/Bytes)."
 msgstr ""
 
-msgid "z.B. Gemeindesaal"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Für diese E-Mail-Adresse besteht bereits eine aktive Anmeldung."
 msgstr ""
 
-msgid "Anschrift / Adresse"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Bitte versuche es gleich noch einmal."
 msgstr ""
 
-msgid "Straße, PLZ Ort"
+#: app/Registrations/RegistrationShortcode.php:27
+msgid "Die Anmeldung konnte nicht gespeichert werden. Bitte erneut versuchen."
 msgstr ""
 
-msgid "Standardkapazität"
+#: app/Registrations/RegistrationShortcode.php:28
+msgid "Vielen Dank! Deine Anmeldung ist bestätigt."
 msgstr ""
 
-msgid "Ort anlegen"
+#: app/Registrations/RegistrationShortcode.php:28
+msgid "Deine Anmeldung ist eingegangen und wird geprüft. Die Bestätigung erfolgt separat."
 msgstr ""
 
-msgid "Adresse"
+#: app/Registrations/RegistrationShortcode.php:28
+msgid "Du stehst auf der Warteliste. Dies ist noch keine Teilnahmebestätigung."
 msgstr ""
 
-msgid "Kap."
+#: app/Registrations/RegistrationShortcode.php:31
+msgid "Ein Fehler ist aufgetreten."
 msgstr ""
 
-msgid "Ort wirklich löschen?"
+#: app/Registrations/RegistrationShortcode.php:32
+msgid "Deine Anmeldung wurde storniert."
 msgstr ""
 
-msgid "Noch keine Orte hinterlegt."
+#: app/Registrations/views/form-view.php:6
+msgid "Diese Veranstaltung ist ausgebucht. Du kannst dich auf die Warteliste setzen lassen."
 msgstr ""
 
-msgid "Dashboard"
-msgstr ""
-
-msgid "Orte"
-msgstr ""
-
-msgid "Personen"
-msgstr ""
-
-msgid "Hilfe & Dokumentation"
-msgstr ""
-
-msgid "Hilfe"
-msgstr ""
-
-msgid "VeranstaltungsWart Dashboard"
-msgstr ""
-
-msgid "Aktion erfolgreich!"
-msgstr ""
-
-msgid "Die Anmeldung wurde aktualisiert und die entsprechende E-Mail versendet."
-msgstr ""
-
-msgid "Offene Anmeldungen"
-msgstr ""
-
-msgid "Warten auf deine Freigabe"
-msgstr ""
-
-msgid "Aktive Veranstaltungen"
-msgstr ""
-
-msgid "Zukünftige veröffentlichte Events"
-msgstr ""
-
-msgid "Aktuelle Warteschlange (Eingegangen)"
-msgstr ""
-
-msgid "Eingang am"
-msgstr ""
-
-msgid "Teilnehmer"
-msgstr ""
-
-msgid "Möchtest du diese Anmeldung wirklich ablehnen? Der Teilnehmer erhält eine E-Mail."
-msgstr ""
-
-msgid "Keine offenen Anmeldungen vorhanden. Alles erledigt!"
-msgstr ""
-
-msgid "Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar."
-msgstr ""
-
-msgid "Willkommen beim <strong>VeranstaltungsWart</strong>. Hier findest du alle Informationen zur Einrichtung deines Buchungssystems."
-msgstr ""
-
-msgid "Erste Schritte"
-msgstr ""
-
-msgid "E-Mail-Vorlagen:"
-msgstr ""
-
-msgid "Das System benötigt Vorlagen mit diesen technischen Namen (Slugs):"
-msgstr ""
-
-msgid "Eingangsbestätigung"
-msgstr ""
-
-msgid "Admin-Benachrichtigung"
-msgstr ""
-
-msgid "Wartelisten-Platz"
-msgstr ""
-
-msgid "Freigabe"
-msgstr ""
-
-msgid "Storno/Ablehnung"
-msgstr ""
-
-msgid "Orte:"
-msgstr ""
-
-msgid "Unter \"Veranstaltungsorte\" Kapazitäten festlegen."
-msgstr ""
-
-msgid "Event:"
-msgstr ""
-
-msgid "Veranstaltung erstellen und Shortcode einfügen."
-msgstr ""
-
-msgid "Shortcodes"
-msgstr ""
-
-msgid "Füge diesen Shortcode in den Inhalt (Editor) deiner Veranstaltung ein, um das Anmeldeformular anzuzeigen:"
-msgstr ""
-
-msgid "Hinweis: Der Shortcode erkennt automatisch, für welche Veranstaltung er aufgerufen wird."
-msgstr ""
-
-msgid "E-Mail Platzhalter"
-msgstr ""
-
-msgid "Diese Platzhalter kannst du in den Betreff oder Inhalt deiner E-Mail-Vorlagen einbauen:"
-msgstr ""
-
-msgid "Platzhalter"
-msgstr ""
-
-msgid "Beschreibung"
-msgstr ""
-
-msgid "Beispiel"
-msgstr ""
-
-msgid "Vorname des Teilnehmers"
-msgstr ""
-
-msgid "Hallo {vorname},"
-msgstr ""
-
-msgid "Nachname des Teilnehmers"
-msgstr ""
-
-msgid "Familie {nachname}"
-msgstr ""
-
-msgid "E-Mail des Teilnehmers"
-msgstr ""
-
-msgid "Kontakt: {email}"
-msgstr ""
+#. translators: %d: available seats.
+#: app/Registrations/views/form-view.php:8
+#, php-format
+msgid "%d Platz verfügbar"
+msgid_plural "%d Plätze verfügbar"
+msgstr[0] ""
+msgstr[1] ""
 
-msgid "Name der Veranstaltung"
+#: app/Registrations/views/form-view.php:15
+msgid "Website"
 msgstr ""
 
-msgid "Deine Buchung für {event_name}"
+#: app/Registrations/views/form-view.php:17
+msgid "Vorname *"
 msgstr ""
 
-msgid "Termindaten"
+#: app/Registrations/views/form-view.php:18
+msgid "Nachname *"
 msgstr ""
 
-msgid "Am {event_datum} um {event_zeit}"
+#: app/Registrations/views/form-view.php:20
+msgid "E-Mail-Adresse *"
 msgstr ""
 
-msgid "Anschrift des Ortes"
+#: app/Registrations/views/form-view.php:22
+msgid "Zusätzliche Begleitpersonen"
 msgstr ""
 
-msgid "Ort: {event_adresse}"
+#: app/Registrations/views/form-view.php:27
+msgid " (optional)"
 msgstr ""
 
-msgid "Anzahl gebuchter Plätze"
+#: app/Registrations/views/form-view.php:30
+msgid "Ich stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anmeldung zu. Informationen in der"
 msgstr ""
 
-msgid "Du hast {event_plaetze} Plätze reserviert."
+#: app/Registrations/views/form-view.php:30
+msgid "Datenschutzerklärung"
 msgstr ""
 
-msgid "Abmelde-Link (HTML)"
+#: app/Registrations/views/form-view.php:31
+msgid "Auf Warteliste setzen"
 msgstr ""
 
-msgid "Klicke hier: {storno_link}"
+#: assets/editor.js:24
+msgid "Aktuelle Veranstaltung"
 msgstr ""
 
-msgid "E-Mail-Vorlagen"
+#: assets/editor.js:25
+#, js-format
+msgid "Ausgewählte Veranstaltung #%d"
 msgstr ""
 
-msgid "E-Mail-Vorlage"
+#: assets/editor.js:26
+msgid "Veranstaltung suchen"
 msgstr ""
 
-msgid "Neue Vorlage"
+#: assets/editor.js:34
+msgid "Bitte zuerst eine Veranstaltung wählen."
 msgstr ""
 
-msgid "Neue E-Mail-Vorlage erstellen"
+#: assets/editor.js:36
+msgid "Die zentralen Einstellungen können nur berechtigte Veranstaltungsbearbeiter ändern."
 msgstr ""
 
-msgid "E-Mail-Vorlage bearbeiten"
+#: assets/editor.js:40
+msgid "Gespeichert. Die Einstellungen gelten für alle Formulare dieser Veranstaltung."
 msgstr ""
 
-msgid "Test-Mail wurde versendet!"
+#: assets/editor.js:46
+msgid "Beim Ortswechsel wird die Kapazität übernommen. Danach kannst du sie unten anpassen."
 msgstr ""
 
-msgid "Prüfe dein Postfach."
+#: assets/editor.js:57
+msgid "Diese zentralen Einstellungen werden mit dem folgenden Button sofort gespeichert, unabhängig vom Beitrag."
 msgstr ""
 
-msgid "Verfügbare Platzhalter:"
+#: assets/editor.js:57
+msgid "Speichert …"
 msgstr ""
 
-msgid "Hinweis: Der <strong>Titel</strong> dieser Vorlage wird automatisch als <strong>E-Mail-Betreff</strong> verwendet."
+#: assets/editor.js:57
+msgid "Veranstaltungseinstellungen speichern"
 msgstr ""
 
-msgid "E-Mail testen"
+#: assets/editor.js:69
+msgid "Überschrift"
 msgstr ""
 
-msgid "Bitte die Vorlage erst <strong>veröffentlichen</strong>, um eine Test-Mail zu senden."
+#: assets/editor.js:69
+#: assets/editor.js:72
+msgid "Buttontext"
 msgstr ""
 
-msgid "Sende diese Vorlage mit Beispieldaten an deine Adresse:"
+#: assets/editor.js:69
+msgid "Freie Plätze anzeigen"
 msgstr ""
 
-msgid "Test-Mail jetzt senden"
+#: assets/editor.js:71
+msgid "Beitragsbild anzeigen"
 msgstr ""
 
-msgid "Zugriff verweigert."
+#: assets/editor.js:71
+msgid "Ort anzeigen"
 msgstr ""
 
-msgid "Vorlage nicht gefunden."
+#: assets/editor.js:73
+msgid "Anzahl"
 msgstr ""
 
-msgid "(Test-Nachname)"
+#: assets/editor.js:73
+msgid "Spalten"
 msgstr ""
 
-msgid "Demo-Veranstaltung am Sonntag"
+#: assets/editor.js:73
+msgid "Kategorie"
 msgstr ""
 
-msgid "Musterstraße 1, 12345 Stadt"
+#: assets/editor.js:73
+msgid "Vergangene Veranstaltungen einschließen"
 msgstr ""
 
-msgid "Anmeldung stornieren"
+#: assets/editor.js:73
+msgid "Abgesagte Veranstaltungen anzeigen"
 msgstr ""
 
-msgid "Technischer Name (Slug)"
+#: assets/editor.js:73
+msgid "Text bei leerer Liste (leer = ausblenden)"
 msgstr ""
 
-msgid "Benachrichtigung"
+#: assets/editor.js:76
+msgid "Block-Einstellungen"
 msgstr ""
 
-msgid "Systemfehler: E-Mail-Vorlage \"%s\" wurde nicht gefunden."
+#: assets/editor.js:76
+msgid "Zentrale Veranstaltungseinstellungen"
 msgstr ""
 
-msgid "[ {event_name} ] Anmeldung eingegangen"
+#: assets/editor.js:76
+msgid "Veranstaltungskarte"
 msgstr ""
 
-msgid "Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}!\n\nDeine Anmeldung ist eingegangen.\n\nWir prüfen aktuell die Anmeldungen und senden dir in Kürze eine separate Bestätigung zu.\n\nFalls du doch nicht teilnehmen kannst, nutze bitte diesen Link zur Stornierung:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart"
+#: assets/editor.js:76
+msgid "Veranstaltungsliste"
 msgstr ""
 
-msgid "[ {event_name} ] Anmeldung bestätigt"
+#: assets/editor.js:76
+msgid "Bitte eine Veranstaltung in den Block-Einstellungen auswählen."
 msgstr ""
 
-msgid "Hallo {vorname},\n\nvielen Dank für deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am <strong>{event_datum} um {event_zeit}</strong>.\n\nDeine Anmeldung ist hiermit <strong>bestätigt</strong>!\n\nDie Veranstaltung findet hier statt:<br><strong>{event_adresse}</strong>\n\nSolltest du wider Erwarten doch nicht teilnehmen können, gib deinen Platz bitte rechtzeitig frei, damit andere nachrücken können:\n{storno_link}\n\nWir freuen uns auf dich!\n\nViele Grüße,\ndein VeranstaltungsWart"
+#: assets/editor.js:76
+msgid "Formular mit Name, E-Mail und den zentral eingestellten Zusatzfeldern. Die Vorschau nimmt keine Anmeldungen entgegen."
 msgstr ""
 
-msgid "[ {event_name} ] Anmeldung abgelehnt"
+#: assets/editor.js:76
+#, js-format
+msgid "Dynamische Liste: %1$d Veranstaltungen, %2$d Spalten. Die Website zeigt die aktuellen Termine."
 msgstr ""
 
-msgid "Hallo {vorname},\n\nleider können wir deine Anmeldung zu der Veranstaltung <strong>{event_name}</strong> am {event_datum} nicht bestätigen.\n\nHoffentlich klappt es beim nächsten Mal!\n\nViele Grüße,\ndein VeranstaltungsWart"
+#: assets/editor.js:80
+msgid "VeranstaltungsWart – Anmeldung"
 msgstr ""
 
-msgid "[ {event_name} ] Anmeldung auf der Warteliste"
+#: assets/editor.js:81
+msgid "VeranstaltungsWart – Veranstaltungskarte"
 msgstr ""
 
-msgid "Hallo {vorname},\n\nvielen Dank für dein Interesse an unserer Veranstaltung <strong>{event_name}</strong> am {event_datum}! Aktuell sind alle Plätze belegt, aber du stehst auf der Warteliste.\n\nSobald ein Platz frei wird, informieren wir dich sofort per E-Mail.\n\nFalls du nicht mehr auf der Warteliste bleiben möchtest, kannst du dich hier wieder abmelden:\n{storno_link}\n\nViele Grüße,\ndein VeranstaltungsWart"
+#: assets/editor.js:82
+msgid "VeranstaltungsWart – Veranstaltungsliste"
 msgstr ""
 
-msgid "[ {event_name} ] Neue Anmeldung"
+#: assets/editor.js:90
+msgid "Datum"
 msgstr ""
 
-msgid "Eine neue Anmeldung für die Veranstaltung <strong>{event_name}</strong> am {event_datum} ist eingegangen und wartet auf Freigabe:\n\nName: <strong>{vorname} {nachname}</strong>\nE-Mail-Adresse: {email}\n\nBitte prüfe die Anmeldung.\n\nViele Grüße,\ndein VeranstaltungsWart"
+#: assets/editor.js:90
+msgid "Wochentag"
 msgstr ""
 
-msgid "Freitextfeld (Anmerkungen) anzeigen"
+#: assets/editor.js:90
+msgid "Beginn"
 msgstr ""
 
-msgid "Anmerkungen / Nachricht (optional)"
+#: assets/editor.js:90
+msgid "Ende"
 msgstr ""
 
-msgid "Allergien, Platzwünsche oder Besonderheiten..."
+#: assets/editor.js:90
+msgid "Hinweise"
 msgstr ""
 
-msgid "Anmerkung"
+#: assets/editor.js:92
+#: assets/editor.js:96
+msgid "Veranstaltungsdaten einfügen"
 msgstr ""

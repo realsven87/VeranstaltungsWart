@@ -35,6 +35,7 @@ const fs = require('node:fs');
     if (await capacity.inputValue() !== '0') throw new Error('Unlimited capacity not inherited');
     await location.selectOption({ label: 'Geheimer Ort' });
     await capacity.fill('7');
+    await page.setViewportSize({ width: 1440, height: 1100 });
     await page.screenshot({ path: '/tmp/vw-screenshots/screenshot-2.png', fullPage: true });
     const gaps = await page.locator('.vw-settings-fields:visible').first().evaluate(container => {
         const fields = [...container.querySelectorAll(':scope > .vw-setting-field')];
@@ -103,6 +104,7 @@ const fs = require('node:fs');
     if (invalid.status() !== 500 || !(await invalid.text()).includes('gültige CSV-Datei')) throw new Error('Invalid upload extension accepted');
     const imported = await upload('contacts.csv', 'Import;Example;import@example.org\nBad;Email;not-an-email');
     if (!imported.ok() || !imported.url().includes('count=1')) throw new Error('CSV valid-row import failed');
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('http://127.0.0.1:8080/wp-admin/admin.php?page=vw_dashboard');
     await page.locator('#wpbody-content').screenshot({ path: '/tmp/vw-screenshots/screenshot-1.png' });
     await browser.close();
