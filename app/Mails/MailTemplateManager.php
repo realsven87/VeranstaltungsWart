@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace VW\Mails;
 
 // Sicherheitscheck: Verhindert direkten Aufruf
@@ -18,14 +18,14 @@ class MailTemplateManager {
      */
     public function register() {
         add_action('init', [$this, 'register_template_cpt']);
-        
+
         // Spalten in der Übersicht anpassen
         add_filter('manage_vw_mail_template_posts_columns', [$this, 'add_slug_column']);
         add_action('manage_vw_mail_template_posts_custom_column', [$this, 'render_slug_column'], 10, 2);
-        
+
         // Hilfetext mit Platzhaltern (nur im klassischen Editor sichtbar)
         add_action('edit_form_after_title', [$this, 'render_placeholder_help']);
-        
+
         // Meta-Box für Test-Mail-Versand
         add_action('add_meta_boxes', [$this, 'add_test_mail_metabox']);
         add_action('admin_post_vw_send_test_mail', [$this, 'handle_send_test_mail']);
@@ -44,15 +44,15 @@ class MailTemplateManager {
             'all_items'          => __('E-Mail-Vorlagen', 'veranstaltungswart'),
             'menu_name'          => __('E-Mail-Vorlagen', 'veranstaltungswart')
         ];
-        
+
         $args = [
             'labels'             => $labels,
-            'public'             => false, 
-            'show_ui'            => true,  
+            'public'             => false,
+            'show_ui'            => true,
             'show_in_menu'       => 'vw_dashboard',
             'query_var'          => true,
             'rewrite'            => false,
-            'capability_type'    => 'post',
+            'capabilities' => ['edit_posts' => 'manage_options', 'edit_post' => 'manage_options', 'read_post' => 'manage_options', 'delete_post' => 'manage_options', 'create_posts' => 'manage_options', 'publish_posts' => 'manage_options', 'edit_others_posts' => 'manage_options', 'delete_posts' => 'manage_options', 'read_private_posts' => 'manage_options'],
             'has_archive'        => false,
             'hierarchical'       => false,
             'supports'           => ['title', 'editor'],
@@ -66,7 +66,7 @@ class MailTemplateManager {
      */
     public function render_placeholder_help($post) {
         if (!isset($post->post_type) || $post->post_type !== 'vw_mail_template') return;
-        
+
         // Erfolgsmeldung nach Test-Versand
         if (isset($_GET['test_sent'])) {
             echo '<div class="notice notice-success inline"><p><strong>' . esc_html__('Test-Mail wurde versendet!', 'veranstaltungswart') . '</strong> ' . esc_html__('Prüfe dein Postfach.', 'veranstaltungswart') . '</p></div>';
@@ -105,12 +105,12 @@ class MailTemplateManager {
             echo '<p class="description">' . wp_kses_post(__('Bitte die Vorlage erst <strong>veröffentlichen</strong>, um eine Test-Mail zu senden.', 'veranstaltungswart')) . '</p>';
             return;
         }
-        
+
         $user = wp_get_current_user();
         ?>
         <p style="margin-bottom: 10px;"><?php esc_html_e('Sende diese Vorlage mit Beispieldaten an deine Adresse:', 'veranstaltungswart'); ?></p>
         <code style="display:block; margin-bottom: 15px;"><?php echo esc_html($user->user_email); ?></code>
-        <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=vw_send_test_mail&template_id=' . $post->ID), 'vw_test_mail_nonce')); ?>" 
+        <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=vw_send_test_mail&template_id=' . $post->ID), 'vw_test_mail_nonce')); ?>"
            class="button button-secondary">
            <?php esc_html_e('Test-Mail jetzt senden', 'veranstaltungswart'); ?>
         </a>
@@ -122,15 +122,15 @@ class MailTemplateManager {
      */
     public function handle_send_test_mail() {
         if (!current_user_can('manage_options')) wp_die(esc_html__('Zugriff verweigert.', 'veranstaltungswart'));
-        
+
         $template_id = isset($_GET['template_id']) ? intval($_GET['template_id']) : 0;
         check_admin_referer('vw_test_mail_nonce');
-        
+
         $post = get_post($template_id);
         if (!$post) wp_die(esc_html__('Vorlage nicht gefunden.', 'veranstaltungswart'));
-        
+
         $user = wp_get_current_user();
-        
+
         // Beispieldaten generieren (ohne absage_grund)
         $test_data = [
             'vorname'      => $user->display_name,
@@ -146,10 +146,10 @@ class MailTemplateManager {
             'storno_link'  => '<a href="#">' . esc_html__('Anmeldung stornieren', 'veranstaltungswart') . '</a>',
             'kalender_link'=> '<a href="#">' . esc_html__('Termin in den Kalender eintragen', 'veranstaltungswart') . '</a>',
             ];
-        
+
         // Mail rendern
         $mail = self::get_rendered_mail($post->post_name, $test_data);
-        
+
         // Versand als HTML
         wp_mail(
             $user->user_email,
@@ -157,7 +157,7 @@ class MailTemplateManager {
             $mail['body'],
             ['Content-Type: text/html; charset=UTF-8']
         );
-        
+
         // Zurückleiten mit Parameter
         wp_redirect(get_edit_post_link($template_id, 'url') . '&test_sent=1');
         exit;
@@ -201,7 +201,7 @@ class MailTemplateManager {
         ];
         $posts = get_posts($args);
         $template = $posts ? $posts[0] : null;
-        
+
         if (!$template) {
             return [
                 'subject' => '[' . get_bloginfo('name') . '] ' . __('Benachrichtigung', 'veranstaltungswart'),
@@ -209,19 +209,20 @@ class MailTemplateManager {
                 'body'    => sprintf(esc_html__('Systemfehler: E-Mail-Vorlage "%s" wurde nicht gefunden.', 'veranstaltungswart'), esc_html($template_slug))
             ];
         }
-        
+
         $subject = $template->post_title;
         $body    = $template->post_content;
-        
+
         // Platzhalter ersetzen (unterstützt {key} und [key])
         foreach ($replacements as $key => $value) {
-            $subject = str_replace(['{' . $key . '}', '[' . $key . ']'], $value, $subject);
-            $body    = str_replace(['{' . $key . '}', '[' . $key . ']'], $value, $body);
+            $subject = str_replace(['{' . $key . '}', '[' . $key . ']'], str_replace(["\r", "\n"], ' ', wp_strip_all_tags($value)), $subject);
+            $safe = in_array($key, ['storno_link', 'kalender_link'], true) ? wp_kses_post($value) : esc_html($value);
+            $body = str_replace(['{' . $key . '}', '[' . $key . ']'], $safe, $body);
         }
-        
+
         // Standard WordPress Formatierung (Absätze) + Shortcode-Support
-        $body = wpautop(do_shortcode($body));
-        
+        $body = wpautop($body);
+
         return [
             'subject' => wp_specialchars_decode($subject, ENT_QUOTES),
             'body'    => $body
@@ -288,7 +289,7 @@ class MailTemplateManager {
                 'post_status'    => 'any',
                 'posts_per_page' => 1
             ]);
-            
+
             if (empty($existing)) {
                 wp_insert_post([
                     'post_title'   => $tpl['title'],

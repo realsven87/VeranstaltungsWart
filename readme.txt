@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 5.8
 Tested up to: 6.5
-Stable tag: 2.0.0
+Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -40,7 +40,7 @@ Verabschiede dich von unübersichtlichen Excel-Listen! Mit dem VeranstaltungsWar
 Füge den Shortcode `[event_registration]` in den Standard-Editor (Gutenberg) deiner Veranstaltung ein. Das System erkennt automatisch, auf welcher Veranstaltungsseite es sich befindet.
 
 = Wie funktioniert die Warteliste? =
-Sobald die definierte "Max. Teilnehmer"-Zahl einesr Veranstaltung erreicht ist, schaltet das Formular automatisch in den Wartelisten-Modus. Wenn du eine bestätigte Anmeldung stornierst oder löschst, berechnet das System die Plätze neu und schlägt dir die nächste Person auf der Warteliste zum Nachrücken vor.
+Sobald die definierte "Max. Teilnehmer"-Zahl einesr Veranstaltung erreicht ist, schaltet das Formular automatisch in den Wartelisten-Modus. Wenn du eine bestätigte Anmeldung stornierst oder löschst, berechnet das System die Plätze neu und bestätigt passende freigegebene Personen automatisch. Ungeprüfte Personen benötigen weiterhin deine Freigabe.
 
 = Kann ich die E-Mails testen, bevor sie an Teilnehmer rausgehen? =
 Ja! Gehe im Dashboard auf "E-Mail-Vorlagen", öffne eine Vorlage und klicke in der rechten Seitenleiste auf den Button "Test-Mail jetzt senden". Du erhältst dann eine E-Mail mit Beispieldaten an die E-Mail-Adresse des Administrators.
@@ -59,4 +59,68 @@ Ja. Der VeranstaltungsWart unterstützt die nativen WordPress-Tools zum Export u
 4. Die Personenverwaltung zur schnellen Freigabe von Teilnehmern.
 5. Das Anmeldeformular für Teilnehmer auf der Website.
 
+== Version 3.0: Blöcke und dynamische Daten ==
+
+Drei native Blöcke stehen im Block-Editor zur Verfügung:
+* VeranstaltungsWart – Anmeldung
+* VeranstaltungsWart – Veranstaltungskarte
+* VeranstaltungsWart – Veranstaltungsliste
+
+Im Anmeldeblock kann eine Veranstaltung ausgewählt werden. Ohne Auswahl wird die
+aktuelle Veranstaltung verwendet. So funktionieren Formulare auch auf Beiträgen
+und Seiten. Zentral gespeicherte Formularregeln gelten für alle Einbettungen.
+
+Die Veranstaltungseinstellungen befinden sich im Block und in der Dokument-Seitenleiste.
+Mit „Veranstaltungseinstellungen speichern“ werden sie SOFORT separat gespeichert.
+Die Veröffentlichung des Beitrags speichert diese Einstellungen nicht automatisch.
+Im klassischen Editor werden die Felder weiterhin zusammen mit dem Beitrag gespeichert.
+
+Platzhalter im Veranstaltungstext: {event_name}, {event_datum}, {event_wochentag},
+{event_zeit}, {event_ende}, {event_ort}, {event_adresse}, {event_hinweis}.
+Im Absatz-Editor gibt es ein Menü „Veranstaltungsdaten einfügen“.
+In anderen Beiträgen: [event_data id="123" field="event_datum"]
+Anmeldung in anderen Beiträgen: [event_registration id="123"]
+
+Orte sind standardmäßig nicht öffentlich. Die Einstellung „Ort erst nach bestätigter
+Anmeldung mitteilen“ schützt generierte Ortsangaben in Karten, Platzhaltern und
+E-Mails. Ein Kalenderdownload ist nur mit bestätigter Anmeldung möglich.
+Bereits manuell in Texte oder Bilder geschriebene Adressen werden nicht entfernt.
+
+Endzeit und Anmeldeschluss sind optional. Ohne Anmeldeschluss endet die Anmeldung
+mit Beginn. Ohne Endzeit wird keine Dauer für den Kalenderdownload erfunden.
+
+Die Blöcke unterstützen Theme-Farben und Abstände. Die Liste filtert nach Kategorie,
+Anzahl, vergangenen und abgesagten Veranstaltungen. Ein leerer Hinweistext blendet
+Listen ohne Treffer vollständig aus.
+
+== Upgrade von 2.0 ==
+
+Datenbank und bestehende Shortcodes bleiben erhalten. Vor dem Update sichern und
+auf einer Testinstallation prüfen. Nicht deinstallieren: uninstall.php löscht Daten!
+Autoren bearbeiten nur eigene Veranstaltungen; Administratoren und Redakteure
+können auch fremde Veranstaltungen bearbeiten. Personen und Orte verwalten Admins.
+Falls Version 2.0 Autoren allgemeine Rechte für fremde Blogbeiträge erteilt hat,
+zeigt ein Admin-Hinweis eine ausdrücklich auslösbare Reparatur an. Diese Rechte
+werden nicht automatisch gelöscht, da sie auch bewusst vergeben worden sein können.
+
+Nur bestätigte Plätze belegen die Kapazität. Eingegangene Anmeldungen reservieren
+keine Plätze. Die automatische Warteliste verarbeitet freigegebene Personen nach
+Eingangszeit und überspringt Gruppen, die nicht vollständig passen. Ungeprüfte
+Personen benötigen weiterhin eine manuelle Bestätigung.
+
+Das Datenbanksystem muss MySQL/MariaDB GET_LOCK unterstützen. Bei nicht verfügbarem
+Lock wird die Anmeldung mit einer Fehlermeldung abgelehnt, statt ungesichert zu buchen.
+Seiten mit Formularen sollten von lang laufendem Full-Page-Caching ausgeschlossen
+werden, damit die WordPress-Formulartokens aktuell bleiben.
+
 == Changelog ==
+
+= 3.0.0 =
+* Dynamische Anmelde-, Veranstaltungs- und Listenblöcke.
+* Zentrale Einstellungen über authentifizierte REST-Endpunkte und Editor-Seitenleiste.
+* Veranstaltungsplatzhalter, Endzeit, Anmeldeschluss und private Ortsangaben.
+* Einheitliche Wartelistenstatus, getrennte Statistiken und gesicherte Platzvergabe.
+* Serverseitige Formularvalidierung und Schutz vor doppelten aktiven Anmeldungen.
+* Eigene Veranstaltungsrechte und veranstaltungsbezogene Zugriffskontrollen.
+* Stornierung mit Bestätigungsseite; korrigierter Kalenderexport.
+* Automatisierte Syntax-, WordPress- und HTTP-Integrationstests.

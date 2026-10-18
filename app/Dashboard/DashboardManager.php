@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace VW\Dashboard;
 
 // Sicherheitscheck: Verhindert direkten Aufruf
@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use VW\Locations\LocationManager; 
+use VW\Locations\LocationManager;
 use VW\Persons\PersonManager;
 
 /**
@@ -21,7 +21,7 @@ class DashboardManager {
     public function register() {
         // Menüaufbau (Priorität 5, damit es weit oben erscheint)
         add_action('admin_menu', [$this, 'setup_admin_menu'], 5);
-        
+
         // Das Standard-Menü des CPTs (vw_event) aus der Hauptleiste entfernen
         add_action('admin_menu', function() {
             remove_menu_page('edit.php?post_type=vw_event');
@@ -30,12 +30,12 @@ class DashboardManager {
 
     public function setup_admin_menu() {
         global $wpdb;
-        
+
         $table_reg = $wpdb->prefix . 'vw_registrations';
         $pending_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_reg WHERE status = 'eingegangen'");
-        
+
         $badge = '';
-        if ($pending_count > 0) {
+        if ($pending_count > 0 && current_user_can('manage_options')) {
             $badge = sprintf(
                 ' <span class="update-plugins count-%1$d"><span class="plugin-count">%1$s</span></span>',
                 number_format_i18n($pending_count)
@@ -46,43 +46,48 @@ class DashboardManager {
         add_menu_page(
             __('VeranstaltungsWart', 'veranstaltungswart'),
             __('VeranstaltungsWart', 'veranstaltungswart') . $badge,
-            'edit_posts', 
-            'vw_dashboard', 
+            'manage_vw_events',
+            'vw_dashboard',
             [$this, 'render_dashboard'],
             'dashicons-calendar-alt',
             6
         );
 
         // Untermenüs
-        add_submenu_page('vw_dashboard', __('Dashboard', 'veranstaltungswart'), __('Dashboard', 'veranstaltungswart'), 'edit_posts', 'vw_dashboard', [$this, 'render_dashboard']);
-        add_submenu_page('vw_dashboard', __('Alle Veranstaltungen', 'veranstaltungswart'), __('Veranstaltungen', 'veranstaltungswart'), 'edit_posts', 'edit.php?post_type=vw_event');
+        add_submenu_page('vw_dashboard', __('Dashboard', 'veranstaltungswart'), __('Dashboard', 'veranstaltungswart'), 'manage_vw_events', 'vw_dashboard', [$this, 'render_dashboard']);
+        add_submenu_page('vw_dashboard', __('Alle Veranstaltungen', 'veranstaltungswart'), __('Veranstaltungen', 'veranstaltungswart'), 'manage_vw_events', 'edit.php?post_type=vw_event');
         add_submenu_page('vw_dashboard', __('Event-Kategorien', 'veranstaltungswart'), __('Kategorien', 'veranstaltungswart'), 'manage_options', 'edit-tags.php?taxonomy=vw_event_category&post_type=vw_event');
-        add_submenu_page('vw_dashboard', __('Veranstaltungsorte', 'veranstaltungswart'), __('Orte', 'veranstaltungswart'), 'edit_posts', 'vw_locations', [LocationManager::class, 'render_admin_page']);
+        add_submenu_page('vw_dashboard', __('Veranstaltungsorte', 'veranstaltungswart'), __('Orte', 'veranstaltungswart'), 'manage_options', 'vw_locations', [LocationManager::class, 'render_admin_page']);
         add_submenu_page('vw_dashboard', __('Personen-Verwaltung', 'veranstaltungswart'), __('Personen', 'veranstaltungswart'), 'manage_options', 'vw_persons', [PersonManager::class, 'render_admin_page']);
-        add_submenu_page('vw_dashboard', __('Hilfe & Dokumentation', 'veranstaltungswart'), __('Hilfe', 'veranstaltungswart'), 'edit_posts', 'vw_help', [$this, 'render_help_page']);
+        add_submenu_page('vw_dashboard', __('Hilfe & Dokumentation', 'veranstaltungswart'), __('Hilfe', 'veranstaltungswart'), 'manage_vw_events', 'vw_help', [$this, 'render_help_page']);
     }
 
     public function render_dashboard() {
+        if (!current_user_can('manage_vw_events')) return;
+        if (!current_user_can('manage_options')) {
+            echo '<div class="wrap"><h1>VeranstaltungsWart</h1><p><a href="' . esc_url(admin_url('edit.php?post_type=vw_event')) . '">Veranstaltungen und zugehörige Anmeldungen verwalten</a></p></div>';
+            return;
+        }
         global $wpdb;
-        
+
         $table_reg = $wpdb->prefix . 'vw_registrations';
         $table_persons = $wpdb->prefix . 'vw_persons';
         $current_time = current_time('mysql');
-        
+
         $total_pending_count = (int) $wpdb->get_var("SELECT COUNT(*) FROM $table_reg WHERE status = 'eingegangen'");
-        
+
         $active_events_count = (int) $wpdb->get_var($wpdb->prepare("
-            SELECT COUNT(DISTINCT p.ID) 
+            SELECT COUNT(DISTINCT p.ID)
             FROM {$wpdb->posts} p
             JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-            WHERE p.post_type = 'vw_event' 
+            WHERE p.post_type = 'vw_event'
             AND p.post_status = 'publish'
-            AND pm.meta_key = 'vw_event_date' 
+            AND pm.meta_key = 'vw_event_date'
             AND pm.meta_value >= %s
         ", $current_time));
 
         $pending = $wpdb->get_results("
-            SELECT r.*, p.first_name, p.last_name, p.email, post.post_title 
+            SELECT r.*, p.first_name, p.last_name, p.email, post.post_title
             FROM $table_reg r
             JOIN $table_persons p ON r.person_id = p.id
             JOIN {$wpdb->posts} post ON r.event_post_id = post.ID

@@ -37,14 +37,14 @@ class EventRepository
 
         // KORREKTUR: Nur 'bestätigt' zählt als belegter Platz
         $current = (int) $this->wpdb->get_var($this->wpdb->prepare("
-        SELECT SUM(seats_total) FROM {$this->table_regs} 
+        SELECT SUM(seats_total) FROM {$this->table_regs}
         WHERE event_post_id = %d AND status = 'bestätigt'
     ", $event_id));
 
         // Warteliste: Alles, was nicht bestätigt oder abgelehnt ist (z.B. 'eingegangen')
         $waitlist = (int) $this->wpdb->get_var($this->wpdb->prepare("
-        SELECT SUM(seats_total) FROM {$this->table_regs} 
-        WHERE event_post_id = %d AND status = 'eingegangen'
+        SELECT SUM(seats_total) FROM {$this->table_regs}
+        WHERE event_post_id = %d AND status = 'warteliste'
     ", $event_id));
 
         return [
@@ -52,6 +52,7 @@ class EventRepository
             'current' => $current,
             'confirmed_count' => $current, // Für die Anzeige in der Meta-Box
             'waitlist' => $waitlist,
+            'pending_count' => (int) $this->wpdb->get_var($this->wpdb->prepare("SELECT COALESCE(SUM(seats_total), 0) FROM {$this->table_regs} WHERE event_post_id = %d AND status = 'eingegangen'", $event_id)),
             'waiting_count' => $waitlist, // Konsistenz für registration-list-table.php
             'max_capacity' => $max,
             'is_full' => ($max > 0 && $current >= $max)
@@ -65,7 +66,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
         $order = ($order === 'ASC') ? 'ASC' : 'DESC';
 
         return $this->wpdb->get_results($this->wpdb->prepare("
-            SELECT r.*, p.first_name, p.last_name, p.email, p.trust_status 
+            SELECT r.*, p.first_name, p.last_name, p.email, p.trust_status
             FROM {$this->table_regs} r
             LEFT JOIN {$this->table_persons} p ON r.person_id = p.id
             WHERE r.event_post_id = %d
@@ -89,43 +90,72 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
         return $this->wpdb->delete($this->table_regs, ['id' => $reg_id], ['%d']);
     }
 
-    public function process_waitlist_move_up($event_id, $max_capacity)
-    {
-        $stats = $this->get_registration_stats($event_id);
-        $available_slots = $max_capacity - $stats['current'];
+    private static $locks = [];
 
-        if ($available_slots <= 0)
-            return;
+    /** Serialize every capacity-changing path, including independent PHP requests. */
+    public function with_event_lock($event_id, $callback) {
+        $key = 'vw_' . md5(DB_NAME . $this->wpdb->prefix . ':' . (int) $event_id);
+        if (isset(self::$locks[$key])) return $callback();
+        if ((int) $this->wpdb->get_var($this->wpdb->prepare('SELECT GET_LOCK(%s, 5)', $key)) !== 1) {
+            return new \WP_Error('busy', 'Die Veranstaltung wird gerade bearbeitet. Bitte erneut versuchen.');
+        }
+        self::$locks[$key] = true;
+        try { return $callback(); }
+        finally {
+            unset(self::$locks[$key]);
+            $this->wpdb->get_var($this->wpdb->prepare('SELECT RELEASE_LOCK(%s)', $key));
+        }
+    }
 
-        // Wir holen die nächsten Kandidaten (Warteliste oder Eingegangen)
-        $waitlist_entries = $this->wpdb->get_results($this->wpdb->prepare("
-        SELECT r.id, r.seats_total, r.person_id, p.trust_status 
-        FROM {$this->table_regs} r
-        LEFT JOIN {$this->table_persons} p ON r.person_id = p.id
-        WHERE r.event_post_id = %d AND r.status IN ('warteliste', 'eingegangen')
-        ORDER BY r.registered_at ASC
-    ", $event_id));
+    public function get_registration($id) {
+        return $this->wpdb->get_row($this->wpdb->prepare("SELECT * FROM {$this->table_regs} WHERE id = %d", $id));
+    }
 
-        foreach ($waitlist_entries as $entry) {
-            if ($entry->seats_total <= $available_slots) {
+    public function active_registration($event_id, $person_id) {
+        return $this->wpdb->get_var($this->wpdb->prepare("SELECT id FROM {$this->table_regs} WHERE event_post_id = %d AND person_id = %d AND status IN ('eingegangen','warteliste','bestätigt') LIMIT 1", $event_id, $person_id));
+    }
 
-                // LOGIK: Ist die Person global bestätigt?
-                if ($entry->trust_status === 'bestätigt') {
-                    // JA: Automatisch bestätigen + Mail
-                    $this->update_registration_status($entry->id, 'bestätigt');
-                    MailService::send_registration_mail($entry->id, 'anmeldebestaetigung');
-                    $available_slots -= $entry->seats_total;
-                } else {
-                    // NEIN: Nur Status ändern, damit du im Backend manuell bestätigen kannst
-                    // Wir setzen ihn auf 'eingegangen' (oder 'nachgerückt'), damit er in der Liste oben steht
-                    $this->update_registration_status($entry->id, 'eingegangen');
-                    // KEINE Mail hier! Du bestätigst später manuell im Backend.
+    public function change_status($reg_id, $status) {
+        $reg = $this->get_registration($reg_id);
+        if (!$reg || !in_array($status, ['bestätigt', 'abgelehnt', 'storniert'], true)) return new \WP_Error('invalid', 'Ungültige Anmeldung oder Status.');
+        return $this->with_event_lock($reg->event_post_id, function() use ($reg_id, $status) {
+            $reg = $this->get_registration($reg_id);
+            if (!$reg) return new \WP_Error('invalid', 'Anmeldung nicht gefunden.');
+            if ($reg->status === $status) return false;
+            if ($status === 'bestätigt') {
+                if (EventSettings::closed_reason($reg->event_post_id)) return new \WP_Error('closed', 'Die Veranstaltung ist nicht mehr zur Anmeldung geöffnet.');
+                if ($reg->status === 'storniert') return new \WP_Error('cancelled', 'Stornierte Anmeldung kann nicht bestätigt werden.');
+                $active = $this->active_registration($reg->event_post_id, $reg->person_id);
+                if ($active && (int) $active !== (int) $reg_id) return new \WP_Error('duplicate', 'Eine andere aktive Anmeldung existiert bereits.');
+                $stats = $this->get_registration_stats($reg->event_post_id);
+                if ($stats['max'] > 0 && $stats['current'] + $reg->seats_total > $stats['max']) return new \WP_Error('full', 'Nicht genügend freie Plätze.');
+            }
+            if ($this->update_registration_status($reg_id, $status) === false) return new \WP_Error('database', 'Speichern fehlgeschlagen.');
+            $slug = ['bestätigt' => 'anmeldebestaetigung', 'abgelehnt' => 'ablehnung-info', 'storniert' => 'storno-bestaetigung'];
+            MailService::send_registration_mail($reg_id, $slug[$status]);
+            if ($status !== 'bestätigt') $this->process_waitlist_move_up($reg->event_post_id, (int) EventSettings::get($reg->event_post_id, 'vw_max_capacity'));
+            return true;
+        });
+    }
+
+    public function process_waitlist_move_up($event_id, $max_capacity) {
+        return $this->with_event_lock($event_id, function() use ($event_id, $max_capacity) {
+            if (EventSettings::closed_reason($event_id)) return;
+            $stats = $this->get_registration_stats($event_id);
+            $available = $max_capacity > 0 ? $max_capacity - $stats['current'] : PHP_INT_MAX;
+            $entries = $this->wpdb->get_results($this->wpdb->prepare("SELECT r.*, p.trust_status FROM {$this->table_regs} r LEFT JOIN {$this->table_persons} p ON r.person_id = p.id WHERE r.event_post_id = %d AND r.status IN ('warteliste', 'eingegangen') ORDER BY r.registered_at ASC, r.id ASC", $event_id));
+            foreach ($entries as $entry) {
+                if ($entry->seats_total > $available) continue; // A group is never split.
+                if ($entry->trust_status === 'freigegeben') {
+                    if ($this->update_registration_status($entry->id, 'bestätigt') !== false) {
+                        $available -= $entry->seats_total;
+                        MailService::send_registration_mail($entry->id, 'anmeldebestaetigung');
+                    }
+                } elseif ($entry->status === 'warteliste') {
+                    if ($this->update_registration_status($entry->id, 'eingegangen') !== false) MailService::send_registration_mail($entry->id, 'freigabe-info');
                 }
             }
-            if ($available_slots <= 0)
-                break;
-        }
-
+        });
     }
 
     /* --- PERSONEN --- */
@@ -160,7 +190,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
             'created_at' => current_time('mysql')
         ]);
 
-        return (int) $this->wpdb->insert_id;
+        return (int) $this->wpdb->get_var($this->wpdb->prepare("SELECT id FROM {$this->table_persons} WHERE email = %s", $email));
     }
 
     public function update_person($id, $data)
@@ -179,7 +209,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
     {
         // 1. Zuerst alle Anmeldungen der Person suchen (um später die Wartelisten anzustoßen)
         $registrations = $this->wpdb->get_results($this->wpdb->prepare(
-            "SELECT event_post_id FROM {$this->table_regs} WHERE person_id = %d", 
+            "SELECT event_post_id FROM {$this->table_regs} WHERE person_id = %d",
             $id
         ));
 

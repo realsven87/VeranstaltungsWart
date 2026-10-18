@@ -1,0 +1,66 @@
+name: Plugin checks
+on:
+  pull_request:
+  push:
+    branches: [main, 'feature/v3-*']
+permissions:
+  contents: read
+jobs:
+  wordpress:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '7.4'
+            wordpress: '6.5'
+          - php: '8.3'
+            wordpress: 'latest'
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '${{ matrix.php }}'
+          extensions: mysqli
+          tools: wp-cli
+      - name: Syntax checks
+        run: |
+          find . -name '*.php' -print0 | xargs -0 -n1 php -l
+          node --check assets/editor.js
+      - name: Install isolated WordPress
+        env:
+          WP_VERSION: '${{ matrix.wordpress }}'
+        run: |
+          mkdir /tmp/vw-wordpress
+          wp core download --version="$WP_VERSION" --path=/tmp/vw-wordpress
+          wp config create --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1:3306 --path=/tmp/vw-wordpress
+          wp core install --url=http://127.0.0.1:8080 --title=Test --admin_user=admin --admin_password=test-only-password --admin_email=test@example.org --skip-email --path=/tmp/vw-wordpress
+          ln -s "$GITHUB_WORKSPACE" /tmp/vw-wordpress/wp-content/plugins/veranstaltungswart
+          wp plugin activate veranstaltungswart --path=/tmp/vw-wordpress
+          wp option update timezone_string Europe/Berlin --path=/tmp/vw-wordpress
+          mkdir -p /tmp/vw-wordpress/wp-content/mu-plugins
+          printf '%s\n' '<?php add_filter("pre_wp_mail", "__return_true");' > /tmp/vw-wordpress/wp-content/mu-plugins/test-mail.php
+      - name: WordPress integration tests
+        run: wp eval-file "$GITHUB_WORKSPACE/tests/integration.php" --path=/tmp/vw-wordpress
+      - name: HTTP registration tests
+        run: |
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/vw-wordpress > /tmp/vw-http.log 2>&1 &
+          python3 tests/http.py
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.php }}
+          path: /tmp/vw-http.log
