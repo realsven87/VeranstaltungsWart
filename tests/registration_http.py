@@ -7,7 +7,8 @@ import time
 import urllib.parse
 import urllib.request
 BASE = 'http://127.0.0.1:8080'
-event = json.load(open('/tmp/vw-http-fixture.json'))['id']
+fixture = json.load(open('/tmp/vw-http-fixture.json'))
+event = fixture['id']
 for attempt in range(30):
     try:
         page = urllib.request.urlopen(BASE + '/?p=' + str(event)).read().decode()
@@ -39,3 +40,13 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
 assert sum(result.get('reg') == ['pending'] for result in results) == 1
 assert sum(result.get('reg_error') == ['duplicate'] for result in results) == 3
 print('PASS: HTTP validation, international names, duplicate protection and trusted registration')
+
+# A scanner GET must leave the registration intact; the calendar is still accessible.
+query = urllib.parse.urlencode(dict(id=fixture['confirmed'], hash=fixture['confirmed_hash']))
+cancel_url = BASE + '/wp-admin/admin-post.php?action=vw_cancel_registration&' + query
+confirmation = urllib.request.urlopen(cancel_url).read().decode()
+assert 'Stornierung bestätigen' in confirmation
+ics = urllib.request.urlopen(BASE + '/wp-admin/admin-post.php?action=vw_download_ics&' + query).read().decode()
+assert 'BEGIN:VCALENDAR' in ics and 'Geheime Straße' in ics
+assert 'DTEND' not in ics, 'No fabricated end time'
+print('PASS: GET cancellation is non-mutating and confirmed calendar download works')

@@ -85,7 +85,7 @@
         edit: function ({ value, onChange }) {
             const type = wp.data.useSelect(select => select('core/editor').getCurrentPostType(), []);
             if (type !== 'vw_event') return null;
-            return el(wp.components.DropdownMenu, { icon: 'calendar-alt', label: 'Veranstaltungsdaten einfügen', controls: Object.entries(tokens).map(([key, title]) => ({ title, onClick: () => onChange(wp.richText.insert(value, '{' + key + '}')) })) });
+            return el(wp.blockEditor.BlockControls, { group: 'inline' }, el(wp.components.ToolbarGroup, null, el(wp.components.DropdownMenu, { icon: 'calendar-alt', label: 'Veranstaltungsdaten einfügen', controls: Object.entries(tokens).map(([key, title]) => ({ title, onClick: () => onChange(wp.richText.insert(value, '{' + key + '}')) })) })));
         }
     });
 })(window.wp);

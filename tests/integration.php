@@ -63,5 +63,5 @@ $http = wp_insert_post(['post_type' => 'vw_event', 'post_status' => 'publish', '
 EventSettings::save($http, ['vw_event_date' => $start, 'vw_max_capacity' => 2, 'vw_allow_guests' => '0', 'vw_allow_message' => '1', 'vw_message_required' => '1']);
 $http_trusted = $repo->get_or_create_person_id('HTTP', 'Trusted', 'trusted@example.org');
 $repo->update_person($http_trusted, ['trust_status' => 'freigegeben']);
-file_put_contents('/tmp/vw-http-fixture.json', wp_json_encode(['id' => $http]));
+file_put_contents('/tmp/vw-http-fixture.json', wp_json_encode(['id' => $http, 'confirmed' => $r2, 'confirmed_hash' => wp_hash('two@example.org' . $r2)]));
 echo "Integration tests complete.\n";
