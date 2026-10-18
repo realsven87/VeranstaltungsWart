@@ -53,22 +53,36 @@ class EventMetaBox {
         }
         wp_nonce_field('vw_event_settings_nonce', 'vw_event_settings_nonce_field');
         $locations = (new EventRepository())->get_all_locations();
+        echo '<div class="vw-settings-fields">';
         foreach (EventSettings::fields() as $key => $field) {
             $value = EventSettings::get($post->ID, $key);
-            echo '<p><label for="' . esc_attr($key) . '">' . esc_html($field[0]) . '</label><br>';
+            echo '<div class="vw-setting-field"><label for="' . esc_attr($key) . '">' . esc_html($field[0]) . '</label><br>';
             if ($field[1] === 'boolean') {
                 echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . '>';
             } elseif ($key === 'vw_location_id') {
                 echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">Kein Ort</option>';
-                foreach ($locations as $location) echo '<option value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
+                foreach ($locations as $location) echo '<option data-capacity="' . max(0, (int) $location->default_capacity) . '" value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
                 echo '</select>';
             } else {
                 $type = $field[1] === 'date' ? 'datetime-local' : ($field[1] === 'integer' ? 'number' : 'text');
                 if ($type === 'datetime-local') $value = str_replace(' ', 'T', substr($value, 0, 16));
                 echo '<input class="widefat" type="' . esc_attr($type) . '" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" min="0">';
             }
-            echo '</p>';
+            echo '</div>';
         }
+        echo '</div>';
+        ?>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const location = document.getElementById('vw_location_id');
+            const capacity = document.getElementById('vw_max_capacity');
+            if (location && capacity) location.addEventListener('change', function() {
+                const value = this.options[this.selectedIndex].getAttribute('data-capacity');
+                if (value !== null) capacity.value = value;
+            });
+        });
+        </script>
+        <?php
     }
 
     public function save($post_id) {

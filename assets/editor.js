@@ -41,12 +41,19 @@
         const controls = Object.entries(vwEditor.fields).map(([key, field]) => {
             const props = { key, label: field[0], value: values[key], onChange: value => setValues(old => Object.assign({}, old, { [key]: value })) };
             if (field[1] === 'boolean') return el(ToggleControl, Object.assign({}, props, { checked: values[key] === '1', onChange: value => props.onChange(value ? '1' : '0') }));
-            if (key === 'vw_location_id') return el(SelectControl, Object.assign({}, props, { options: [{ value: 0, label: 'Kein Ort' }].concat((locations.data || []).map(row => ({ value: row.id, label: row.name }))) }));
+            if (key === 'vw_location_id') return el(SelectControl, Object.assign({}, props, {
+                disabled: locations.loading, help: 'Beim Ortswechsel wird die Kapazität übernommen. Danach kannst du sie unten anpassen.',
+                options: [{ value: 0, label: 'Kein Ort' }].concat((locations.data || []).map(row => ({ value: row.id, label: row.name }))),
+                onChange: value => setValues(old => {
+                    const location = (locations.data || []).find(row => row.id === Number(value));
+                    return Object.assign({}, old, { vw_location_id: Number(value) }, location ? { vw_max_capacity: location.default_capacity } : {});
+                })
+            }));
             if (field[1] === 'date') return el(TextControl, Object.assign({}, props, { type: 'datetime-local', value: (values[key] || '').replace(' ', 'T').slice(0, 16) }));
             if (field[1] === 'integer') return el(TextControl, Object.assign({}, props, { type: 'number', min: 0, max: key === 'vw_max_guests' ? 100 : undefined }));
             return el(key === 'vw_event_notes' ? TextareaControl : TextControl, props);
         });
-        return el(Fragment, null, el('p', null, 'Diese zentralen Einstellungen werden mit dem folgenden Button sofort gespeichert, unabhängig vom Beitrag.'), controls, el(Button, { variant: 'primary', disabled: busy, onClick: save }, busy ? 'Speichert …' : 'Veranstaltungseinstellungen speichern'), notice && el(Notice, { isDismissible: false, status: 'info' }, notice));
+        return el(Fragment, null, el('p', null, 'Diese zentralen Einstellungen werden mit dem folgenden Button sofort gespeichert, unabhängig vom Beitrag.'), el('div', { className: 'vw-settings-fields' }, controls.map((control, index) => el('div', { className: 'vw-setting-field', key: Object.keys(vwEditor.fields)[index] }, control))), el(Button, { variant: 'primary', disabled: busy, onClick: save }, busy ? 'Speichert …' : 'Veranstaltungseinstellungen speichern'), notice && el(Notice, { isDismissible: false, status: 'info' }, notice));
     }
     const common = { eventId: { type: 'integer', default: 0 } };
     function edit(kind) {

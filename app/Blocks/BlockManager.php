@@ -9,10 +9,15 @@ use VW\Core\Capabilities;
 class BlockManager {
     public function register() {
         add_action('init', [$this, 'blocks']);
+        add_action('admin_enqueue_scripts', function() {
+            $screen = get_current_screen();
+            if ($screen && $screen->post_type === 'vw_event') wp_enqueue_style('vw-editor-settings');
+        });
         add_action('rest_api_init', [$this, 'routes']);
     }
     public function blocks() {
         wp_register_style('vw-blocks', VW_PLUGIN_URL . 'assets/blocks.css', [], VW_VERSION);
+        wp_register_style('vw-editor-settings', VW_PLUGIN_URL . 'assets/editor.css', [], VW_VERSION);
         wp_register_script('vw-editor', VW_PLUGIN_URL . 'assets/editor.js', ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-api-fetch', 'wp-rich-text', 'wp-i18n', 'wp-plugins', 'wp-edit-post'], VW_VERSION, true);
         wp_localize_script('vw-editor', 'vwEditor', ['fields' => EventSettings::fields()]);
         $shared = ['eventId' => ['type' => 'integer', 'default' => 0]];
@@ -22,7 +27,7 @@ class BlockManager {
             'event-list' => ['count' => ['type' => 'integer', 'default' => 6], 'columns' => ['type' => 'integer', 'default' => 3], 'category' => ['type' => 'integer', 'default' => 0], 'showPast' => ['type' => 'boolean', 'default' => false], 'showCanceled' => ['type' => 'boolean', 'default' => true], 'emptyText' => ['type' => 'string', 'default' => ''], 'showImage' => ['type' => 'boolean', 'default' => true], 'showLocation' => ['type' => 'boolean', 'default' => true]],
         ];
         foreach ($definitions as $name => $attributes) register_block_type('veranstaltungswart/' . $name, [
-            'api_version' => 2, 'editor_script' => 'vw-editor', 'style' => 'vw-blocks',
+            'api_version' => 2, 'editor_script' => 'vw-editor', 'editor_style' => 'vw-editor-settings', 'style' => 'vw-blocks',
             'attributes' => array_merge($shared, $attributes),
             'supports' => ['html' => false, 'align' => ['wide', 'full'], 'color' => ['text' => true, 'background' => true], 'spacing' => ['padding' => true, 'margin' => true]],
             'uses_context' => ['postId'],
@@ -60,7 +65,7 @@ class BlockManager {
             }
         ]);
         register_rest_route('veranstaltungswart/v1', '/locations', ['methods' => 'GET', 'permission_callback' => function() { return current_user_can('manage_vw_events'); }, 'callback' => function() {
-            return rest_ensure_response(array_map(function($row) { return ['id' => (int) $row->id, 'name' => $row->name]; }, (new EventRepository())->get_all_locations()));
+            return rest_ensure_response(array_map(function($row) { return ['id' => (int) $row->id, 'name' => $row->name, 'default_capacity' => max(0, (int) $row->default_capacity)]; }, (new EventRepository())->get_all_locations()));
         }]);
         register_rest_route('veranstaltungswart/v1', '/preview/(?P<id>\d+)', ['methods' => 'GET', 'permission_callback' => function($request) { return Capabilities::can_manage_event((int) $request['id']) || (EventSettings::is_public((int) $request['id']) && current_user_can('edit_posts')); }, 'callback' => function($request) {
             return rest_ensure_response(EventPresentation::values((int) $request['id']));
@@ -73,7 +78,7 @@ class BlockManager {
         $cancelled = get_post_meta($id, 'vw_event_canceled', true) === '1';
         $status = $cancelled ? 'Abgesagt' : (EventSettings::closed_reason($id) ? 'Anmeldung geschlossen' : ($stats['is_full'] ? 'Ausgebucht · Warteliste' : 'Anmeldung geöffnet'));
         $html = '<article class="vw-event-card">';
-        if (($atts['showImage'] ?? true) && has_post_thumbnail($id)) $html .= get_the_post_thumbnail($id, 'medium_large');
+        if (($atts['showImage'] ?? true) && has_post_thumbnail($id)) $html .= '<div class="vw-card-image">' . get_the_post_thumbnail($id, 'medium_large') . '</div>';
         $html .= '<div class="vw-card-body"><p class="vw-event-status">' . esc_html($status) . '</p><h3><a href="' . esc_url(get_permalink($id)) . '">' . esc_html($v['event_name']) . '</a></h3>';
         $html .= '<p>' . esc_html($v['event_datum'] . ' · ' . $v['event_zeit']) . '</p>';
         if ($atts['showLocation'] ?? true) $html .= '<p>' . esc_html($v['event_ort']) . '</p>';

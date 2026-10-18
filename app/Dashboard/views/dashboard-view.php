@@ -2,7 +2,7 @@
 
 <?php 
 // Die aktuelle URL sicher kodieren, damit wir nach der Aktion genau hierher zurückkehren
-$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
 ?>
 
 <div class="wrap">
@@ -63,6 +63,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         }
     </style>
 
+    <p>Hier siehst du ausschließlich Veranstaltungen und Anmeldungen, die du verwalten darfst.</p>
     <div class="vw-dashboard-stats">
         <div class="vw-stat-card" style="border-left: 5px solid #ffa500;">
             <h2 style="margin: 0; font-size: 14px; color: #646970; text-transform: uppercase; letter-spacing: 0.5px;">
@@ -170,7 +171,16 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         </table>
     </div>
     
+    <?php if ($total_pending_count > 50): ?>
+        <nav aria-label="Anmeldungen durchblättern" class="tablenav"><div class="tablenav-pages">
+            <?php echo wp_kses_post(paginate_links([
+                'base' => add_query_arg('vw_page', '%#%', admin_url('admin.php?page=vw_dashboard')),
+                'format' => '', 'current' => $page, 'total' => (int) ceil($total_pending_count / 50),
+                'prev_text' => 'Zurück', 'next_text' => 'Weiter',
+            ])); ?>
+        </div></nav>
+    <?php endif; ?>
     <div style="margin-top: 20px;">
-        <p class="description"><?php esc_html_e('Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind in der Personen-Verwaltung oder unter dem jeweiligen Event einsehbar.', 'veranstaltungswart'); ?></p>
+        <p class="description"><?php esc_html_e('Hinweis: Bestätigte Anmeldungen verschwinden aus dieser Ansicht und sind unter der jeweiligen Veranstaltung einsehbar.', 'veranstaltungswart'); ?></p>
     </div>
 </div>

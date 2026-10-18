@@ -62,6 +62,11 @@ class EventSettings {
             }
             $data[$key] = $value;
         }
+        // API callers can explicitly override capacity; otherwise a new location supplies it.
+        if ((int) $data['vw_location_id'] !== (int) self::get($id, 'vw_location_id') && $data['vw_location_id'] && !array_key_exists('vw_max_capacity', $input)) {
+            $location = (new EventRepository())->get_location($data['vw_location_id']);
+            if ($location) $data['vw_max_capacity'] = max(0, (int) $location->default_capacity);
+        }
         $start = self::date($data['vw_event_date']);
         $end = self::date($data['vw_event_end']);
         $deadline = self::date($data['vw_registration_deadline']);

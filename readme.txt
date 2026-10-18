@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 5.8
 Tested up to: 6.5
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -114,6 +114,12 @@ Seiten mit Formularen sollten von lang laufendem Full-Page-Caching ausgeschlosse
 werden, damit die WordPress-Formulartokens aktuell bleiben.
 
 == Changelog ==
+
+= 3.0.1 =
+* Optionale Bilder in Veranstaltungskarten und -listen: Desktop links, mobil oberhalb.
+* Dashboard einschließlich Zähler und Menü-Badge auf bearbeitbare Veranstaltungen begrenzt.
+* Ortswechsel übernimmt die Ortskapazität; manuelle Anpassungen bleiben möglich.
+* Zusammengehörige Beschriftungen und Felder mit klaren Abständen im Editor.
 
 = 3.0.0 =
 * Dynamische Anmelde-, Veranstaltungs- und Listenblöcke.

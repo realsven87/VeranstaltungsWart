@@ -69,3 +69,48 @@ foreach (['race1', 'race2', 'race3'] as $name) {
 }
 file_put_contents('/tmp/vw-http-fixture.json', wp_json_encode(['id' => $http, 'confirmed' => $r2, 'confirmed_hash' => wp_hash('two@example.org' . $r2)]));
 echo "Integration tests complete.\n";
+
+// The dashboard must use exactly the permissions enforced by registration actions.
+$dashboard = new VW\Dashboard\DashboardManager();
+$owned_event = wp_insert_post(['post_type' => 'vw_event', 'post_status' => 'publish', 'post_title' => 'Author-only event', 'post_author' => $author_id]);
+EventSettings::save($owned_event, ['vw_event_date' => $start]);
+$owned_reg = $repo->create_registration(array_merge($base, ['event_post_id' => $owned_event, 'person_id' => $person3, 'status' => 'eingegangen']));
+wp_set_current_user($author_id);
+$author_dashboard = $dashboard->get_dashboard_data();
+vw_assert($author_dashboard['total_pending_count'] === 1 && $author_dashboard['active_events_count'] === 1, 'Author dashboard counts only own permitted events');
+vw_assert(count($author_dashboard['pending']) === 1 && (int) $author_dashboard['pending'][0]->id === (int) $owned_reg, 'Author dashboard excludes foreign participant details');
+$deny = function($caps, $cap, $user_id, $args) use ($owned_event) {
+    return $cap === 'edit_post' && (int) ($args[0] ?? 0) === (int) $owned_event ? ['do_not_allow'] : $caps;
+};
+add_filter('map_meta_cap', $deny, 20, 4);
+vw_assert($dashboard->get_dashboard_data()['total_pending_count'] === 0, 'Dashboard honours per-event permission filters');
+remove_filter('map_meta_cap', $deny, 20);
+wp_set_current_user($admin->ID);
+$admin_dashboard = $dashboard->get_dashboard_data();
+vw_assert($admin_dashboard['total_pending_count'] === 2, 'Administrator dashboard includes both authors');
+$editor = wp_insert_user(['user_login' => 'testeditor', 'user_pass' => 'test', 'role' => 'editor']);
+wp_set_current_user($editor);
+vw_assert($dashboard->get_dashboard_data()['total_pending_count'] === 2, 'Editor dashboard includes events they can manage');
+wp_set_current_user(0);
+vw_assert($dashboard->get_dashboard_data()['pending'] === [], 'Anonymous dashboard contains no participants');
+wp_set_current_user($admin->ID);
+$capacity_event = wp_insert_post(['post_type' => 'vw_event', 'post_status' => 'draft', 'post_title' => 'Capacity test', 'post_author' => $admin->ID]);
+vw_assert(EventSettings::save($capacity_event, ['vw_location_id' => $location]) === true && (int) EventSettings::get($capacity_event, 'vw_max_capacity') === 2, 'Location supplies capacity when none explicitly provided');
+EventSettings::save($capacity_event, ['vw_max_capacity' => 9]);
+EventSettings::save($capacity_event, ['vw_location_id' => $location]);
+vw_assert((int) EventSettings::get($capacity_event, 'vw_max_capacity') === 9, 'Unchanged location preserves manual capacity');
+$repo->save_location(0, ['name' => 'Unlimited test location', 'address' => '', 'default_capacity' => 0]);
+$unlimited_location = $wpdb->insert_id;
+EventSettings::save($capacity_event, ['vw_location_id' => $unlimited_location]);
+vw_assert((int) EventSettings::get($capacity_event, 'vw_max_capacity') === 0, 'Location capacity zero is inherited as unlimited');
+EventSettings::save($capacity_event, ['vw_location_id' => $location, 'vw_max_capacity' => 17]);
+vw_assert((int) EventSettings::get($capacity_event, 'vw_max_capacity') === 17, 'Explicit override wins over newly selected location');
+echo "Dashboard and capacity regression tests complete.\n";
+
+// Give the HTTP/editor fixture a real optional featured image for responsive layout tests.
+$upload = wp_upload_bits('vw-layout-test.png', null, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZ9sAAAAASUVORK5CYII='));
+vw_assert(!$upload['error'], 'Layout fixture image uploaded');
+$attachment = wp_insert_attachment(['post_title' => 'Layout image', 'post_mime_type' => 'image/png', 'post_status' => 'inherit'], $upload['file'], $http);
+wp_update_attachment_metadata($attachment, ['width' => 1, 'height' => 1, 'file' => _wp_relative_upload_path($upload['file'])]);
+set_post_thumbnail($http, $attachment);
+vw_assert(strpos((new VW\Blocks\BlockManager())->card($http, ['showImage' => false]), 'vw-card-image') === false, 'Optional image can still be hidden');

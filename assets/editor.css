@@ -1,0 +1,16 @@
+/* Keep each label with its input; spacing belongs between whole field groups. */
+.vw-settings-fields { display: flex; flex-direction: column; gap: 22px; margin: 20px 0 24px; }
+.vw-settings-fields .vw-setting-field { margin: 0; min-width: 0; }
+.vw-settings-fields .components-base-control,
+.vw-settings-fields .components-base-control__field { margin-bottom: 0; }
+.vw-settings-fields .components-base-control__label,
+.vw-settings-fields .components-input-control__label,
+.vw-settings-fields .vw-setting-field > label {
+    display: block; margin: 0 0 6px; font-size: 13px; font-weight: 600;
+    line-height: 1.5; text-transform: none;
+}
+.vw-settings-fields .components-base-control__help { margin: 6px 0 0; font-size: 12px; line-height: 1.5; }
+.vw-settings-fields .components-toggle-control__label { font-size: 13px; line-height: 1.5; }
+.vw-settings-fields input:not([type=checkbox]),
+.vw-settings-fields select, .vw-settings-fields textarea { max-width: 100%; box-sizing: border-box; }
+.vw-settings-fields .vw-setting-field > br { display: none; }
