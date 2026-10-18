@@ -73,6 +73,39 @@ const fs = require('node:fs');
     }
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.locator('.vw-registration-container').first().screenshot({ path: '/tmp/vw-screenshots/screenshot-3.png' });
+    // Native lazy auto-sizes uses size containment. Keep real raster srcset and
+    // HTML dimensions: clearing sizes (as in the SVG tests) hides this regression.
+    for (const width of [1280, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        const results = await page.locator('.vw-card-image img').evaluateAll(async images => {
+            return Promise.all(images.map(async img => {
+                if (!img.srcset || !img.width || !img.height) throw new Error('Missing responsive raster fixture');
+                img.loading = 'lazy';
+                if (!img.sizes.startsWith('auto')) img.sizes = 'auto, ' + img.sizes;
+                img.scrollIntoView();
+                await img.decode();
+                const measure = () => {
+                    const rect = img.getBoundingClientRect();
+                    const wrapper = img.closest('.vw-card-image').getBoundingClientRect();
+                    const card = img.closest('.vw-event-card').getBoundingClientRect();
+                    const body = img.closest('.vw-event-card').querySelector('.vw-card-body').getBoundingClientRect();
+                    return { imageError: Math.abs(rect.height - rect.width * 800 / 1200), wrapperError: Math.abs(wrapper.height - rect.height), cardError: Math.abs(card.height - (innerWidth > 700 ? Math.max(rect.height, body.height) : rect.height + body.height) - 2) };
+                };
+                // The previous rule must reproduce the bug, then the fix must recover.
+                img.style.aspectRatio = 'auto';
+                const broken = measure();
+                img.style.removeProperty('aspect-ratio');
+                const fixed = measure();
+                return { broken, fixed };
+            }));
+        });
+        if (results.length < 2) throw new Error('Missing native image cases in both blocks');
+        for (const result of results) {
+            if (result.broken.imageError < 10) throw new Error('Old auto-sizes bug was not reproduced: ' + JSON.stringify(result));
+            if (Object.values(result.fixed).some(error => error > 3)) throw new Error('Auto-sizes leaves artificial image/card height: ' + JSON.stringify(result));
+        }
+        console.log('PASS: reproduced old auto-sizes height bug and verified fix at ' + width);
+    }
     // Reproduce theme overrides and optimization plugins wrapping thumbnails in picture.
     await page.addStyleTag({ content: '.entry-content article { display:flex; flex-direction:column-reverse; min-height:1000px; } .entry-content .vw-card-image img { position:absolute; height:100%; object-fit:cover; }' });
     await page.locator('.vw-card-image > img').evaluateAll(images => images.forEach(img => {

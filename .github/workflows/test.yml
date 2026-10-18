@@ -33,7 +33,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '${{ matrix.php }}'
-          extensions: mysqli
+          extensions: mysqli, gd
           tools: wp-cli
       - name: Syntax checks
         run: |
@@ -99,12 +99,12 @@ jobs:
           mkdir -p /tmp/vw-package/veranstaltungswart
           cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-package/veranstaltungswart/
           cd /tmp/vw-package
-          zip -qr veranstaltungswart-3.1.1.zip veranstaltungswart
+          zip -qr veranstaltungswart-3.1.2.zip veranstaltungswart
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.3'
         with:
-          name: veranstaltungswart-3.1.1
-          path: /tmp/vw-package/veranstaltungswart-3.1.1.zip
+          name: veranstaltungswart-3.1.2
+          path: /tmp/vw-package/veranstaltungswart-3.1.2.zip
       - name: Upload failure logs
         if: failure()
         uses: actions/upload-artifact@v4

@@ -108,10 +108,17 @@ vw_assert((int) EventSettings::get($capacity_event, 'vw_max_capacity') === 17, '
 echo "Dashboard and capacity regression tests complete.\n";
 
 // Give the HTTP/editor fixture a real optional featured image for responsive layout tests.
-$upload = wp_upload_bits('vw-layout-test.png', null, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aZ9sAAAAASUVORK5CYII='));
+require_once ABSPATH . 'wp-admin/includes/image.php';
+$bitmap = imagecreatetruecolor(1200, 800);
+imagefill($bitmap, 0, 0, imagecolorallocate($bitmap, 40, 100, 180));
+ob_start();
+imagepng($bitmap);
+$png = ob_get_clean();
+imagedestroy($bitmap);
+$upload = wp_upload_bits('vw-layout-test.png', null, $png);
 vw_assert(!$upload['error'], 'Layout fixture image uploaded');
 $attachment = wp_insert_attachment(['post_title' => 'Layout image', 'post_mime_type' => 'image/png', 'post_status' => 'inherit'], $upload['file'], $http);
-wp_update_attachment_metadata($attachment, ['width' => 1, 'height' => 1, 'file' => _wp_relative_upload_path($upload['file'])]);
+wp_update_attachment_metadata($attachment, wp_generate_attachment_metadata($attachment, $upload['file']));
 set_post_thumbnail($http, $attachment);
 vw_assert(strpos((new VW\Blocks\BlockManager())->card($http, ['showImage' => false]), 'vw-card-image') === false, 'Optional image can still be hidden');
 
