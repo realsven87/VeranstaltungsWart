@@ -85,7 +85,7 @@ class EventSettings {
             $stats = $repo->get_registration_stats($id);
             if ($data['vw_max_capacity'] > 0 && $data['vw_max_capacity'] < $stats['current']) return new \WP_Error('capacity', __('Die Kapazität darf nicht unter den bereits bestätigten Plätzen liegen.', 'veranstaltungswart'));
             $old = (int) self::get($id, 'vw_max_capacity');
-            foreach ($data as $key => $value) update_post_meta($id, $key, $value);
+            foreach ($data as $key => $value) update_post_meta($id, $key, $key === 'vw_questions' ? wp_slash($value) : $value);
             if ($old > 0 && ($data['vw_max_capacity'] == 0 || $data['vw_max_capacity'] > $old)) $repo->process_waitlist_move_up($id, (int) $data['vw_max_capacity']);
             return true;
         });

@@ -30,7 +30,7 @@
         <?php if (array_filter($questions, function($q) { return $q['active']; })): ?>
             <input type="hidden" name="vw_questions_version" value="<?php echo esc_attr(\VW\Events\RegistrationQuestions::version($event_id)); ?>">
             <input type="hidden" name="vw_answers" value="{}">
-            <div class="vw-questions" data-guest-label="<?php esc_attr_e('Begleitperson %d', 'veranstaltungswart'); ?>" data-required-message="<?php esc_attr_e('Bitte mindestens eine Option auswählen.', 'veranstaltungswart'); ?>">
+            <div class="vw-questions" data-guest-label="<?php /* translators: %d: guest number, not a name. */ esc_attr_e('Begleitperson %d', 'veranstaltungswart'); ?>" data-required-message="<?php esc_attr_e('Bitte mindestens eine Option auswählen.', 'veranstaltungswart'); ?>">
                 <?php \VW\Events\RegistrationQuestions::render_fields($questions, 'registration', 'registration', $uid); ?>
                 <?php if (array_filter($questions, function($q) { return $q['active'] && $q['scope'] === 'person'; })): ?>
                     <fieldset class="vw-person-questions"><legend><?php esc_html_e('Du', 'veranstaltungswart'); ?></legend>

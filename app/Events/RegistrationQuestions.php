@@ -15,7 +15,7 @@ class RegistrationQuestions {
     private static function text($value, $limit) {
         return is_string($value) && strlen($value) <= $limit ? sanitize_textarea_field($value) : null;
     }
-    private static function valid_id($value) { return is_string($value) && preg_match('/^[a-zA-Z0-9_-]{1,64}$/D', $value); }
+    private static function valid_id($value) { return is_string($value) && preg_match('/^[a-zA-Z][a-zA-Z0-9_-]{0,63}$/D', $value); }
     public static function normalize($input, $old = []) {
         if (!is_array($input) || count($input) > 20) return self::error();
         $result = []; $seen = [];
