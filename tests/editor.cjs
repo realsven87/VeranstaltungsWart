@@ -27,7 +27,7 @@ const fs = require('node:fs');
     await page.getByRole('button', { name: 'Veranstaltungseinstellungen speichern', exact: true }).waitFor();
     // Wait for a real settings response and save via the actual block UI.
     await page.getByLabel('Freitextfeld ist Pflichtfeld', { exact: true }).uncheck();
-    const responsePromise = page.waitForResponse(response => response.url().includes('/veranstaltungswart/v1/settings/') && response.request().method() === 'POST');
+    const responsePromise = page.waitForResponse(response => decodeURIComponent(response.url()).includes('/veranstaltungswart/v1/settings/') && response.request().method() === 'POST');
     await page.getByRole('button', { name: 'Veranstaltungseinstellungen speichern', exact: true }).click();
     const response = await responsePromise;
     if (!response.ok() || (await response.json()).vw_message_required !== '0') throw new Error('Editor settings save failed');

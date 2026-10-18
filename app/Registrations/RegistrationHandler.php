@@ -16,8 +16,8 @@ class RegistrationHandler {
     private function redirect($id, $key, $value) {
         $fallback = get_permalink($id) ?: home_url('/');
         $target = isset($_POST['redirect_to']) && is_string($_POST['redirect_to']) ? wp_validate_redirect(esc_url_raw(wp_unslash($_POST['redirect_to'])), $fallback) : $fallback;
-        $target = remove_query_arg(['reg', 'reg_error', 'vw_event'], $target);
-        wp_safe_redirect(add_query_arg([$key => $value, 'vw_event' => $id], $target));
+        $target = remove_query_arg(['reg', 'reg_error', 'vw_event_id'], $target);
+        wp_safe_redirect(add_query_arg([$key => $value, 'vw_event_id' => $id], $target));
         exit;
     }
     public function handle_registration() {

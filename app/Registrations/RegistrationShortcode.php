@@ -23,7 +23,7 @@ class RegistrationShortcode {
         return ob_get_clean();
     }
     public function render_messages($id) {
-        if (isset($_GET['vw_event']) && absint($_GET['vw_event']) !== (int) $id) return;
+        if (isset($_GET['vw_event_id']) && absint($_GET['vw_event_id']) !== (int) $id) return;
         $errors = ['nonce_fail' => 'Bitte lade die Seite neu und versuche es erneut.', 'closed' => 'Die Anmeldung ist geschlossen.', 'invalid_data' => 'Bitte prüfe Name, E-Mail-Adresse und Datenschutzzustimmung.', 'invalid_guests' => 'Die Anzahl der Begleitpersonen ist nicht erlaubt.', 'invalid_message' => 'Bitte prüfe das Freitextfeld (maximal 5.000 Zeichen/Bytes).', 'duplicate' => 'Für diese E-Mail-Adresse besteht bereits eine aktive Anmeldung.', 'busy' => 'Bitte versuche es gleich noch einmal.', 'database' => 'Die Anmeldung konnte nicht gespeichert werden. Bitte erneut versuchen.'];
         $success = ['ok' => 'Vielen Dank! Deine Anmeldung ist bestätigt.', 'pending' => 'Deine Anmeldung ist eingegangen und wird geprüft. Die Bestätigung erfolgt separat.', 'waitlist' => 'Du stehst auf der Warteliste. Dies ist noch keine Teilnahmebestätigung.'];
         $error = isset($_GET['reg_error']) && is_string($_GET['reg_error']) ? sanitize_key($_GET['reg_error']) : '';

@@ -50,3 +50,10 @@ ics = urllib.request.urlopen(BASE + '/wp-admin/admin-post.php?action=vw_download
 assert 'BEGIN:VCALENDAR' in ics and 'Geheime Straße' in ics
 assert 'DTEND' not in ics, 'No fabricated end time'
 print('PASS: GET cancellation is non-mutating and confirmed calendar download works')
+
+# Three independent trusted people compete for the one remaining seat.
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+    results = list(pool.map(lambda name: submit(email=name + '@example.org'), ['race1', 'race2', 'race3']))
+assert sum(result.get('reg') == ['ok'] for result in results) == 1, results
+assert sum(result.get('reg') == ['waitlist'] for result in results) == 2, results
+print('PASS: Concurrent trusted registrations cannot overbook')

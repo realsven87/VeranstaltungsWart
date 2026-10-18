@@ -16,7 +16,7 @@ class EventExporter {
      * Erzeugt eine CSV-Datei der Teilnehmer und sendet sie an den Browser.
      */
 public function download_participants_csv($event_id) {
-    if (!current_user_can('edit_posts')) {
+    if (!\VW\Core\Capabilities::can_manage_event($event_id)) {
         wp_die(esc_html__('Zugriff verweigert.', 'veranstaltungswart'));
     }
 
