@@ -20,6 +20,7 @@ class EventSettings {
             'vw_location_private' => [__('Ort erst nach bestätigter Anmeldung mitteilen', 'veranstaltungswart'), 'boolean', '1'],
             'vw_event_notes' => [__('Hinweise für Teilnehmer', 'veranstaltungswart'), 'text', ''],
             'vw_send_reminders' => [__('Erinnerungen 7 und 3 Tage vorher senden', 'veranstaltungswart'), 'boolean', '1'],
+            'vw_questions' => [__('Zusatzfragen', 'veranstaltungswart'), 'questions', []],
         ];
     }
     public static function get($id, $key) {
@@ -45,6 +46,12 @@ class EventSettings {
         foreach (self::fields() as $key => $field) {
             if (!array_key_exists($key, $input)) continue;
             $value = $input[$key];
+            if ($field[1] === 'questions') {
+                $value = RegistrationQuestions::normalize($value, RegistrationQuestions::get($id));
+                if (is_wp_error($value)) return $value;
+                $data[$key] = $value;
+                continue;
+            }
             if (!is_scalar($value)) return new \WP_Error('invalid_setting', __('Ungültiger Einstellungswert.', 'veranstaltungswart'));
             switch ($field[1]) {
                 case 'date':

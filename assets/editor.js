@@ -41,6 +41,7 @@
         }
         const controls = Object.entries(vwEditor.fields).map(([key, field]) => {
             const props = { key, label: field[0], value: values[key], onChange: value => setValues(old => Object.assign({}, old, { [key]: value })) };
+            if (field[1] === 'questions') return el(window.VWQuestionsEditor, props);
             if (field[1] === 'boolean') return el(ToggleControl, Object.assign({}, props, { checked: values[key] === '1', onChange: value => props.onChange(value ? '1' : '0') }));
             if (key === 'vw_location_id') return el(SelectControl, Object.assign({}, props, {
                 disabled: locations.loading, help: __('Beim Ortswechsel wird die Kapazität übernommen. Danach kannst du sie unten anpassen.', 'veranstaltungswart'),

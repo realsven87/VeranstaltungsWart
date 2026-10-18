@@ -57,7 +57,8 @@ public function download_participants_csv($event_id) {
             __('Vorname', 'veranstaltungswart'),
             __('E-Mail', 'veranstaltungswart'),
             __('Plätze', 'veranstaltungswart'),
-            __('Angemeldet am', 'veranstaltungswart')
+            __('Angemeldet am', 'veranstaltungswart'),
+            __('Zusatzantworten', 'veranstaltungswart')
         ], ';', '"', '');
 
         // Datenzeilen schreiben
@@ -68,7 +69,8 @@ public function download_participants_csv($event_id) {
                 $this->csv_cell($reg->first_name),
                 $this->csv_cell($reg->email),
                 $reg->seats_total,
-                date_i18n('d.m.Y H:i', strtotime($reg->registered_at))
+                date_i18n('d.m.Y H:i', strtotime($reg->registered_at)),
+                $this->csv_cell(RegistrationQuestions::answer_text($reg->answers ?? ''))
             ], ';', '"', '');
         }
 

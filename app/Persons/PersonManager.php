@@ -34,7 +34,7 @@ class PersonManager {
         add_action('admin_init', function() {
             if (function_exists('wp_add_privacy_policy_content')) {
                 wp_add_privacy_policy_content('VeranstaltungsWart', wp_kses_post(
-                    __('VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website.', 'veranstaltungswart')
+                    __('VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten, Antworten auf veranstaltungsspezifische Zusatzfragen (auch je nummerierter Begleitperson) und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website.', 'veranstaltungswart')
                 ));
             }
         });
@@ -284,6 +284,7 @@ class PersonManager {
                     ['name' => __('Status', 'veranstaltungswart'), 'value' => $reg->status],
                     ['name' => __('Begleitpersonen', 'veranstaltungswart'), 'value' => $reg->guest_count],
                     ['name' => __('Nachricht', 'veranstaltungswart'), 'value' => $reg->message],
+                    ['name' => __('Zusatzantworten', 'veranstaltungswart'), 'value' => \VW\Events\RegistrationQuestions::answer_text($reg->answers ?? '')],
                     ['name' => __('Gesamtplätze', 'veranstaltungswart'), 'value' => $reg->seats_total],
                 ];
                 $export_items[] = [

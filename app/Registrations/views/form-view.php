@@ -27,7 +27,24 @@
             <p><label for="<?php echo esc_attr($uid); ?>message"><?php echo esc_html(\VW\Events\EventSettings::get($event_id, 'vw_message_label')); ?><?php echo $required ? ' *' : esc_html__(' (optional)', 'veranstaltungswart'); ?></label>
             <textarea id="<?php echo esc_attr($uid); ?>message" name="message" rows="3" maxlength="5000" placeholder="<?php echo esc_attr(\VW\Events\EventSettings::get($event_id, 'vw_message_hint')); ?>" <?php echo $required ? 'required' : ''; ?>></textarea></p>
         <?php endif; ?>
+        <?php if (array_filter($questions, function($q) { return $q['active']; })): ?>
+            <input type="hidden" name="vw_questions_version" value="<?php echo esc_attr(\VW\Events\RegistrationQuestions::version($event_id)); ?>">
+            <input type="hidden" name="vw_answers" value="{}">
+            <div class="vw-questions" data-guest-label="<?php esc_attr_e('Begleitperson %d', 'veranstaltungswart'); ?>" data-required-message="<?php esc_attr_e('Bitte mindestens eine Option auswählen.', 'veranstaltungswart'); ?>">
+                <?php \VW\Events\RegistrationQuestions::render_fields($questions, 'registration', 'registration', $uid); ?>
+                <?php if (array_filter($questions, function($q) { return $q['active'] && $q['scope'] === 'person'; })): ?>
+                    <fieldset class="vw-person-questions"><legend><?php esc_html_e('Du', 'veranstaltungswart'); ?></legend>
+                        <?php \VW\Events\RegistrationQuestions::render_fields($questions, 'person', '0', $uid); ?>
+                    </fieldset>
+                    <div class="vw-guest-questions"></div>
+                    <template><fieldset class="vw-person-questions"><legend></legend>
+                        <?php \VW\Events\RegistrationQuestions::render_fields($questions, 'person', '__guest__', $uid); ?>
+                    </fieldset></template>
+                <?php endif; ?>
+            </div>
+            <noscript><p><?php esc_html_e('Bitte JavaScript aktivieren, um die Zusatzfragen für dich und deine Begleitpersonen auszufüllen.', 'veranstaltungswart'); ?></p></noscript>
+        <?php endif; ?>
         <p><label class="vw-consent"><input type="checkbox" name="gdpr_consent" value="1" required><span><?php esc_html_e('Ich stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anmeldung zu. Informationen in der', 'veranstaltungswart'); ?> <a href="<?php echo esc_url(get_privacy_policy_url() ?: home_url('/datenschutz/')); ?>" target="_blank" rel="noopener"><?php esc_html_e('Datenschutzerklärung', 'veranstaltungswart'); ?></a>. *</span></label></p>
-        <button class="wp-element-button vw-submit" type="submit"><?php echo esc_html($stats['is_full'] ? __('Auf Warteliste setzen', 'veranstaltungswart') : $atts['button']); ?></button>
+        <button class="wp-element-button vw-submit" type="submit" <?php disabled((bool) array_filter($questions, function($q) { return $q['active']; })); ?>><?php echo esc_html($stats['is_full'] ? __('Auf Warteliste setzen', 'veranstaltungswart') : $atts['button']); ?></button>
     </form>
 </div>

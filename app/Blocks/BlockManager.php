@@ -11,14 +11,21 @@ class BlockManager {
         add_action('init', [$this, 'blocks']);
         add_action('admin_enqueue_scripts', function() {
             $screen = get_current_screen();
-            if ($screen && $screen->post_type === 'vw_event') wp_enqueue_style('vw-editor-settings');
+            if ($screen && $screen->post_type === 'vw_event') {
+                wp_enqueue_style('vw-editor-settings');
+                wp_enqueue_style('wp-components');
+                wp_enqueue_script('vw-question-editor');
+            }
         });
         add_action('rest_api_init', [$this, 'routes']);
     }
     public function blocks() {
         wp_register_style('vw-blocks', VW_PLUGIN_URL . 'assets/blocks.css', [], VW_VERSION);
         wp_register_style('vw-editor-settings', VW_PLUGIN_URL . 'assets/editor.css', [], VW_VERSION);
-        wp_register_script('vw-editor', VW_PLUGIN_URL . 'assets/editor.js', ['wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-api-fetch', 'wp-rich-text', 'wp-i18n', 'wp-plugins', 'wp-edit-post'], VW_VERSION, true);
+        wp_register_script('vw-registration', VW_PLUGIN_URL . 'assets/registration.js', [], VW_VERSION, true);
+        wp_register_script('vw-question-editor', VW_PLUGIN_URL . 'assets/questions-editor.js', ['wp-element', 'wp-components', 'wp-i18n'], VW_VERSION, true);
+        wp_set_script_translations('vw-question-editor', 'veranstaltungswart', VW_PLUGIN_DIR . 'languages');
+        wp_register_script('vw-editor', VW_PLUGIN_URL . 'assets/editor.js', ['vw-question-editor', 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-api-fetch', 'wp-rich-text', 'wp-i18n', 'wp-plugins', 'wp-edit-post'], VW_VERSION, true);
         wp_set_script_translations('vw-editor', 'veranstaltungswart', VW_PLUGIN_DIR . 'languages');
         wp_localize_script('vw-editor', 'vwEditor', ['fields' => EventSettings::fields()]);
         $shared = ['eventId' => ['type' => 'integer', 'default' => 0]];

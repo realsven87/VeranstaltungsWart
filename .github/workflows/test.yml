@@ -38,7 +38,7 @@ jobs:
       - name: Syntax checks
         run: |
           find . -name '*.php' -print0 | xargs -0 -n1 php -l
-          node --check assets/editor.js
+          for file in assets/*.js tests/*.cjs; do node --check "$file"; done
       - name: Install isolated WordPress
         env:
           WP_VERSION: '${{ matrix.wordpress }}'
@@ -67,7 +67,9 @@ jobs:
           name: wordpress-org-check
           path: /tmp/vw-plugin-check.json
       - name: WordPress integration tests
-        run: wp eval-file "$GITHUB_WORKSPACE/tests/integration.php" --path=/tmp/vw-wordpress
+        run: |
+          wp eval-file "$GITHUB_WORKSPACE/tests/integration.php" --path=/tmp/vw-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/questions.php" --path=/tmp/vw-wordpress
       - name: HTTP registration tests
         run: |
           PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/vw-wordpress > /tmp/vw-http.log 2>&1 &
@@ -78,8 +80,10 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.51.1
           npx playwright install --with-deps chromium
           node tests/editor.cjs
+          node tests/questions.cjs
           wp theme install kadence --activate --path=/tmp/vw-wordpress
           node tests/editor.cjs
+          node tests/questions.cjs
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.3'
         with:
@@ -99,12 +103,12 @@ jobs:
           mkdir -p /tmp/vw-package/veranstaltungswart
           cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-package/veranstaltungswart/
           cd /tmp/vw-package
-          zip -qr veranstaltungswart-3.1.2.zip veranstaltungswart
+          zip -qr veranstaltungswart-3.2.0.zip veranstaltungswart
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.3'
         with:
-          name: veranstaltungswart-3.1.2
-          path: /tmp/vw-package/veranstaltungswart-3.1.2.zip
+          name: veranstaltungswart-3.2.0
+          path: /tmp/vw-package/veranstaltungswart-3.2.0.zip
       - name: Upload failure logs
         if: failure()
         uses: actions/upload-artifact@v4

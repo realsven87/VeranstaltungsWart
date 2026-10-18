@@ -42,6 +42,8 @@ class RegistrationHandler {
             if ($guests === false || $guests < 0 || $guests > $limit) return new \WP_Error('invalid_guests');
             $message = EventSettings::get($id, 'vw_allow_message') === '1' ? sanitize_textarea_field($input['message']) : '';
             if (strlen($message) > 5000 || (EventSettings::get($id, 'vw_allow_message') === '1' && EventSettings::get($id, 'vw_message_required') === '1' && trim($message) === '')) return new \WP_Error('invalid_message');
+            $answers = \VW\Events\RegistrationQuestions::validate_answers($id, $guests, isset($_POST['vw_answers']) ? wp_unslash($_POST['vw_answers']) : '', isset($_POST['vw_questions_version']) ? wp_unslash($_POST['vw_questions_version']) : '');
+            if (is_wp_error($answers)) return $answers;
             $person_id = $repo->get_or_create_person_id($first, $last, $email);
             if (!$person_id) return new \WP_Error('database');
             if ($repo->active_registration($id, $person_id)) return new \WP_Error('duplicate');
@@ -49,7 +51,7 @@ class RegistrationHandler {
             $stats = $repo->get_registration_stats($id);
             $status = $person && $person->trust_status === 'freigegeben' ? 'bestätigt' : 'eingegangen';
             if ($stats['max'] > 0 && $stats['current'] + $guests + 1 > $stats['max']) $status = 'warteliste';
-            $reg_id = $repo->create_registration(['event_post_id' => $id, 'person_id' => $person_id, 'guest_count' => $guests, 'message' => $message, 'seats_total' => $guests + 1, 'status' => $status, 'registered_at' => current_time('mysql')]);
+            $reg_id = $repo->create_registration(['event_post_id' => $id, 'person_id' => $person_id, 'guest_count' => $guests, 'message' => $message, 'answers' => wp_json_encode($answers), 'seats_total' => $guests + 1, 'status' => $status, 'registered_at' => current_time('mysql')]);
             if (!$reg_id) return new \WP_Error('database');
             return ['id' => $reg_id, 'status' => $status];
         });

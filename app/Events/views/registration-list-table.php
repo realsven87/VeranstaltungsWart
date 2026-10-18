@@ -118,6 +118,9 @@ $current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')))
                                        title="<?php esc_attr_e('Platz frei! Dieser Teilnehmer kann jetzt bestätigt werden.', 'veranstaltungswart'); ?>"></span>
                             <?php endif; ?>
 
+                            <?php if (!empty($reg->answers) && $reg->answers !== '[]'): ?>
+                                <details class="vw-answer-details"><summary><?php esc_html_e('Zusatzantworten', 'veranstaltungswart'); ?></summary><p style="white-space:pre-wrap"><?php echo esc_html(\VW\Events\RegistrationQuestions::answer_text($reg->answers)); ?></p></details>
+                            <?php endif; ?>
                             <?php if (!empty($reg->message)): ?>
                                 <div style="margin-top: 8px; background: #fff; padding: 8px 10px; border-left: 3px solid #2271b1; border-radius: 2px; font-size: 12px; box-shadow: 0 1px 1px rgba(0,0,0,0.04);">
                                     <strong style="color:#646970; display:block; margin-bottom:2px; font-size:11px; text-transform:uppercase;"><?php esc_html_e('Anmerkung', 'veranstaltungswart'); ?></strong>

@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 6.5
 Tested up to: 7.1
-Stable tag: 3.1.2
+Stable tag: 3.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -105,6 +105,12 @@ WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata 
 
 == Changelog ==
 
+= 3.2.0 =
+* Configure event-specific single-choice, multiple-choice and text questions per registration or per person.
+* Numbered guests need no names; answers remain intact when questions or options are deactivated or renamed.
+* Review answers in the dashboard and participant list, export them as CSV, and count choices by registration status.
+* Upgrade existing installations automatically without losing registrations.
+
 = 3.1.2 =
 * Preserve HTML image aspect-ratio hints for native lazy auto-sizes; prevent oversized card containers.
 * Reproduce the previous height bug with responsive raster images on desktop and mobile.
@@ -137,3 +143,11 @@ WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata 
 * Eigene Veranstaltungsrechte und veranstaltungsbezogene Zugriffskontrollen.
 * Stornierung mit Bestätigungsseite; korrigierter Kalenderexport.
 * Automatisierte Syntax-, WordPress- und HTTP-Integrationstests.
+
+== Registration questions ==
+
+In the event settings (block sidebar, registration block, or classic editor), add up to 20 questions with up to 30 options each. Choose single choice, multiple choice or text; optional or required; and per person or once per registration. Save the event settings separately in the block editor.
+
+Guests are numbered only; no guest names are requested. JavaScript is required when custom questions are active. Removed guest fields are excluded from submission. Question type and scope are fixed after saving; deactivate an existing question and add a new one to change them. Deactivate unused options instead of deleting historical answers.
+
+Answers keep the labels from the time of registration. Dashboard and event participant list show individual answers; CSV includes them. Choice totals distinguish confirmed, waiting-list and pending registrations, excluding cancelled/rejected registrations. Each selected option counts once per answer; group-level answers are not multiplied by the guest count. Renamed labels are reported separately. Free text is shown individually. Existing retention/deletion rules apply to the saved answers.

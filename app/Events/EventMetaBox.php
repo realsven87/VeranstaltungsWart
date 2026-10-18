@@ -57,7 +57,9 @@ class EventMetaBox {
         foreach (EventSettings::fields() as $key => $field) {
             $value = EventSettings::get($post->ID, $key);
             echo '<div class="vw-setting-field"><label for="' . esc_attr($key) . '">' . esc_html($field[0]) . '</label><br>';
-            if ($field[1] === 'boolean') {
+            if ($field[1] === 'questions') {
+                echo '<div data-vw-question-editor><input type="hidden" name="vw_questions" value="' . esc_attr(wp_json_encode($value)) . '"><div class="vw-question-editor-root"></div></div>';
+            } elseif ($field[1] === 'boolean') {
                 echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . '>';
             } elseif ($key === 'vw_location_id') {
                 echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">' . esc_html__('Kein Ort', 'veranstaltungswart') . '</option>';
@@ -91,7 +93,10 @@ class EventMetaBox {
         $input = [];
         foreach (EventSettings::fields() as $key => $field) {
             if ($field[1] === 'boolean') $input[$key] = isset($_POST[$key]) ? '1' : '0';
-            elseif (isset($_POST[$key])) $input[$key] = wp_unslash($_POST[$key]);
+            elseif (isset($_POST[$key])) {
+                $input[$key] = wp_unslash($_POST[$key]);
+                if ($field[1] === 'questions') $input[$key] = is_string($input[$key]) ? json_decode($input[$key], true) : null;
+            }
         }
         $result = EventSettings::save($post_id, $input);
         if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
@@ -112,6 +117,7 @@ class EventMetaBox {
         $repo = new EventRepository();
         $registrations = $repo->get_registrations_for_event($post->ID);
         $stats = $repo->get_registration_stats($post->ID);
+        RegistrationQuestions::render_totals($post->ID);
 
         // Export-Button oben rechts platzieren
         echo '<div style="text-align: right; margin-bottom: 15px;">';

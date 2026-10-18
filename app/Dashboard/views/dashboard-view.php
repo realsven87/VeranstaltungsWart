@@ -129,7 +129,10 @@ $current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')))
                                     </div>
                                 </div>
                                 
-                                <?php if (!empty($reg->message)): ?>
+                                <?php if (!empty($reg->answers) && $reg->answers !== '[]'): ?>
+                                <details class="vw-answer-details"><summary><?php esc_html_e('Zusatzantworten', 'veranstaltungswart'); ?></summary><p style="white-space:pre-wrap"><?php echo esc_html(\VW\Events\RegistrationQuestions::answer_text($reg->answers)); ?></p></details>
+                            <?php endif; ?>
+                            <?php if (!empty($reg->message)): ?>
                                     <div style="margin-top: 10px; font-size: 12px; color: #50575e; background: #f6f7f7; padding: 8px 10px; border-left: 3px solid #2271b1; border-radius: 0 3px 3px 0;">
                                         <span class="dashicons dashicons-testimonial" style="font-size: 14px; width: 14px; height: 14px; vertical-align: text-bottom; margin-right: 4px; color: #8c8f94;"></span>
                                         <span style="font-style: italic;"><?php echo nl2br(esc_html($reg->message)); ?></span>

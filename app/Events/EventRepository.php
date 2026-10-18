@@ -77,7 +77,7 @@ public function get_registrations_for_event($event_id, $orderby = 'registered_at
     public function create_registration($data)
     {
         global $wpdb;
-        $wpdb->insert($this->table_regs, $data);
+        if ($wpdb->insert($this->table_regs, $data) === false) return 0;
         return $wpdb->insert_id;
     }
 

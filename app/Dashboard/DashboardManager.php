@@ -99,6 +99,9 @@ class DashboardManager {
         $pending = $data['pending'];
         $page = $data['page'];
         include VW_PLUGIN_DIR . 'app/Dashboard/views/dashboard-view.php';
+        $summary_events = array_filter(get_posts(['post_type' => 'vw_event', 'post_status' => ['publish', 'draft', 'pending', 'future', 'private'], 'posts_per_page' => -1]), function($post) { return \VW\Core\Capabilities::can_manage_event($post->ID); });
+        $summary_id = isset($_GET['vw_summary_event']) && is_scalar($_GET['vw_summary_event']) ? absint($_GET['vw_summary_event']) : 0;
+        include VW_PLUGIN_DIR . 'app/Dashboard/views/question-totals.php';
     }
 
     public function render_help_page() {

@@ -14,3 +14,5 @@
 .vw-settings-fields input:not([type=checkbox]),
 .vw-settings-fields select, .vw-settings-fields textarea { max-width: 100%; box-sizing: border-box; }
 .vw-settings-fields .vw-setting-field > br { display: none; }
+
+.vw-question-config{min-width:0;border:1px solid #aaa;padding:12px;margin:16px 0}.vw-question-config>legend{font-weight:600}.vw-option-config{padding:10px;border-left:3px solid #ddd;margin:12px 0}.vw-question-config .components-base-control{margin-bottom:16px}
