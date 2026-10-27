@@ -76,6 +76,7 @@ class Schema {
             person_id mediumint(9) NOT NULL,
             guest_count int(11) DEFAULT 0,
             message text DEFAULT '',
+            answers longtext NULL,
             status varchar(20) DEFAULT 'eingegangen',
             seats_total int(11) DEFAULT 1,
             registered_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
@@ -88,5 +89,6 @@ class Schema {
         
         // dbDelta verarbeitet das Array an SQL-Befehlen
         dbDelta($sql);
+        if ($wpdb->get_var($wpdb->prepare('SHOW COLUMNS FROM %i LIKE %s', $table_registrations, 'answers'))) update_option('vw_schema_version', '3.2.0');
     }
 }

@@ -1,5 +1,5 @@
-<?php 
-namespace VW\Events; 
+<?php
+namespace VW\Events;
 
 // Sicherheitscheck: Verhindert direkten Aufruf
 if (!defined('ABSPATH')) {
@@ -21,220 +21,106 @@ class EventMetaBox {
     public function register() {
         // 1. Einstellungen in der Seitenleiste (Side)
         add_meta_box(
-            'vw_event_settings_v2', 
-            __('Veranstaltungs-Details', 'veranstaltungswart'), 
-            [$this, 'render_settings_meta_box'], 
-            'vw_event', 
-            'side', 
+            'vw_event_settings_v2',
+            __('Veranstaltungs-Details', 'veranstaltungswart'),
+            [$this, 'render_settings_meta_box'],
+            'vw_event',
+            'side',
             'high'
         );
-        
+
         // 2. Teilnehmerliste im Hauptbereich (Normal)
         add_meta_box(
-            'vw_event_registrations_v2', 
-            __('Angemeldete Teilnehmer & Warteliste', 'veranstaltungswart'), 
-            [$this, 'render_registration_list'], 
-            'vw_event', 
-            'normal', 
+            'vw_event_registrations_v2',
+            __('Angemeldete Teilnehmer & Warteliste', 'veranstaltungswart'),
+            [$this, 'render_registration_list'],
+            'vw_event',
+            'normal',
             'high'
         );
-        
+
         // 3. Speicher-Hook registrieren
-        add_action('save_post_vw_event', [$this, 'save']);
+
     }
 
     /**
      * Rendert die Felder für Datum, Ort und Kapazität
      */
     public function render_settings_meta_box($post) {
-        $repo = new EventRepository();
-        $locations = $repo->get_all_locations();
-        
-        $current_location = get_post_meta($post->ID, 'vw_location_id', true);
-        $current_capacity = get_post_meta($post->ID, 'vw_max_capacity', true);
-        $current_date     = get_post_meta($post->ID, 'vw_event_date', true);
-        $allow_guests     = get_post_meta($post->ID, 'vw_allow_guests', true);
-        $allow_message    = get_post_meta($post->ID, 'vw_allow_message', true);
-        $send_reminders   = get_post_meta($post->ID, 'vw_send_reminders', true);
-        $event_hinweis    = get_post_meta($post->ID, 'vw_event_notes', true);
-
-        if ($allow_guests === '') $allow_guests = '1'; 
-        if ($send_reminders === '') $send_reminders = '1';
-        
+        if (function_exists('use_block_editor_for_post') && use_block_editor_for_post($post)) {
+            echo '<p>' . esc_html__('Die Einstellungen findest du rechts im Bereich „VeranstaltungsWart“ oder im Anmeldeblock. Dort separat speichern.', 'veranstaltungswart') . '</p>';
+            return;
+        }
         wp_nonce_field('vw_event_settings_nonce', 'vw_event_settings_nonce_field');
-        ?>
-        
-        <style>
-            /* Erzwingt exakt gleiche Breiten und Box-Modelle für alle Felder in dieser MetaBox */
-            .vw-event-settings-fields input[type="datetime-local"],
-            .vw-event-settings-fields input[type="number"],
-            .vw-event-settings-fields select {
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-                margin-top: 5px;
+        $locations = (new EventRepository())->get_all_locations();
+        echo '<div class="vw-settings-fields">';
+        foreach (EventSettings::fields() as $key => $field) {
+            $value = EventSettings::get($post->ID, $key);
+            echo '<div class="vw-setting-field"><label for="' . esc_attr($key) . '">' . esc_html($field[0]) . '</label><br>';
+            if ($field[1] === 'questions') {
+                echo '<div data-vw-question-editor><input type="hidden" name="vw_questions" value="' . esc_attr(wp_json_encode($value)) . '"><div class="vw-question-editor-root"></div></div>';
+            } elseif ($field[1] === 'boolean') {
+                echo '<input type="checkbox" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="1" ' . checked($value, '1', false) . '>';
+            } elseif ($key === 'vw_location_id') {
+                echo '<select id="' . esc_attr($key) . '" name="' . esc_attr($key) . '"><option value="0">' . esc_html__('Kein Ort', 'veranstaltungswart') . '</option>';
+                foreach ($locations as $location) echo '<option data-capacity="' . esc_attr(max(0, (int) $location->default_capacity)) . '" value="' . (int) $location->id . '" ' . selected($value, $location->id, false) . '>' . esc_html($location->name) . '</option>';
+                echo '</select>';
+            } else {
+                $type = $field[1] === 'date' ? 'datetime-local' : ($field[1] === 'integer' ? 'number' : 'text');
+                if ($type === 'datetime-local') $value = str_replace(' ', 'T', substr($value, 0, 16));
+                echo '<input class="widefat" type="' . esc_attr($type) . '" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" min="0">';
             }
-        </style>
-        <div class="vw-event-settings-fields">
-            <p>
-                <label for="vw_event_date"><strong><?php esc_html_e('Datum & Uhrzeit:', 'veranstaltungswart'); ?></strong></label>
-                <input type="datetime-local" id="vw_event_date" name="vw_event_date"
-                        value="<?php echo esc_attr(str_replace(' ', 'T', $current_date)); ?>"
-                        class="widefat" required>
-            </p>
-            
-            <p>
-                <label for="vw_location_id"><strong><?php esc_html_e('Veranstaltungsort:', 'veranstaltungswart'); ?></strong></label>
-                <select name="vw_location_id" id="vw_location_id" class="widefat" required>
-                    <option value=""><?php esc_html_e('-- Ort wählen --', 'veranstaltungswart'); ?></option>
-                    <?php foreach ($locations as $loc): ?>
-                        <option value="<?php echo (int) $loc->id; ?>"
-                                 data-capacity="<?php echo (int) $loc->default_capacity; ?>"
-                                 <?php selected($current_location, $loc->id); ?>>
-                            <?php echo esc_html($loc->name); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </p>
-            <p>
-                <label for="vw_max_capacity"><strong><?php esc_html_e('Max. Teilnehmer:', 'veranstaltungswart'); ?></strong></label>
-                <input type="number" name="vw_max_capacity" id="vw_max_capacity"
-                        value="<?php echo esc_attr($current_capacity); ?>"
-                        class="widefat" min="0">
-                <span class="description" style="display: block; margin-top: 4px;"><?php esc_html_e('0 = Unbegrenzt', 'veranstaltungswart'); ?></span>
-            </p>
-            <hr>
-            <p style="margin-top: 15px;">
-                <label for="vw_event_notes"><strong><?php esc_html_e('Hinweise für Teilnehmer (Optional):', 'veranstaltungswart'); ?></strong></label>
-                <textarea name="vw_event_notes" id="vw_event_notes" class="widefat" rows="3" placeholder="<?php esc_attr_e('Z.B. Bitte festes Schuhwerk mitbringen...', 'veranstaltungswart'); ?>"><?php echo esc_textarea($event_hinweis); ?></textarea>
-                <span class="description" style="display: block; margin-top: 4px;"><?php esc_html_e('Dieser Text wird über den Platzhalter {event_hinweis} in die E-Mails eingefügt.', 'veranstaltungswart'); ?></span>
-            </p>
-
-            <hr>
-            <p>
-                <label>
-                    <input type="checkbox" name="vw_allow_guests" value="1" <?php checked($allow_guests, '1'); ?>>
-                    <strong><?php esc_html_e('Begleitpersonen erlauben', 'veranstaltungswart'); ?></strong>
-                </label>
-            </p>
-            <p style="margin-top: 10px;">
-                <label>
-                    <input type="checkbox" name="vw_allow_message" value="1" <?php checked($allow_message, '1'); ?>>
-                    <strong><?php esc_html_e('Freitextfeld (Anmerkungen) anzeigen', 'veranstaltungswart'); ?></strong>
-                </label>
-            </p>         
-            <p style="margin-top: 10px;">
-                <label>
-                    <input type="checkbox" name="vw_send_reminders" value="1" <?php checked($send_reminders, '1'); ?>>
-                    <strong><?php esc_html_e('Erinnerungen versenden (7 & 3 Tage vor Veranstaltung)', 'veranstaltungswart'); ?></strong>
-                </label>
-            </p>
-            
-            <hr>
-            <p style="margin-top: 15px;">
-                <label>
-                    <input type="checkbox" name="vw_notify_change" value="1">
-                    <strong style="color: #2271b1;"><?php esc_html_e('Teilnehmer über diese Änderung informieren (E-Mail)', 'veranstaltungswart'); ?></strong>
-                </label>
-                <span class="description" style="display: block; margin-top: 4px;"><?php esc_html_e('Sendet nach dem Speichern sofort eine Update-E-Mail an alle aktiven Teilnehmer (Warteliste & Bestätigt).', 'veranstaltungswart'); ?></span>
-            </p>
-        </div>
+            if (!empty($field[3])) echo '<p class="description">' . esc_html($field[3]) . '</p>';
+            echo '</div>';
+        }
+        echo '</div>';
+        ?>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const locSelect = document.getElementById('vw_location_id');
-                const capInput  = document.getElementById('vw_max_capacity');
-                if(locSelect && capInput) {
-                    locSelect.addEventListener('change', function() {
-                        const selectedOption = this.options[this.selectedIndex];
-                        const defaultCap = selectedOption.getAttribute('data-capacity');
-                        
-                        if (defaultCap && (capInput.value === '' || capInput.value === '0')) {
-                            capInput.value = defaultCap;
-                        }
-                    });
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            const location = document.getElementById('vw_location_id');
+            const capacity = document.getElementById('vw_max_capacity');
+            if (location && capacity) location.addEventListener('change', function() {
+                const value = this.options[this.selectedIndex].getAttribute('data-capacity');
+                if (value !== null) capacity.value = value;
             });
+        });
         </script>
-        
-        <?php 
-            $is_canceled = get_post_meta($post->ID, 'vw_event_canceled', true) === '1';
-            if (!$is_canceled): 
-                $cancel_url = admin_url('admin-post.php?action=vw_cancel_event&event_id=' . $post->ID);
-                $cancel_url = wp_nonce_url($cancel_url, 'vw_cancel_event_' . $post->ID);
-            ?>
-                <p style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #ccd0d4; text-align: center;">
-                    <a href="<?php echo esc_url($cancel_url); ?>" 
-                       class="button" 
-                       style="background: #d63638; color: white; border-color: #d63638; text-shadow: none; width: 100%; font-weight: bold; padding: 5px 0; height: auto; display: flex; justify-content: center; align-items: center;"
-                       onclick="return confirm('Möchtest du diese Veranstaltung wirklich absagen? Alle angemeldeten Personen und Wartelisten-Teilnehmer werden unwiderruflich per E-Mail informiert!');">
-                        <span class="dashicons dashicons-calendar-cropper" style="vertical-align: middle; margin-top: -3px; margin-right: 5px;"></span> 
-                        Veranstaltung absagen
-                    </a>
-                </p>
-            <?php else: ?>
-                <p style="margin-top: 25px; padding-top: 15px; border-top: 1px solid #ccd0d4; text-align: center; color: #d63638; font-weight: bold; font-size: 14px;">
-                    Diese Veranstaltung wurde abgesagt!
-                </p>
-            <?php endif; ?>
         <?php
     }
 
-    /**
-     * Speichert die Daten und triggert bei Kapazitätserhöhung die Warteliste.
-     */
     public function save($post_id) {
-        if (!isset($_POST['vw_event_settings_nonce_field']) || !wp_verify_nonce($_POST['vw_event_settings_nonce_field'], 'vw_event_settings_nonce')) return;
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-        if (!current_user_can('edit_post', $post_id)) return;
-        
-        $repo = new EventRepository();
-        
-        $old_capacity = (int) get_post_meta($post_id, 'vw_max_capacity', true);
-        $new_capacity = isset($_POST['vw_max_capacity']) ? (int) $_POST['vw_max_capacity'] : 0;
-        
-        // Datum für SQL formatieren (T von datetime-local entfernen)
-        $clean_date = isset($_POST['vw_event_date']) ? str_replace('T', ' ', sanitize_text_field($_POST['vw_event_date'])) : '';
-        
-        update_post_meta($post_id, 'vw_event_date', $clean_date);
-        update_post_meta($post_id, 'vw_location_id', (int) $_POST['vw_location_id']);
-        update_post_meta($post_id, 'vw_max_capacity', $new_capacity);
-        update_post_meta($post_id, 'vw_allow_guests', isset($_POST['vw_allow_guests']) ? '1' : '0');
-        update_post_meta($post_id, 'vw_allow_message', isset($_POST['vw_allow_message']) ? '1' : '0');
-        update_post_meta($post_id, 'vw_send_reminders', isset($_POST['vw_send_reminders']) ? '1' : '0');
-
-        // Hinweise für Teilnehmer
-        $event_notes = isset($_POST['vw_event_notes']) ? sanitize_textarea_field($_POST['vw_event_notes']) : '';
-        update_post_meta($post_id, 'vw_event_notes', $event_notes);
-
-        // Wartelisten-Automatik
-        if ($new_capacity > 0 && $new_capacity > $old_capacity) {
-            $repo->process_waitlist_move_up($post_id, $new_capacity);
-        }
-
-        // Änderungs-Benachrichtigungen versenden
-        if (isset($_POST['vw_notify_change']) && $_POST['vw_notify_change'] === '1') {
-            $registrations = $repo->get_registrations_for_event($post_id);
-            if (!empty($registrations)) {
-                foreach ($registrations as $reg) {
-                    $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
-                    
-                    // Wir informieren alle aktiven Teilnehmer (stornierte/abgehnte sind irrelevant)
-                    if ($rid && $reg->status !== 'storniert' && $reg->status !== 'abgelehnt') {
-                        MailService::send_registration_mail($rid, 'event-aenderung');
-                    }
-                }
+        if (get_post_type($post_id) !== 'vw_event' || !isset($_POST['vw_event_settings_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vw_event_settings_nonce_field'])), 'vw_event_settings_nonce')) return;
+        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
+        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || !current_user_can('edit_post', $post_id)) return;
+        $input = [];
+        foreach (EventSettings::fields() as $key => $field) {
+            if ($field[1] === 'boolean') $input[$key] = isset($_POST[$key]) ? '1' : '0';
+            elseif (isset($_POST[$key])) {
+                $input[$key] = wp_unslash($_POST[$key]);
+                if ($field[1] === 'questions') $input[$key] = is_string($input[$key]) ? json_decode($input[$key], true) : null;
             }
         }
+        $result = EventSettings::save($post_id, $input);
+        if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
     }
 
     /**
      * Zeigt die Tabelle mit den Anmeldungen unter dem Content-Editor an.
      */
     public function render_registration_list($post) {
+        if (get_post_meta($post->ID, 'vw_event_canceled', true) === '1') {
+            echo '<p><strong>' . esc_html__('Diese Veranstaltung wurde abgesagt.', 'veranstaltungswart') . '</strong></p>';
+        } else {
+            $url = wp_nonce_url(admin_url('admin-post.php?action=vw_cancel_event&event_id=' . $post->ID), 'vw_cancel_event_' . $post->ID);
+            echo '<p><a class="button" onclick="' . esc_attr('return confirm(' . wp_json_encode(__('Veranstaltung absagen und alle aktiven Teilnehmer informieren?', 'veranstaltungswart')) . ')') . '" href="' . esc_url($url) . '">' . esc_html__('Veranstaltung absagen', 'veranstaltungswart') . '</a></p>';
+        }
+        $notify = wp_nonce_url(admin_url('admin-post.php?action=vw_notify_event_change&event_id=' . $post->ID), 'vw_notify_event_' . $post->ID);
+        echo '<p>' . esc_html__('Änderungen zuerst speichern. Danach:', 'veranstaltungswart') . ' <a class="button" onclick="' . esc_attr('return confirm(' . wp_json_encode(__('Aktuelle Veranstaltungsdaten per E-Mail an alle aktiven Teilnehmer senden?', 'veranstaltungswart')) . ')') . '" href="' . esc_url($notify) . '">' . esc_html__('Teilnehmer über Änderungen informieren', 'veranstaltungswart') . '</a></p>';
         $repo = new EventRepository();
         $registrations = $repo->get_registrations_for_event($post->ID);
         $stats = $repo->get_registration_stats($post->ID);
-        
+        RegistrationQuestions::render_totals($post->ID);
+
         // Export-Button oben rechts platzieren
         echo '<div style="text-align: right; margin-bottom: 15px;">';
         // Hinzugefügt: esc_url um den Button-Link für maximale Sicherheit
@@ -243,11 +129,11 @@ class EventMetaBox {
                  <span class="dashicons dashicons-download" style="margin-top:4px;"></span> ' . esc_html__('Teilnehmerliste (CSV) exportieren', 'veranstaltungswart') . '
               </a>';
         echo '</div>';
-        
+
         $view_file = VW_PLUGIN_DIR . 'app/Events/views/registration-list-table.php';
         if (file_exists($view_file)) {
             // Aktuelle URL für Referer-Logik
-            $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+            $current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
             include $view_file;
         } else {
             echo '<p>' . esc_html__('Teilnehmerliste konnte nicht geladen werden.', 'veranstaltungswart') . '</p>';

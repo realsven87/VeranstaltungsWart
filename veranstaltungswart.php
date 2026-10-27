@@ -2,13 +2,15 @@
 /**
  * Plugin Name: VeranstaltungsWart
  * Description: Der Veranstaltungs-Manager für Vereine und politische Organisationen. Erstelle und verwalte Veranstaltungen, Teilnehmer und E-Mail-Vorlagen mit Leichtigkeit.
- * Version:     2.0.0
+ * Version:     3.3.0
  * Author:      Sven Epple
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: veranstaltungswart
  * Domain Path: /languages
  * Requires PHP: 7.4
- * Requires at least: 5.8
- * Tested up to: 6.5
+ * Requires at least: 6.5
+ * Tested up to: 7.1
  */
 
 // Sicherheitscheck: Verhindert direkten Aufruf der Datei
@@ -21,7 +23,7 @@ if (!defined('ABSPATH')) {
  */
 define('VW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('VW_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('VW_VERSION', '2.0.0');
+define('VW_VERSION', '3.3.0');
 
 /**
  * Loader einbinden und Autoloader registrieren.
@@ -50,13 +52,16 @@ class VeranstaltungsWart {
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
         // WICHTIG: Sprachdateien laden, damit unsere Übersetzungen funktionieren!
-        add_action('plugins_loaded', [$this, 'load_textdomain']);
+        add_action('init', [$this, 'load_textdomain'], 0);
 
         // Initialisierung der Module
         $this->init_modules();
-        
+
         // Hooks für allgemeine Plugin-Aufgaben
         add_action('init', [$this, 'ensure_capabilities']);
+        add_action('init', function() {
+            if (get_option('vw_schema_version') !== '3.2.0') (new \VW\Database\Schema())->create_tables();
+        }, 1);
     }
 
     /**
@@ -84,7 +89,7 @@ class VeranstaltungsWart {
 
         // 3. Berechtigungen für Rollen setzen
         $this->ensure_capabilities();
-        
+
         // 4. Permalinks neu generieren (wichtig für CPTs)
         // ZUERST den Post Type und die Taxonomie registrieren, damit WordPress sie beim Flushen kennt!
         $event_post_type = new \VW\Events\EventPostType();
@@ -101,6 +106,7 @@ class VeranstaltungsWart {
 public function deactivate() {
     // Cronjob entfernen, damit er nicht leer weiterläuft
     wp_clear_scheduled_hook('vw_daily_gdpr_cleanup');
+    wp_clear_scheduled_hook('vw_daily_event_reminders');
 
     // Zeichne die Landkarte ohne die Plugin-URLs neu
     flush_rewrite_rules();
@@ -110,29 +116,18 @@ public function deactivate() {
      * Stellt sicher, dass Autoren und Admins die nötigen Rechte für das Plugin haben.
      */
     public function ensure_capabilities() {
-        $roles = ['administrator', 'author'];
-        
-        foreach ($roles as $role_name) {
-            $role = get_role($role_name);
-            if (!$role) continue;
-
-            // Rechte für Event-Management
-            $role->add_cap('edit_others_posts');
-            $role->add_cap('edit_published_posts');
-            $role->add_cap('publish_posts');
-            $role->add_cap('delete_posts');
-            $role->add_cap('delete_published_posts');
-            $role->add_cap('delete_others_posts');
-            
-            // Eigene Capabilities
-            $role->add_cap('manage_vw_events');
-        }
+        \VW\Core\Capabilities::install();
     }
 
     /**
      * Initialisiert alle Kern-Module des Plugins.
      */
     private function init_modules() {
+        \VW\Core\Capabilities::register();
+        (new \VW\Events\EventPresentation())->register();
+        (new \VW\Events\EventVisibility())->register();
+        (new \VW\Blocks\BlockManager())->register();
+
         // 1. Dashboard & Menüsteuerung (Zentrale Verwaltung & Quick-Actions)
         $this->modules['dashboard'] = new \VW\Dashboard\DashboardManager();
         $this->modules['dashboard']->register();

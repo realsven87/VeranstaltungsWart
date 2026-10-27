@@ -1,0 +1,133 @@
+name: Plugin checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  wordpress:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '7.4'
+            wordpress: '6.5'
+          - php: '8.3'
+            wordpress: 'latest'
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '${{ matrix.php }}'
+          extensions: mysqli, gd
+          tools: wp-cli
+      - name: Syntax checks
+        run: |
+          find . -name '*.php' -print0 | xargs -0 -n1 php -l
+          for file in assets/*.js tests/*.cjs; do node --check "$file"; done
+      - name: Install isolated WordPress
+        env:
+          WP_VERSION: '${{ matrix.wordpress }}'
+        run: |
+          mkdir /tmp/vw-wordpress
+          wp core download --version="$WP_VERSION" --path=/tmp/vw-wordpress
+          wp config create --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1:3306 --path=/tmp/vw-wordpress
+          wp core install --url=http://127.0.0.1:8080 --title=Test --admin_user=admin --admin_password=test-only-password --admin_email=test@example.org --skip-email --path=/tmp/vw-wordpress
+          ln -s "$GITHUB_WORKSPACE" /tmp/vw-wordpress/wp-content/plugins/veranstaltungswart
+          wp plugin activate veranstaltungswart --path=/tmp/vw-wordpress
+          wp option update timezone_string Europe/Berlin --path=/tmp/vw-wordpress
+          mkdir -p /tmp/vw-wordpress/wp-content/mu-plugins
+          printf '%s\n' '<?php add_filter("pre_wp_mail", "__return_true");' > /tmp/vw-wordpress/wp-content/mu-plugins/test-mail.php
+      - name: WordPress.org Plugin Check
+        if: matrix.php == '8.3'
+        run: |
+          wp plugin install plugin-check --version=2.1.0 --activate --path=/tmp/vw-wordpress
+          mkdir -p /tmp/vw-release/veranstaltungswart
+          cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-release/veranstaltungswart/
+          wp plugin check /tmp/vw-release/veranstaltungswart --require=/tmp/vw-wordpress/wp-content/plugins/plugin-check/cli.php --format=json --path=/tmp/vw-wordpress > /tmp/vw-plugin-check.json || check_status=$?
+          cat /tmp/vw-plugin-check.json
+          python3 tests/check_plugin_report.py /tmp/vw-plugin-check.json
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.php == '8.3'
+        with:
+          name: wordpress-org-check
+          path: /tmp/vw-plugin-check.json
+      - name: WordPress integration tests
+        run: |
+          wp eval-file "$GITHUB_WORKSPACE/tests/integration.php" --path=/tmp/vw-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/questions.php" --path=/tmp/vw-wordpress
+          wp eval-file "$GITHUB_WORKSPACE/tests/visibility.php" --path=/tmp/vw-wordpress
+      - name: HTTP registration tests
+        run: |
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/vw-wordpress "$GITHUB_WORKSPACE/tests/router.php" > /tmp/vw-http.log 2>&1 &
+          python3 tests/registration_http.py
+          python3 tests/visibility_http.py
+      - name: Editor integration test
+        if: matrix.php == '8.3'
+        run: |
+          npm install --no-save --package-lock=false playwright@1.51.1
+          npx playwright install --with-deps chromium
+          node tests/editor.cjs
+          node tests/questions.cjs
+          node tests/visibility.cjs
+          wp theme install kadence --activate --path=/tmp/vw-wordpress
+          node tests/editor.cjs
+          node tests/questions.cjs
+          node tests/visibility.cjs
+      - name: SEO visibility integration
+        if: matrix.php == '8.3'
+        run: |
+          wp rewrite structure '/%postname%/' --path=/tmp/vw-wordpress
+          wp plugin install wordpress-seo --activate --path=/tmp/vw-wordpress
+          python3 tests/visibility_http.py Yoast
+          wp plugin deactivate wordpress-seo --path=/tmp/vw-wordpress
+          wp plugin install seo-by-rank-math --activate --path=/tmp/vw-wordpress
+          wp option update rank_math_registration_skip 1 --path=/tmp/vw-wordpress
+          wp rewrite flush --path=/tmp/vw-wordpress
+          python3 tests/visibility_http.py RankMath
+          wp plugin deactivate seo-by-rank-math --path=/tmp/vw-wordpress
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.3'
+        with:
+          name: wordpress-org-screenshots
+          path: /tmp/vw-screenshots/*.png
+      - name: Generate translation template
+        if: matrix.php == '8.3'
+        run: |
+          wp i18n make-pot . languages/veranstaltungswart.pot --domain=veranstaltungswart --exclude=tests,node_modules,.git,.github --skip-audit
+          echo 'VW_POT_START'
+          base64 -w0 languages/veranstaltungswart.pot
+          echo
+          echo 'VW_POT_END'
+      - name: Build installable plugin
+        if: matrix.php == '8.3'
+        run: |
+          mkdir -p /tmp/vw-package/veranstaltungswart
+          cp -r app assets languages LICENSE.txt readme.txt uninstall.php veranstaltungswart.php /tmp/vw-package/veranstaltungswart/
+          cd /tmp/vw-package
+          zip -qr veranstaltungswart-3.3.0.zip veranstaltungswart
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.3'
+        with:
+          name: veranstaltungswart-3.3.0
+          path: /tmp/vw-package/veranstaltungswart-3.3.0.zip
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.php }}
+          path: /tmp/vw-http.log
