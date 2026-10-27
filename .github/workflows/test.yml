@@ -73,7 +73,7 @@ jobs:
           wp eval-file "$GITHUB_WORKSPACE/tests/visibility.php" --path=/tmp/vw-wordpress
       - name: HTTP registration tests
         run: |
-          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/vw-wordpress > /tmp/vw-http.log 2>&1 &
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8080 -t /tmp/vw-wordpress "$GITHUB_WORKSPACE/tests/router.php" > /tmp/vw-http.log 2>&1 &
           python3 tests/registration_http.py
           python3 tests/visibility_http.py
       - name: Editor integration test
@@ -83,12 +83,15 @@ jobs:
           npx playwright install --with-deps chromium
           node tests/editor.cjs
           node tests/questions.cjs
+          node tests/visibility.cjs
           wp theme install kadence --activate --path=/tmp/vw-wordpress
           node tests/editor.cjs
           node tests/questions.cjs
+          node tests/visibility.cjs
       - name: SEO visibility integration
         if: matrix.php == '8.3'
         run: |
+          wp rewrite structure '/%postname%/' --path=/tmp/vw-wordpress
           wp plugin install wordpress-seo --activate --path=/tmp/vw-wordpress
           python3 tests/visibility_http.py Yoast
           wp plugin deactivate wordpress-seo --path=/tmp/vw-wordpress

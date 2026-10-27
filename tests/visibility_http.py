@@ -9,6 +9,8 @@ assert len(robots)==1 and 'noindex' in robots[0] and not re.search(r'[\s,\"\']in
 public=get({'p':f['visible']})
 assert not any('noindex' in r for r in re.findall(r'<meta\b[^>]*name=[\'\"]robots[\'\"][^>]*>',public,re.I))
 if len(sys.argv)>1:
+ f['hidden_url']=json.loads(get({'rest_route':'/wp/v2/vw_event/'+str(f['hidden'])}))['link']
+ f['visible_url']=json.loads(get({'rest_route':'/wp/v2/vw_event/'+str(f['visible'])}))['link']
  sitemap=get({'sitemap':'vw_event','sitemap_n':1})
  assert '<urlset' in sitemap and (html.escape(f['hidden_url'])+'</loc>') not in sitemap and (html.escape(f['visible_url'])+'</loc>') in sitemap,sitemap[:1000]
  print('PASS: '+sys.argv[1]+' single robots tag and actual XML sitemap')

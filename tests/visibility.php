@@ -40,6 +40,10 @@ $forbidden=new WP_REST_Request('POST','/veranstaltungswart/v1/settings/'.$ids['h
 wp_set_current_user(get_user_by('login','testauthor')->ID);
 visibility_assert(rest_do_request($forbidden)->get_status()===403 && V::hidden($ids['hidden']), 'Other author cannot change visibility');
 wp_set_current_user(1);
+$_POST = ['vw_event_settings_nonce_field'=>'invalid','vw_direct_link_only'=>'0'];
+(new VW\Events\EventMetaBox())->save($ids['hidden']);
+visibility_assert(V::hidden($ids['hidden']), 'Classic save rejects invalid nonce');
+$_POST=[];
 $old=apply_filters('display_post_states',[],get_post($ids['hidden']));
 visibility_assert(isset($old['vw_direct_link']), 'Backend marks direct-link events');
 EventSettings::save($ids['hidden'],[V::META=>'0']);

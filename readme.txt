@@ -155,3 +155,9 @@ In the event settings (block sidebar, registration block, or classic editor), ad
 Guests are numbered only; no guest names are requested. JavaScript is required when custom questions are active. Removed guest fields are excluded from submission. Question type and scope are fixed after saving; deactivate an existing question and add a new one to change them. Deactivate unused options instead of deleting historical answers.
 
 Answers keep the labels from the time of registration. Dashboard and event participant list show individual answers; CSV includes them. Choice totals distinguish confirmed, waiting-list and pending registrations, excluding cancelled/rejected registrations. Each selected option counts once per answer; group-level answers are not multiplied by the guest count. Renamed labels are reported separately. Free text is shown individually. Existing retention/deletion rules apply to the saved answers.
+
+== Direct-link-only events ==
+
+Enable “Nur über Direktlink erreichbar” in the event settings to hide a published event from automatic public lists, search, feeds and XML sitemaps. Its URL, registration and explicitly embedded event card remain public. This is not access control. Existing events remain listed by default.
+
+Core WordPress, Yoast SEO and Rank Math robots/sitemap integrations are supported. Changes clear WordPress and supported sitemap caches. External page/CDN caches must be purged separately; custom integrations can use the vw_event_visibility_changed action. Other SEO plugins and third-party lists using custom SQL need their own integration. See docs/VISIBILITY.md in the source repository for scope and test details.
