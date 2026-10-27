@@ -96,6 +96,8 @@ jobs:
           python3 tests/visibility_http.py Yoast
           wp plugin deactivate wordpress-seo --path=/tmp/vw-wordpress
           wp plugin install seo-by-rank-math --activate --path=/tmp/vw-wordpress
+          wp option update rank_math_registration_skip 1 --path=/tmp/vw-wordpress
+          wp rewrite flush --path=/tmp/vw-wordpress
           python3 tests/visibility_http.py RankMath
           wp plugin deactivate seo-by-rank-math --path=/tmp/vw-wordpress
       - uses: actions/upload-artifact@v4
