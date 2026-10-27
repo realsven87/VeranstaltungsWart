@@ -13,7 +13,9 @@ const fs = require('node:fs');
     await Promise.all([page.waitForURL('**/wp-admin/**'), page.locator('#wp-submit').click()]);
     await page.goto('http://127.0.0.1:8080/wp-admin/post.php?post=' + id + '&action=edit');
     await page.waitForFunction(() => window.wp && wp.blocks && wp.blocks.getBlockType('veranstaltungswart/registration'));
+    await page.waitForFunction(id => wp.data.select('core/editor').getCurrentPostId() === id && wp.data.select('core/block-editor').getBlocks().length > 0, id);
     await page.evaluate(() => {
+        wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
         if (wp.data.select('core/edit-post').isFeatureActive('welcomeGuide')) wp.data.dispatch('core/edit-post').toggleFeature('welcomeGuide');
         wp.data.dispatch('core/block-editor').resetBlocks([
             wp.blocks.createBlock('core/paragraph', { content: 'Termin: {event_datum}' }),

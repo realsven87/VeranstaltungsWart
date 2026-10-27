@@ -57,7 +57,9 @@ const fs = require('node:fs');
     // Real question configuration UI, saved independently of the post.
     await page.goto(base + '/wp-admin/post.php?post=' + id + '&action=edit');
     await page.waitForFunction(() => window.wp && wp.blocks && wp.blocks.getBlockType('veranstaltungswart/registration'));
+    await page.waitForFunction(id => wp.data.select('core/editor').getCurrentPostId() === id && wp.data.select('core/block-editor').getBlocks().length > 0, id);
     await page.evaluate(() => {
+        wp.data.dispatch('core/edit-post').openGeneralSidebar('edit-post/block');
         if (wp.data.select('core/edit-post').isFeatureActive('welcomeGuide')) wp.data.dispatch('core/edit-post').toggleFeature('welcomeGuide');
         wp.data.dispatch('core/block-editor').resetBlocks([wp.blocks.createBlock('veranstaltungswart/registration')]);
         wp.data.dispatch('core/block-editor').selectBlock(wp.data.select('core/block-editor').getBlocks()[0].clientId);
