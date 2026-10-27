@@ -3,7 +3,7 @@
     const el = wp.element.createElement, Fragment = wp.element.Fragment;
     const { useState, useEffect } = wp.element;
     const { InspectorControls, useBlockProps, RichTextToolbarButton } = wp.blockEditor;
-    const { PanelBody, TextControl, TextareaControl, ToggleControl, SelectControl, RangeControl, Button, Notice, Spinner } = wp.components;
+    const { PanelBody, CheckboxControl, TextControl, TextareaControl, ToggleControl, SelectControl, RangeControl, Button, Notice, Spinner } = wp.components;
     const api = wp.apiFetch;
     const { __, sprintf } = wp.i18n;
     function useRequest(path) {
@@ -40,9 +40,9 @@
             api({ path: '/veranstaltungswart/v1/settings/' + id, method: 'POST', data: values }).then(data => { setValues(data); window.dispatchEvent(new CustomEvent('vw-settings-saved', { detail: { id, data } })); setNotice(__('Gespeichert. Die Einstellungen gelten für alle Formulare dieser Veranstaltung.', 'veranstaltungswart')); }).catch(error => setNotice(error.message)).finally(() => setBusy(false));
         }
         const controls = Object.entries(vwEditor.fields).map(([key, field]) => {
-            const props = { key, label: field[0], value: values[key], onChange: value => setValues(old => Object.assign({}, old, { [key]: value })) };
+            const props = { key, label: field[0], help: field[3] || undefined, value: values[key], onChange: value => setValues(old => Object.assign({}, old, { [key]: value })) };
             if (field[1] === 'questions') return el(window.VWQuestionsEditor, props);
-            if (field[1] === 'boolean') return el(ToggleControl, Object.assign({}, props, { checked: values[key] === '1', onChange: value => props.onChange(value ? '1' : '0') }));
+            if (field[1] === 'boolean') return el(key === 'vw_direct_link_only' ? CheckboxControl : ToggleControl, Object.assign({}, props, { checked: values[key] === '1', onChange: value => props.onChange(value ? '1' : '0') }));
             if (key === 'vw_location_id') return el(SelectControl, Object.assign({}, props, {
                 disabled: locations.loading, help: __('Beim Ortswechsel wird die Kapazität übernommen. Danach kannst du sie unten anpassen.', 'veranstaltungswart'),
                 options: [{ value: 0, label: __('Kein Ort', 'veranstaltungswart') }].concat((locations.data || []).map(row => ({ value: row.id, label: row.name }))),

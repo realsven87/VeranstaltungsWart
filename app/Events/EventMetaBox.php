@@ -70,6 +70,7 @@ class EventMetaBox {
                 if ($type === 'datetime-local') $value = str_replace(' ', 'T', substr($value, 0, 16));
                 echo '<input class="widefat" type="' . esc_attr($type) . '" id="' . esc_attr($key) . '" name="' . esc_attr($key) . '" value="' . esc_attr($value) . '" min="0">';
             }
+            if (!empty($field[3])) echo '<p class="description">' . esc_html($field[3]) . '</p>';
             echo '</div>';
         }
         echo '</div>';
@@ -89,6 +90,7 @@ class EventMetaBox {
 
     public function save($post_id) {
         if (get_post_type($post_id) !== 'vw_event' || !isset($_POST['vw_event_settings_nonce_field']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['vw_event_settings_nonce_field'])), 'vw_event_settings_nonce')) return;
+        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
         if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) || !current_user_can('edit_post', $post_id)) return;
         $input = [];
         foreach (EventSettings::fields() as $key => $field) {

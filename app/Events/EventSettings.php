@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) exit;
 class EventSettings {
     public static function fields() {
         return [
+            'vw_direct_link_only' => [__('Nur über Direktlink erreichbar', 'veranstaltungswart'), 'boolean', '0', __('Blendet diese Veranstaltung aus öffentlichen Übersichten und der Suche aus. Jeder, der den Link kennt, kann die Veranstaltung weiterhin öffnen.', 'veranstaltungswart')],
             'vw_event_date' => [__('Datum und Beginn', 'veranstaltungswart'), 'date', ''],
             'vw_event_end' => [__('Ende (optional)', 'veranstaltungswart'), 'date', ''],
             'vw_registration_deadline' => [__('Anmeldeschluss (optional)', 'veranstaltungswart'), 'date', ''],
@@ -46,6 +47,7 @@ class EventSettings {
         foreach (self::fields() as $key => $field) {
             if (!array_key_exists($key, $input)) continue;
             $value = $input[$key];
+            if ($key === EventVisibility::META && !in_array($value, [true, false, 0, 1, '0', '1'], true)) return new \WP_Error('invalid_visibility', __('Ungültige Sichtbarkeitseinstellung.', 'veranstaltungswart'));
             if ($field[1] === 'questions') {
                 $value = RegistrationQuestions::normalize($value, RegistrationQuestions::get($id));
                 if (is_wp_error($value)) return $value;

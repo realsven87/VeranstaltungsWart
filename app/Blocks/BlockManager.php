@@ -53,6 +53,7 @@ class BlockManager {
             $query = ['post_type' => 'vw_event', 'post_status' => ['publish', 'draft', 'future', 'private'], 'posts_per_page' => 20, 's' => sanitize_text_field($request->get_param('search') ?: ''), 'orderby' => 'date', 'order' => 'DESC'];
             $events = [];
             foreach (get_posts($query) as $post) {
+                if (\VW\Events\EventVisibility::hidden($post->ID) && !Capabilities::can_manage_event($post->ID)) continue;
                 if (!EventSettings::is_public($post->ID) && !Capabilities::can_manage_event($post->ID)) continue;
                 $events[] = ['id' => $post->ID, 'title' => $post->post_title ?: __('(Ohne Titel)', 'veranstaltungswart'), 'editable' => Capabilities::can_manage_event($post->ID)];
             }
@@ -100,7 +101,7 @@ class BlockManager {
         if (empty($atts['showCanceled'])) $meta[] = ['relation' => 'OR', ['key' => 'vw_event_canceled', 'compare' => 'NOT EXISTS'], ['key' => 'vw_event_canceled', 'value' => '1', 'compare' => '!=']];
         $args = ['post_type' => 'vw_event', 'post_status' => 'publish', 'has_password' => false, 'posts_per_page' => max(1, min(50, (int) ($atts['count'] ?? 6))), 'meta_key' => 'vw_event_date', 'orderby' => 'meta_value', 'order' => 'ASC', 'meta_query' => $meta, 'no_found_rows' => true];
         if (!empty($atts['category'])) $args['tax_query'] = [['taxonomy' => 'vw_event_category', 'field' => 'term_id', 'terms' => absint($atts['category'])]];
-        $posts = get_posts($args);
+        $posts = get_posts(\VW\Events\EventVisibility::public_args($args));
         if (!$posts) return empty($atts['emptyText']) ? '' : '<p>' . esc_html($atts['emptyText']) . '</p>';
         $html = '<div class="vw-event-list vw-columns-' . max(1, min(3, (int) ($atts['columns'] ?? 3))) . '">';
         foreach ($posts as $post) $html .= $this->card($post->ID, $atts);
