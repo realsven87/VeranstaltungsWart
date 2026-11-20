@@ -34,7 +34,7 @@ class PersonManager {
         add_action('admin_init', function() {
             if (function_exists('wp_add_privacy_policy_content')) {
                 wp_add_privacy_policy_content('VeranstaltungsWart', wp_kses_post(
-                    __('VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten, Antworten auf veranstaltungsspezifische Zusatzfragen (auch je nummerierter Begleitperson) und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Kontakte und ihre Anmeldungen, wenn die letzte Anmeldung länger als zwölf Monate zurückliegt. Ohne bisherige Anmeldung greift diese automatische Löschung nicht. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website.', 'veranstaltungswart')
+                    __('VeranstaltungsWart speichert Namen, E-Mail-Adressen, Anmeldestatus, Begleitpersonenzahl, Freitextnachrichten, Antworten auf veranstaltungsspezifische Zusatzfragen (auch je nummerierter Begleitperson) und Zeitpunkte der Anmeldung in der Datenbank dieser Website. Veranstaltungsnachrichten werden über den eingerichteten E-Mail-Dienst versendet. Kontakte können einen Vertrauensstatus und Listenzuordnungen erhalten. Ein täglicher Auftrag löscht Anmeldungen einschließlich Zusatzantworten nach der in den Einstellungen gewählten Anzahl von Tagen nach Veranstaltungsende (Standard: 90 Tage; ohne Endzeit zählt das Ende des Veranstaltungstags). Kontakte ohne verbleibende Anmeldung oder Listenzuordnung werden nach derselben Frist ab Anlage gelöscht. Kontakte mit Listenzuordnung und Anmeldungen ohne gültigen Veranstaltungstermin erfordern eine separate Prüfung. Exporte, E-Mails und Backups werden nicht automatisch bereinigt. Die WordPress-Werkzeuge unterstützen den Export und die Löschung personenbezogener Daten. Bitte ergänze diesen Vorschlag um die tatsächlichen Zwecke, Empfänger und Abläufe deiner Website.', 'veranstaltungswart')
                 ));
             }
         });
@@ -329,25 +329,6 @@ class PersonManager {
      * Cronjob: DSGVO-Bereinigung.
      */
     public function run_gdpr_cleanup() {
-        global $wpdb;
-        $table_persons = $wpdb->prefix . 'vw_persons';
-        $table_reg     = $wpdb->prefix . 'vw_registrations';
-
-        $months_to_keep = 12;
-        $cutoff_date = current_datetime()->modify("-{$months_to_keep} months")->format('Y-m-d H:i:s');
-
-        $old_persons = $wpdb->get_results($wpdb->prepare("
-            SELECT p.email, MAX(r.registered_at) as last_activity
-            FROM %i p
-            JOIN %i r ON p.id = r.person_id
-            GROUP BY p.id
-            HAVING last_activity < %s
-        ", $table_persons, $table_reg, $cutoff_date));
-
-        if (!empty($old_persons)) {
-            foreach ($old_persons as $person) {
-                $this->privacy_erase_data($person->email);
-            }
-        }
+        return \VW\Privacy\Retention::cleanup();
     }
 }

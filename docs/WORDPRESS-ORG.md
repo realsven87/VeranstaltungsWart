@@ -51,6 +51,6 @@ Review these images before publication. If used, upload them to the SVN root `as
 
 ## Data behaviour
 
-The readme documents fields stored, WordPress mail delivery, privacy export/erasure, and daily cleanup. Cleanup currently uses the last registration timestamp (not event date) and a twelve-month retention period. No automatic GDPR compliance is claimed. The plugin supplies suggested privacy-policy text for the site owner to adapt.
+The readme documents fields stored, WordPress mail delivery, privacy export/erasure, and daily cleanup. Cleanup uses the configurable retention period from event end (default 90 days); see RETENTION.md for exceptions and operational requirements. No automatic GDPR compliance is claimed. The plugin supplies suggested privacy-policy text for the site owner to adapt.
 
 Deactivation preserves data. Uninstall deletes custom tables and plugin rights; event and email-template posts remain in the WordPress posts table. Never uninstall to perform an update. Multisite network activation is not supported or tested.

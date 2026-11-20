@@ -21,6 +21,8 @@ if ($timestamp) {
 
 wp_clear_scheduled_hook('vw_daily_event_reminders');
 delete_option('vw_capabilities_version');
+delete_option('vw_retention_days');
+delete_option('vw_retention_last_run');
 
 // 2. Eigene Datenbanktabellen löschen
 global $wpdb;

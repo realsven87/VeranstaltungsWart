@@ -44,16 +44,19 @@ class RegistrationHandler {
             if (strlen($message) > 5000 || (EventSettings::get($id, 'vw_allow_message') === '1' && EventSettings::get($id, 'vw_message_required') === '1' && trim($message) === '')) return new \WP_Error('invalid_message');
             $answers = \VW\Events\RegistrationQuestions::validate_answers($id, $guests, isset($_POST['vw_answers']) ? wp_unslash($_POST['vw_answers']) : '', isset($_POST['vw_questions_version']) ? wp_unslash($_POST['vw_questions_version']) : '');
             if (is_wp_error($answers)) return $answers;
-            $person_id = $repo->get_or_create_person_id($first, $last, $email);
-            if (!$person_id) return new \WP_Error('database');
-            if ($repo->active_registration($id, $person_id)) return new \WP_Error('duplicate');
-            $person = $repo->get_person($person_id);
-            $stats = $repo->get_registration_stats($id);
-            $status = $person && $person->trust_status === 'freigegeben' ? 'bestätigt' : 'eingegangen';
-            if ($stats['max'] > 0 && $stats['current'] + $guests + 1 > $stats['max']) $status = 'warteliste';
-            $reg_id = $repo->create_registration(['event_post_id' => $id, 'person_id' => $person_id, 'guest_count' => $guests, 'message' => $message, 'answers' => wp_json_encode($answers), 'seats_total' => $guests + 1, 'status' => $status, 'registered_at' => current_time('mysql')]);
-            if (!$reg_id) return new \WP_Error('database');
-            return ['id' => $reg_id, 'status' => $status];
+            // Serialize contact lookup + registration with automatic orphan cleanup.
+            return $repo->with_event_lock(0, function() use ($id, $repo, $first, $last, $email, $guests, $message, $answers) {
+                $person_id = $repo->get_or_create_person_id($first, $last, $email);
+                if (!$person_id) return new \WP_Error('database');
+                if ($repo->active_registration($id, $person_id)) return new \WP_Error('duplicate');
+                $person = $repo->get_person($person_id);
+                $stats = $repo->get_registration_stats($id);
+                $status = $person && $person->trust_status === 'freigegeben' ? 'bestätigt' : 'eingegangen';
+                if ($stats['max'] > 0 && $stats['current'] + $guests + 1 > $stats['max']) $status = 'warteliste';
+                $reg_id = $repo->create_registration(['event_post_id' => $id, 'person_id' => $person_id, 'guest_count' => $guests, 'message' => $message, 'answers' => wp_json_encode($answers), 'seats_total' => $guests + 1, 'status' => $status, 'registered_at' => current_time('mysql')]);
+                if (!$reg_id) return new \WP_Error('database');
+                return ['id' => $reg_id, 'status' => $status];
+            });
         });
         if (is_wp_error($result)) $this->redirect($id, 'reg_error', $result->get_error_code());
         $slugs = ['bestätigt' => 'anmeldebestaetigung', 'eingegangen' => 'eingangsbestaetigung', 'warteliste' => 'warteliste-info'];

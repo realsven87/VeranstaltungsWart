@@ -3,7 +3,7 @@ Contributors: realsven87
 Tags: events, event management, bookings, registration
 Requires at least: 6.5
 Tested up to: 7.1
-Stable tag: 3.3.0
+Stable tag: 3.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ The interface currently uses German source strings and supports translations. Th
 
 The plugin stores names, email addresses, registration status, guest counts, free-text messages, registration timestamps, contact trust status and optional contact-list membership in the local WordPress database. Email content may contain these details and is sent through your site's configured WordPress mail service. The plugin does not include analytics or send data to the developer.
 
-A daily WordPress cron task removes contacts and their registrations when their most recent registration is older than twelve months. This is based on the registration timestamp, not the event date; contacts without registrations are not selected by this task. Configure your site's privacy notice to explain the actual processing and retention. Avoid collecting unnecessary sensitive information in the free-text field.
+Under VeranstaltungsWart > Einstellungen, administrators can set retention to 1–3650 days (default: 90). A daily WordPress cron task deletes registrations, messages and additional answers after that period from the event end, or the end of the local event day if no end is set. The rule also applies to existing data and all registration statuses. Future or ongoing events are preserved. Missing/invalid dates and deleted events require manual review. Unreferenced contacts without list membership are removed after the same period from creation; listed contacts require separate review. CSV exports, emails and backups are outside this cleanup. Settings show the last run, counts and problems. Configure your site's privacy notice to explain the actual processing and retention. Avoid collecting unnecessary sensitive information in the free-text field.
 
 Deactivation stops scheduled tasks and preserves data. Deleting the plugin removes its custom tables (including registrations, contacts, lists and venues), plugin capabilities and reminder markers. Event posts and email-template posts are retained in the WordPress posts table. Back up before deletion or upgrades. Do not uninstall as an update procedure.
 
@@ -104,6 +104,12 @@ No. It provides export/erasure tools and a privacy-consent field. Site owners mu
 WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata and documentation updates. Back up before updating; do not uninstall.
 
 == Changelog ==
+
+= 3.4.0 =
+* Add administrator retention settings (1–3650 days, default 90), clear rules and cleanup status.
+* Replace contact-wide twelve-month deletion with event-end-based registration cleanup.
+* Protect future registrations, skip invalid dates, and remove unused unlisted contacts.
+* Serialize public registration contact lookup with contact cleanup.
 
 = 3.3.0 =
 * Add direct-link-only event visibility, public query filtering, noindex and sitemap exclusions.
