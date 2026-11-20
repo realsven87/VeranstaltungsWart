@@ -19,3 +19,5 @@ CSV-Dateien, E-Mail-Postfächer, Backups und Daten externer Integrationen sind n
 ## Prüfung
 
 `tests/retention.php` prüft Standardwert/Validierung, Ende des Veranstaltungstags, mehrtägige Veranstaltungen, ungültige Termine, Friständerung, alle Anmeldestatus einschließlich Antworten, Kontakte mit zukünftiger Anmeldung/Listenzuordnung, ungenutzte Kontakte, wiederholte Bereinigung, Status und geschützte Einstellungsdarstellung. Die vorhandenen HTTP-Anmeldetests prüfen weiterhin die Anmeldung einschließlich der neuen gemeinsamen Kontaktsperre.
+
+`tests/retention.cjs` prüft im Browser Speichern und Neuladen der Einstellung sowie die Ablehnung ungültiger Werte und Nonces am echten WordPress-Endpunkt.
