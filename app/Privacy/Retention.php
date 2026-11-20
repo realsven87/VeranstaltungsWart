@@ -61,9 +61,13 @@ class Retention {
             <h2><?php esc_html_e('Automatische Bereinigung', 'veranstaltungswart'); ?></h2>
             <p><?php esc_html_e('Die Bereinigung läuft täglich über WordPress-Cron. Für eine zuverlässige Ausführung ohne Websitebesuche sollte dein Hosting WordPress-Cron regelmäßig auslösen. Bei großen Datenbeständen werden pro Lauf bis zu 100 fällige Veranstaltungen bereinigt; weitere folgen beim nächsten Lauf.', 'veranstaltungswart'); ?></p>
             <?php $last = get_option('vw_retention_last_run', []); $next = wp_next_scheduled('vw_daily_gdpr_cleanup'); ?>
-            <p><?php echo esc_html(sprintf(__('Nächster geplanter Lauf: %s', 'veranstaltungswart'), $next ? wp_date('d.m.Y H:i', $next) : __('Nicht geplant', 'veranstaltungswart'))); ?></p>
+            <p><?php
+            /* translators: %s: scheduled cleanup date and time. */
+            echo esc_html(sprintf(__('Nächster geplanter Lauf: %s', 'veranstaltungswart'), $next ? wp_date('d.m.Y H:i', $next) : __('Nicht geplant', 'veranstaltungswart'))); ?></p>
             <?php if ($last) : ?>
-                <p><?php echo esc_html(sprintf(__('Letzter Lauf: %1$s. Gelöschte Anmeldungen: %2$d. Gelöschte Kontakte: %3$d. Veranstaltungen mit fehlenden oder ungültigen Daten: %4$d. Fehler: %5$d.', 'veranstaltungswart'), wp_date('d.m.Y H:i', $last['time']), $last['registrations'], $last['persons'], $last['skipped'], $last['errors'])); ?></p>
+                <p><?php
+                /* translators: 1: last run date, 2: deleted registrations, 3: deleted contacts, 4: skipped events, 5: errors. */
+                echo esc_html(sprintf(__('Letzter Lauf: %1$s. Gelöschte Anmeldungen: %2$d. Gelöschte Kontakte: %3$d. Veranstaltungen mit fehlenden oder ungültigen Daten: %4$d. Fehler: %5$d.', 'veranstaltungswart'), wp_date('d.m.Y H:i', $last['time']), $last['registrations'], $last['persons'], $last['skipped'], $last['errors'])); ?></p>
             <?php endif; ?>
             <?php if (!$next || $next < time() - DAY_IN_SECONDS || (!$last && $next < time()) || ($last && ($last['time'] < time() - 2 * DAY_IN_SECONDS || $last['errors'] || $last['skipped']))) : ?>
                 <div class="notice notice-warning inline"><p><?php esc_html_e('Bitte die Ausführung der Bereinigung und gegebenenfalls Veranstaltungsdaten prüfen. Es liegt noch kein erfolgreicher aktueller Lauf vor oder es wurden Probleme gemeldet.', 'veranstaltungswart'); ?></p></div>
