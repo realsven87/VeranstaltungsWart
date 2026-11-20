@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace VW\Events;
 
 // Sicherheitscheck: Verhindert direkten Aufruf
@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-use VW\Mails\MailService;  
+use VW\Mails\MailService;
 
 /**
  * Modul: Veranstaltungsverwaltung (Kern)
@@ -22,20 +22,21 @@ class EventPostType
     {
         add_action('init', [$this, 'create_post_type']);
         add_action('init', [$this, 'create_event_taxonomy']);
-        
+
         // Meta Boxen (Logik in EventMetaBox.php)
         $meta_boxes = new EventMetaBox();
         add_action('add_meta_boxes', [$meta_boxes, 'register']);
-        add_action('save_post', [$meta_boxes, 'save']);
-        
+        add_action('save_post_vw_event', [$meta_boxes, 'save']);
+
+
         // Admin Actions (Handler für Dashboard und MetaBoxen)
         add_action('admin_post_vw_update_reg_status', [$this, 'handle_status_update']);
         add_action('admin_post_vw_delete_registration', [$this, 'handle_delete_registration']);
         add_action('admin_post_vw_export_participants', [$this, 'handle_csv_export']);
-        
+
         // Feedback-Meldungen im Admin-Bereich anzeigen
         add_action('admin_notices', [$this, 'show_admin_notices']);
-        
+
         // Admin-Listenansicht (Übersichtstabelle aller Events)
         add_filter('manage_vw_event_posts_columns', [$this, 'set_custom_event_columns']);
         add_action('manage_vw_event_posts_custom_column', [$this, 'custom_event_column_content'], 10, 2);
@@ -43,6 +44,7 @@ class EventPostType
         add_action('pre_get_posts', [$this, 'event_column_orderby']);
         add_action('restrict_manage_posts', [$this, 'add_author_filter']);
 
+        add_action('admin_post_vw_notify_event_change', [$this, 'notify_change']);
         add_action('admin_post_vw_cancel_event', [$this, 'handle_cancel_event']);
         // Automatischer Cronjob für Erinnerungs-Mails (1x täglich)
         add_action('vw_daily_event_reminders', [$this, 'send_event_reminders']);
@@ -79,7 +81,7 @@ class EventPostType
             'show_in_admin_bar' => true,
             // Bei rewrite Slugs ist es oft besser, sie unübersetzt zu lassen, oder _x() für den Kontext zu nutzen
             'rewrite' => ['slug' => _x('veranstaltungen', 'URL slug', 'veranstaltungswart')],
-            'capability_type' => 'post',
+            'capability_type' => ['vw_event', 'vw_events'],
             'map_meta_cap' => true,
         ]);
     }
@@ -104,6 +106,7 @@ class EventPostType
             ],
             'show_ui' => true,
             'show_admin_column' => false,
+            'capabilities' => ['manage_terms' => 'manage_options', 'edit_terms' => 'manage_options', 'delete_terms' => 'manage_options', 'assign_terms' => 'edit_vw_events'],
             'show_in_rest' => true,
         ]);
     }
@@ -153,8 +156,9 @@ class EventPostType
                 $stats = $repo->get_registration_stats($post_id);
                 // (VOLL) übersetzbar gemacht
                 $full_label = $stats['is_full'] ? ' <span style="color:#d63638; font-weight:bold;">' . esc_html__('(VOLL)', 'veranstaltungswart') . '</span>' : '';
-                echo '<strong>' . intval($stats['current']) . '</strong> / ' . ($stats['max'] ?: '-') . $full_label;
-                
+                echo '<strong>' . intval($stats['current']) . '</strong> / ' . esc_html($stats['max'] ?: '-') . wp_kses_post($full_label);
+
+                if ($stats['pending_count'] > 0) echo '<br><small>Prüfung offen: ' . (int) $stats['pending_count'] . ' Plätze</small>';
                 if ($stats['waitlist'] > 0) {
                     // Warteliste übersetzbar gemacht
                     echo '<br><small style="color:#856404;">' . esc_html__('Warteliste:', 'veranstaltungswart') . ' ' . intval($stats['waitlist']) . '</small>';
@@ -168,38 +172,14 @@ class EventPostType
      */
     public function handle_status_update()
     {
-        if (!current_user_can('edit_posts')) {
-            wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
-        }
-        
-        $reg_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        $status = isset($_GET['new_status']) ? sanitize_text_field($_GET['new_status']) : '';
-        $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
-        
+        $reg_id = isset($_GET['id']) ? absint($_GET['id']) : 0;
         check_admin_referer('vw_reg_action_' . $reg_id);
-        
-        if ($reg_id && $status) {
-            $repo = new EventRepository();
-            $repo->update_registration_status($reg_id, $status);
-            
-            // Mail-Trigger
-            if ($status === 'bestätigt') {
-                MailService::send_registration_mail($reg_id, 'anmeldebestaetigung');
-            } elseif ($status === 'abgelehnt') {
-                MailService::send_registration_mail($reg_id, 'ablehnung-info');
-                // Nachrücker-Logik triggern
-                if ($event_id) {
-                    $max_cap = (int) get_post_meta($event_id, 'vw_max_capacity', true);
-                    $repo->process_waitlist_move_up($event_id, $max_cap);
-                }
-            }
-            
-            // Saubere Weiterleitung
-            $this->redirect_back($event_id, 'status_updated');
-        }
-        
-        wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
-        exit;
+        $repo = new EventRepository();
+        $reg = $repo->get_registration($reg_id);
+        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
+        $result = $repo->change_status($reg_id, sanitize_text_field(wp_unslash($_GET['new_status'] ?? '')));
+        if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
+        $this->redirect_back($reg->event_post_id, 'status_updated');
     }
 
     /**
@@ -207,13 +187,14 @@ class EventPostType
      */
     public function handle_csv_export()
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('manage_vw_events')) {
             wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         }
-        
+
         $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
         check_admin_referer('vw_export_nonce');
-        
+
+        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         if ($event_id) {
             $exporter = new EventExporter();
             $exporter->download_participants_csv($event_id);
@@ -226,29 +207,26 @@ class EventPostType
      */
     public function handle_delete_registration()
     {
-        if (!current_user_can('edit_posts')) {
+        if (!current_user_can('manage_vw_events')) {
             wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         }
-        
+
         $reg_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
-        
+
         check_admin_referer('vw_delete_reg_nonce_' . $reg_id);
-        
-        if ($reg_id) {
-            $repo = new EventRepository();
-            $repo->delete_registration($reg_id);
-            
-            // Auch beim Löschen die Warteliste prüfen
-            if ($event_id) {
-                $max_cap = (int) get_post_meta($event_id, 'vw_max_capacity', true);
-                $repo->process_waitlist_move_up($event_id, $max_cap);
-            }
-            
-            // Saubere Weiterleitung
-            $this->redirect_back($event_id, 'status_updated');
-        }
-        
+
+        $repo = new EventRepository();
+        $reg = $repo->get_registration($reg_id);
+        if (!$reg || !\VW\Core\Capabilities::can_manage_event($reg->event_post_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
+        $event_id = $reg->event_post_id;
+        $result = $repo->with_event_lock($event_id, function() use ($repo, $reg_id, $event_id) {
+            if ($repo->delete_registration($reg_id) === false) return new \WP_Error('database', __('Löschen fehlgeschlagen.', 'veranstaltungswart'));
+            $repo->process_waitlist_move_up($event_id, (int) EventSettings::get($event_id, 'vw_max_capacity'));
+        });
+        if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
+        $this->redirect_back($event_id, 'status_updated');
+
         wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
         exit;
     }
@@ -258,41 +236,40 @@ class EventPostType
      */
     public function handle_cancel_event()
     {
-        if (!current_user_can('edit_posts')) {
-            wp_die('Keine Berechtigung.');
+        if (!current_user_can('manage_vw_events')) {
+            wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
         }
 
         $event_id = isset($_GET['event_id']) ? intval($_GET['event_id']) : 0;
         check_admin_referer('vw_cancel_event_' . $event_id);
 
-        if ($event_id) {
-            $repo = new EventRepository();
-            // Holt alle Personen, die für dieses Event registriert sind
-            $registrations = $repo->get_registrations_for_event($event_id);
-
-            if (!empty($registrations)) {
-                foreach ($registrations as $reg) {
-                    $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
-                    
-                    // Nur Personen anschreiben, die nicht ohnehin schon storniert oder abgelehnt haben
-                    if ($rid && $reg->status !== 'storniert' && $reg->status !== 'abgelehnt') {
-                        // 1. Absage-Mail senden
-                        MailService::send_registration_mail($rid, 'event-abgesagt');
-                        // 2. Status auf abgelehnt setzen, damit die Plätze freigegeben werden
-                        $repo->update_registration_status($rid, 'abgelehnt');
-                    }
+        if (!\VW\Core\Capabilities::can_manage_event($event_id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
+        $repo = new EventRepository();
+        $result = $repo->with_event_lock($event_id, function() use ($repo, $event_id) {
+            if (get_post_meta($event_id, 'vw_event_canceled', true) === '1') return;
+            update_post_meta($event_id, 'vw_event_canceled', '1');
+            foreach ($repo->get_registrations_for_event($event_id) as $reg) {
+                if (in_array($reg->status, ['bestätigt', 'eingegangen', 'warteliste'], true)) {
+                    $repo->update_registration_status($reg->id, 'abgelehnt');
+                    MailService::send_registration_mail($reg->id, 'event-abgesagt');
                 }
             }
-
-            // 3. In den Event-Metadaten hinterlegen, dass das Event abgesagt wurde
-            update_post_meta($event_id, 'vw_event_canceled', '1');
-
-            // Saubere Weiterleitung
-            $this->redirect_back($event_id, 'cancellation_success');
-        }
+        });
+        if (is_wp_error($result)) wp_die(esc_html($result->get_error_message()));
+        $this->redirect_back($event_id, 'cancellation_success');
 
         wp_safe_redirect(admin_url('admin.php?page=vw_dashboard'));
         exit;
+    }
+
+    public function notify_change() {
+        $id = absint($_GET['event_id'] ?? 0);
+        check_admin_referer('vw_notify_event_' . $id);
+        if (!\VW\Core\Capabilities::can_manage_event($id)) wp_die(esc_html__('Keine Berechtigung.', 'veranstaltungswart'));
+        foreach ((new EventRepository())->get_registrations_for_event($id) as $reg) {
+            if (in_array($reg->status, ['eingegangen', 'warteliste', 'bestätigt'], true)) MailService::send_registration_mail($reg->id, 'event-aenderung');
+        }
+        $this->redirect_back($id, 'status_updated');
     }
 
     public function set_sortable_event_columns($columns)
@@ -305,7 +282,7 @@ class EventPostType
     {
         if (!is_admin() || !$query->is_main_query())
             return;
-            
+
         if ('event_dt' === $query->get('orderby')) {
             $query->set('meta_key', 'vw_event_date');
             $query->set('orderby', 'meta_value');
@@ -365,14 +342,14 @@ class EventPostType
             'posts_per_page' => -1,
             'post_status' => 'publish'
         ]);
-        
-        $today = new \DateTime('today');
+
+        $today = new \DateTime('today', wp_timezone());
         $repo = new EventRepository();
 
         foreach ($events as $event) {
             // Wenn Event abgesagt wurde -> überspringen
             if (get_post_meta($event->ID, 'vw_event_canceled', true) === '1') continue;
-            
+
             // Wenn Opt-Out (Häkchen entfernt) -> überspringen
             $send_reminders = get_post_meta($event->ID, 'vw_send_reminders', true);
             if ($send_reminders === '0') continue; // Opt-Out check. Wenn leer oder '1', weitermachen.
@@ -381,9 +358,9 @@ class EventPostType
             if (!$event_date_raw) continue;
 
             try {
-                $event_date = new \DateTime($event_date_raw);
+                $event_date = new \DateTime($event_date_raw, wp_timezone());
                 $event_date->setTime(0, 0, 0); // Nur das reine Datum vergleichen
-                
+
                 // Tage bis zum Event berechnen
                 $interval = $today->diff($event_date);
                 $days_diff = (int)$interval->format('%R%a'); // Gibt z.B. +7 oder -2 zurück
@@ -394,10 +371,14 @@ class EventPostType
                     if (!empty($registrations)) {
                         foreach ($registrations as $reg) {
                             $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
-                            
+
                             // E-Mail NUR an Teilnehmer versenden, die auch wirklich bestätigt sind!
                             if ($rid && $reg->status === 'bestätigt') {
-                                MailService::send_registration_mail($rid, 'event-erinnerung');
+                                // One successful reminder per registration, event date and interval.
+                                $key = 'vw_reminder_' . md5($rid . ':' . $event_date_raw . ':' . $days_diff);
+                                if (add_option($key, time(), '', false)) {
+                                    if (!MailService::send_registration_mail($rid, 'event-erinnerung')) delete_option($key);
+                                }
                             }
                         }
                     }

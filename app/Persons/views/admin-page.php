@@ -6,8 +6,8 @@
     
     <?php 
     // Sicherstellen, dass Sortier-Variablen definiert sind (Fallbacks)
-    $orderby = isset($_GET['orderby']) ? sanitize_text_field($_GET['orderby']) : 'last_name';
-    $order   = isset($_GET['order']) ? sanitize_text_field($_GET['order']) : 'ASC';
+    $orderby = isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : 'last_name';
+    $order   = isset($_GET['order']) ? sanitize_text_field(wp_unslash($_GET['order'])) : 'ASC';
 
     // Erfolgs- und Fehlermeldungen
     if (isset($_GET['status'])): 
@@ -24,6 +24,7 @@
             $type = 'error';
         } elseif ($_GET['status'] === 'bulk_success') {
             $count = isset($_GET['count']) ? intval($_GET['count']) : 0;
+            /* translators: %d: number of processed contacts. */
             $msg = sprintf(_n('%s Person wurde erfolgreich aktualisiert/gelöscht.', '%s Personen wurden erfolgreich aktualisiert/gelöscht.', $count, 'veranstaltungswart'), $count);
         } elseif ($_GET['status'] === 'approved') {
             $msg = __('Person wurde erfolgreich freigegeben.', 'veranstaltungswart');

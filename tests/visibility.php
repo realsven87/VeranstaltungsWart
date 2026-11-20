@@ -1,0 +1,55 @@
+<?php
+use VW\Events\EventSettings;
+use VW\Events\EventVisibility as V;
+function visibility_assert($ok, $message) { if (!$ok) throw new RuntimeException($message); echo "PASS: $message\n"; }
+wp_set_current_user(1);
+$ids=[];
+foreach (['visible','hidden','legacy'] as $name) {
+ $ids[$name]=wp_insert_post(['post_type'=>'vw_event','post_status'=>'publish','post_title'=>'VisibilityFixture '.$name,'post_author'=>1,'post_content'=>'Visibility details [event_registration]']);
+ EventSettings::save($ids[$name],['vw_event_date'=>current_datetime()->modify('+60 days')->format('Y-m-d H:i:s')]);
+}
+delete_post_meta($ids['legacy'],V::META);
+visibility_assert(!V::hidden($ids['visible']) && !V::hidden($ids['legacy']), 'New and legacy events listed by default');
+visibility_assert(is_wp_error(EventSettings::save($ids['hidden'],[V::META=>'yes'])), 'Malformed visibility rejected');
+EventSettings::save($ids['hidden'],[V::META=>'1']);
+$normal=wp_insert_post(['post_type'=>'post','post_status'=>'publish','post_title'=>'VisibilityFixture regular']);
+update_post_meta($normal,V::META,'1');
+$args=['post_type'=>['vw_event','post'],'s'=>'VisibilityFixture','posts_per_page'=>2,'orderby'=>'ID','order'=>'ASC'];
+$q=new WP_Query(V::public_args($args));
+visibility_assert((int)$q->found_posts===3 && (int)$q->max_num_pages===2 && !in_array($ids['hidden'],wp_list_pluck($q->posts,'ID')), 'SQL filtering preserves mixed types, totals and pagination');
+$q2=new WP_Query(V::public_args(array_merge($args,['paged'=>2])));
+visibility_assert(count($q2->posts)===1 && in_array($normal,array_merge(wp_list_pluck($q->posts,'ID'),wp_list_pluck($q2->posts,'ID'))), 'Second page retains ordinary posts even with same meta');
+$backend=new WP_Query(['post_type'=>'vw_event','post__in'=>array_values($ids),'posts_per_page'=>-1]);
+visibility_assert(count($backend->posts)===3, 'Administrative queries preserve hidden events');
+$blocks=new VW\Blocks\BlockManager();
+visibility_assert(strpos($blocks->card($ids['hidden']), 'VisibilityFixture hidden')!==false, 'Explicit card remains visible');
+visibility_assert(strpos($blocks->listing(['count'=>50]), 'VisibilityFixture hidden')===false, 'Automatic plugin list excludes hidden event');
+$provider=new WP_Sitemaps_Posts();
+$urls=array_column($provider->get_url_list(1,'vw_event'),'loc');
+visibility_assert(!in_array(get_permalink($ids['hidden']),$urls) && in_array(get_permalink($ids['legacy']),$urls), 'Core sitemap excludes only hidden event');
+$term=wp_insert_term('Visibility category','vw_event_category');
+foreach($ids as $id) wp_set_object_terms($id,$term['term_id'],'vw_event_category');
+$rest=new WP_REST_Request('GET','/wp/v2/vw_event'); $rest->set_param('search','VisibilityFixture');
+wp_set_current_user(0);
+$data=rest_do_request($rest)->get_data();
+visibility_assert(count($data)===2, 'Public REST list filters hidden event');
+visibility_assert(rest_do_request(new WP_REST_Request('GET','/wp/v2/vw_event/'.$ids['hidden']))->get_status()===200, 'Anonymous REST single access retained');
+wp_set_current_user(1); $rest->set_param('context','edit');
+visibility_assert(count(rest_do_request($rest)->get_data())===3, 'Authorized REST edit list retains hidden event');
+$forbidden=new WP_REST_Request('POST','/veranstaltungswart/v1/settings/'.$ids['hidden']);$forbidden->set_header('Content-Type','application/json');$forbidden->set_body(wp_json_encode([V::META=>'0']));
+wp_set_current_user(get_user_by('login','testauthor')->ID);
+visibility_assert(rest_do_request($forbidden)->get_status()===403 && V::hidden($ids['hidden']), 'Other author cannot change visibility');
+wp_set_current_user(1);
+$_POST = ['vw_event_settings_nonce_field'=>'invalid','vw_direct_link_only'=>'0'];
+(new VW\Events\EventMetaBox())->save($ids['hidden']);
+visibility_assert(V::hidden($ids['hidden']), 'Classic save rejects invalid nonce');
+$_POST=[];
+$old=apply_filters('display_post_states',[],get_post($ids['hidden']));
+visibility_assert(isset($old['vw_direct_link']), 'Backend marks direct-link events');
+EventSettings::save($ids['hidden'],[V::META=>'0']);
+$q=new WP_Query(V::public_args($args));
+visibility_assert((int)$q->found_posts===4, 'Disabling restores cached listing count');
+$urls=array_column($provider->get_url_list(1,'vw_event'),'loc');
+visibility_assert(in_array(get_permalink($ids['hidden']),$urls), 'Disabling restores sitemap entry');
+EventSettings::save($ids['hidden'],[V::META=>'1']);
+file_put_contents('/tmp/vw-visibility.json',wp_json_encode($ids+['hidden_url'=>get_permalink($ids['hidden']),'visible_url'=>get_permalink($ids['visible']),'regular'=>$normal,'term'=>$term['term_id']]));
