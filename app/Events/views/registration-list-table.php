@@ -1,12 +1,12 @@
 <?php if (!defined('ABSPATH')) exit; ?>
-<?php 
+<?php
 // Vorbereitung für die visuelle Nachrücker-Hilfe
 $max_cap = intval($stats['max_capacity']);
 $already_confirmed = intval($stats['confirmed_count']);
 $theoretical_free_slots = ($max_cap > 0) ? ($max_cap - $already_confirmed) : 9999;
 
 // Die aktuelle URL sicher kodieren, damit wir nach der Aktion genau hierher zurückkehren
-$current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
+$current_url = urlencode(esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'] ?? '')));
 ?>
 <style>
     /* Styling für die Statistik-Box (Responsive) */
@@ -31,7 +31,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
         gap: 5px;
         justify-content: flex-end;
     }
-    
+
     /* WordPress Standard-Breakpoint für Mobile Admin-Ansichten */
     @media (max-width: 782px) {
         .vw-actions-container {
@@ -53,17 +53,19 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 
 <div class="vw-registration-stats">
     <div><strong><?php esc_html_e('Gesamt-Kapazität:', 'veranstaltungswart'); ?></strong>
-        <?php echo $max_cap > 0 ? $max_cap : esc_html__('Unbegrenzt', 'veranstaltungswart'); ?></div>
-        
+        <?php echo $max_cap > 0 ? (int) $max_cap : esc_html__('Unbegrenzt', 'veranstaltungswart'); ?></div>
+
     <div><strong><?php esc_html_e('Bestätigte Teilnehmer:', 'veranstaltungswart'); ?></strong> <span
-            style="color: #46b450; font-weight: bold;"><?php echo $already_confirmed; ?></span></div>
-            
+            style="color: #46b450; font-weight: bold;"><?php echo (int) $already_confirmed; ?></span></div>
+
+    <div><strong><?php esc_html_e('Prüfung offen:', 'veranstaltungswart'); ?></strong> <?php echo (int) $stats['pending_count']; ?></div>
+
     <div><strong><?php esc_html_e('Auf Warteliste:', 'veranstaltungswart'); ?></strong> <span
             style="color: #dba617; font-weight: bold;"><?php echo isset($stats['waitlist']) ? intval($stats['waitlist']) : 0; ?></span></div>
-            
+
     <div><strong><?php esc_html_e('Verfügbare Plätze:', 'veranstaltungswart'); ?></strong>
         <span style="font-weight: bold;">
-            <?php echo $max_cap > 0 ? max(0, $theoretical_free_slots) : '&infin;'; ?>
+            <?php echo $max_cap > 0 ? (int) max(0, $theoretical_free_slots) : '&infin;'; ?>
         </span>
     </div>
 </div>
@@ -85,7 +87,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                     $rid = isset($reg->id) ? $reg->id : (isset($reg->reg_id) ? $reg->reg_id : 0);
                     $eid = isset($reg->event_post_id) ? $reg->event_post_id : 0;
                     $seats = isset($reg->seats_total) ? intval($reg->seats_total) : 1;
-                    
+
                     // Prüfen, ob dieser Teilnehmer "nachrücken" könnte (Stornierte natürlich nicht!)
                     $can_move_up = false;
                     if ($reg->status !== 'bestätigt' && $reg->status !== 'abgelehnt' && $reg->status !== 'storniert' && $max_cap > 0) {
@@ -95,27 +97,30 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                         }
                     }
                     $row_style = $can_move_up ? 'background-color: #edfaef !important;' : '';
-                    
+
                     // Link-Aufbau inkl. _wp_http_referer für die kugelsichere Rückleitung
                     $base_url = admin_url('admin-post.php?action=vw_update_reg_status&id=' . $rid . '&event_id=' . $eid . '&_wp_http_referer=' . $current_url);
                     ?>
-                    <tr style="<?php echo $row_style; ?>">
+                    <tr style="<?php echo esc_attr($row_style); ?>">
                         <td>
                             <strong><?php echo esc_html($reg->last_name . ', ' . $reg->first_name); ?></strong>
-                            
-                            <?php 
+
+                            <?php
                             if (isset($reg->trust_status) && $reg->trust_status === 'freigegeben'): ?>
                                <span class="dashicons dashicons-shield-alt"
                                      style="color: #00a32a; vertical-align: middle;"
                                      title="<?php esc_attr_e('Global bestätigte Person (Vertrauenswürdig)', 'veranstaltungswart'); ?>"></span>
                             <?php endif; ?>
-                            
+
                             <?php if ($can_move_up): ?>
                                 <span class="dashicons dashicons-info"
                                        style="color: #46b450; font-size: 17px; width: 17px; height: 17px; vertical-align: text-bottom; margin-left: 4px; cursor: help;"
                                        title="<?php esc_attr_e('Platz frei! Dieser Teilnehmer kann jetzt bestätigt werden.', 'veranstaltungswart'); ?>"></span>
                             <?php endif; ?>
 
+                            <?php if (!empty($reg->answers) && $reg->answers !== '[]'): ?>
+                                <details class="vw-answer-details"><summary><?php esc_html_e('Zusatzantworten', 'veranstaltungswart'); ?></summary><p style="white-space:pre-wrap"><?php echo esc_html(\VW\Events\RegistrationQuestions::answer_text($reg->answers)); ?></p></details>
+                            <?php endif; ?>
                             <?php if (!empty($reg->message)): ?>
                                 <div style="margin-top: 8px; background: #fff; padding: 8px 10px; border-left: 3px solid #2271b1; border-radius: 2px; font-size: 12px; box-shadow: 0 1px 1px rgba(0,0,0,0.04);">
                                     <strong style="color:#646970; display:block; margin-bottom:2px; font-size:11px; text-transform:uppercase;"><?php esc_html_e('Anmerkung', 'veranstaltungswart'); ?></strong>
@@ -123,15 +128,15 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                 </div>
                             <?php endif; ?>
                         </td>
-                        
+
                         <td><a href="mailto:<?php echo esc_attr($reg->email); ?>"><?php echo esc_html($reg->email); ?></a></td>
-                        
+
                         <td style="text-align: center;">
                             <span style="background: #eee; padding: 2px 8px; border-radius: 10px; font-weight: 600; border: 1px solid #ddd;">
-                                <?php echo $seats; ?>
+                                <?php echo (int) $seats; ?>
                             </span>
                         </td>
-                        
+
                         <td>
                             <?php
                             // Bessere Farblogik für die verschiedenen Stati
@@ -145,8 +150,8 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                 $status_color = '#dba617'; // Orange (Eingegangen / Warteliste)
                             }
                             ?>
-                            <span style="color: <?php echo $status_color; ?>; font-weight: 600;">
-                                <?php 
+                            <span style="color: <?php echo esc_attr($status_color); ?>; font-weight: 600;">
+                                <?php
                                 // Die Statuswerte kommen aus der Datenbank, idealerweise mappen wir sie hier für die Übersetzung.
                                 // Ansonsten ist die einfache Ausgabe mit esc_html in Ordnung, wenn die Datenbankwerte ohnehin deutsch sind.
                                 // Für ein offizielles Repo ist es besser, bekannte Stati zu mappen:
@@ -158,11 +163,11 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                     'warteliste' => __('Warteliste', 'veranstaltungswart')
                                 ];
                                 $display_status = isset($status_labels[$reg->status]) ? $status_labels[$reg->status] : ucfirst($reg->status);
-                                echo esc_html($display_status); 
+                                echo esc_html($display_status);
                                 ?>
                             </span>
                         </td>
-                        
+
                         <td style="text-align: right;">
                             <div class="vw-actions-container">
                                 <?php if ($reg->status !== 'bestätigt' && $reg->status !== 'storniert'): ?>
@@ -171,7 +176,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                         <span class="dashicons dashicons-yes" style="vertical-align: middle;"></span>
                                     </a>
                                 <?php endif; ?>
-                                
+
                                 <?php if ($reg->status !== 'abgelehnt' && $reg->status !== 'storniert'): ?>
                                     <a href="<?php echo esc_url(wp_nonce_url($base_url . '&new_status=abgelehnt', 'vw_reg_action_' . $rid)); ?>"
                                         class="button button-small" title="<?php esc_attr_e('Ablehnen', 'veranstaltungswart'); ?>"
@@ -179,7 +184,7 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
                                         <span class="dashicons dashicons-no-alt" style="color: #dba617; vertical-align: middle;"></span>
                                     </a>
                                 <?php endif; ?>
-                                
+
                                 <a href="<?php echo esc_url(wp_nonce_url(admin_url('admin-post.php?action=vw_delete_registration&id=' . $rid . '&event_id=' . $eid . '&_wp_http_referer=' . $current_url), 'vw_delete_reg_nonce_' . $rid)); ?>"
                                     class="button button-small" onclick="return confirm('<?php esc_attr_e('Anmeldung endgültig löschen?', 'veranstaltungswart'); ?>')"
                                     title="<?php esc_attr_e('Löschen', 'veranstaltungswart'); ?>">
@@ -200,14 +205,14 @@ $current_url = urlencode(wp_unslash($_SERVER['REQUEST_URI']));
 </div>
 
 <p class="description" style="margin-top: 15px;">
-    <strong><?php esc_html_e('Status-Info:', 'veranstaltungswart'); ?></strong> 
-    <?php esc_html_e('"Eingegangen" sind neue Anmeldungen.', 'veranstaltungswart'); ?> 
-    
+    <strong><?php esc_html_e('Status-Info:', 'veranstaltungswart'); ?></strong>
+    <?php esc_html_e('"Eingegangen" sind neue Anmeldungen.', 'veranstaltungswart'); ?>
+
     <span style="background: #edfaef; padding: 2px 5px; border-radius: 3px; color: #2e7d32; border: 1px solid #c3e6cb; margin: 0 5px;">
         <?php esc_html_e('Grün markierte Zeilen', 'veranstaltungswart'); ?>
-    </span> 
-    
-    <?php esc_html_e('haben aktuell Platz im Event. Das', 'veranstaltungswart'); ?> 
-    <span class="dashicons dashicons-shield-alt" style="font-size: 14px; color: #00a32a;"></span> 
+    </span>
+
+    <?php esc_html_e('haben aktuell Platz im Event. Das', 'veranstaltungswart'); ?>
+    <span class="dashicons dashicons-shield-alt" style="font-size: 14px; color: #00a32a;"></span>
     <?php esc_html_e('Icon zeigt global vertrauenswürdige Personen.', 'veranstaltungswart'); ?>
 </p>
