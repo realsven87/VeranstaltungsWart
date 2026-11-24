@@ -100,6 +100,9 @@ No. It provides export/erasure tools and a privacy-consent field. Site owners mu
 
 == Upgrade Notice ==
 
+= 3.4.0 =
+Back up before upgrading. The retention period (90 days from event end by default) now applies to existing registrations. The next cleanup can permanently delete expired entries. Confirm the setting before cleanup.
+
 = 3.1.0 =
 WordPress.org preparation: WordPress 6.5 minimum, translation support, metadata and documentation updates. Back up before updating; do not uninstall.
 
